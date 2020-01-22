@@ -44,94 +44,95 @@ class MyCustomFormState extends State<MyCustomForm> {
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
 
-
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     final format = DateFormat("MM-dd-yyyy");
     return Form(
-      key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          TextFormField(
-            decoration: InputDecoration(
-              labelText: 'Name'
-            ),
-            validator: (value) {
-              if (value.isEmpty) {
-                return 'Please enter some text';
-              }
-              return null;
-            },
-          ),
-          DateTimeField(
-            format: format,
-            onShowPicker: (context, currentValue) {
-              return showDatePicker(
-                context: context,
-                firstDate: DateTime(1900),
-                initialDate: currentValue ?? DateTime.now(),
-                lastDate: DateTime(2100)
-              );
-            },    
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: RaisedButton(
-              onPressed: () {
-                // Validate returns true if the form is valid, or false
-                // otherwise.
-                if (_formKey.currentState.validate()) {
-                  // If the form is valid, display a Snackbar.
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text('Processing Data')));
-                }
-              },
-              child: Text('Submit'),
-            ),
-          ),
-        ],
-      ),
-    );
+        key: _formKey,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Name'),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please enter some text';
+                  }
+                  return null;
+                },
+              ),
+              Column(
+                children: <Widget>[
+                  DateTimeField(
+                    format: format,
+                    onShowPicker: (context, currentValue) {
+                      return showDatePicker(
+                          context: context,
+                          firstDate: DateTime(1900),
+                          initialDate: currentValue ?? DateTime.now(),
+                          lastDate: DateTime(2100));
+                    },
+                    decoration: InputDecoration(labelText: 'Expiration Date'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: RaisedButton(
+                      onPressed: () {
+                        // Validate returns true if the form is valid, or false
+                        // otherwise.
+                        if (_formKey.currentState.validate()) {
+                          // If the form is valid, display a Snackbar.
+                          Scaffold.of(context).showSnackBar(
+                              SnackBar(content: Text('Processing Data')));
+                        }
+                      },
+                      child: Text('Submit'),
+                    ),
+                  ),
+                ],
+              ),
+            ]));
   }
 }
 
 class HomeScreenState extends State<HomeScreen> {
-
   _addNew() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (BuildContext context) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text('Add a New Item'),
-            ),
-            body: MyCustomForm()
-          );
-        }
-      )
-    );
-    
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (BuildContext context) {
+      return Scaffold(
+          appBar: AppBar(
+            title: Text('Add a New Item'),
+          ),
+          body: MyCustomForm());
+    }));
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Text(
-          'Browse the pantry',
-          textAlign: TextAlign.center
+    return Scaffold(
+      body: Center(
+        child: Column(  
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Browse the Pantry',
+              style: Theme.of(context).textTheme.display1,
+            ),
+            Text(
+              'Expiring Soon',
+              style: Theme.of(context).textTheme.display1,
+            ),
+            RaisedButton(
+              onPressed: _addNew,
+              child: const Text(
+                'New Item',
+                style: TextStyle(fontSize: 20)
+              )
+            )
+          ],
         ),
-        Text(
-          'What\'s expiring soon?',
-          textAlign: TextAlign.center
-        ),
-        RaisedButton(
-          onPressed: _addNew,
-
-        )
-      ],
+      ),
     );
   }
 }
