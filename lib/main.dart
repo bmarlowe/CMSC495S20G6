@@ -7,7 +7,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appTitle = 'Form Validation Demo';
+    final appTitle = 'Pantry Inventory';
 
     return MaterialApp(
       title: appTitle,
@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: Text(appTitle),
         ),
-        body: MyCustomForm(),
+        body: HomeScreen(),
       ),
     );
   }
@@ -29,6 +29,11 @@ class MyCustomForm extends StatefulWidget {
   }
 }
 
+class HomeScreen extends StatefulWidget {
+  @override
+  HomeScreenState createState() => HomeScreenState();
+}
+
 // Create a corresponding State class.
 // This class holds data related to the form.
 class MyCustomFormState extends State<MyCustomForm> {
@@ -38,6 +43,7 @@ class MyCustomFormState extends State<MyCustomForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +93,45 @@ class MyCustomFormState extends State<MyCustomForm> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class HomeScreenState extends State<HomeScreen> {
+
+  _addNew() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Add a New Item'),
+            ),
+            body: MyCustomForm()
+          );
+        }
+      )
+    );
+    
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Text(
+          'Browse the pantry',
+          textAlign: TextAlign.center
+        ),
+        Text(
+          'What\'s expiring soon?',
+          textAlign: TextAlign.center
+        ),
+        RaisedButton(
+          onPressed: _addNew,
+
+        )
+      ],
     );
   }
 }
