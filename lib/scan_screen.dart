@@ -155,23 +155,63 @@ class ScanState extends State<Scan> {
   }
 
   Widget barcodeInfo() {
-    return Column(
-      children: <Widget>[
-        Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: ListView.builder(
-              itemCount: (baseResponse == null ||
-                      baseResponse.items == null ||
-                      baseResponse.items.length == 0)
-                  ? 0
-                  : baseResponse.items.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                    title: Text('${baseResponse.items[index].title}'));
-              }, //itemBuilder:
-            ))
-      ],
-    );
+    return Column(children: [
+      Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: FutureBuilder<String>(
+          future: fetchBarcodeInfo(
+              client, barcode), // a previously-obtained Future<String> or null
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            List<Widget> children;
+
+            if (snapshot.hasData) {
+              children = <Widget>[
+                Icon(
+                  Icons.check_circle_outline,
+                  color: Colors.teal,
+                  size: 60,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Text('Result: ${snapshot.data}'),
+                )
+              ];
+            } else if (snapshot.hasError) {
+              children = <Widget>[
+                Icon(
+                  Icons.error_outline,
+                  color: Colors.red,
+                  size: 60,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 16),
+                  child: Text('Error: ${snapshot.error}'),
+                )
+              ];
+            } else {
+              children = <Widget>[
+                SizedBox(
+                  child: CircularProgressIndicator(),
+                  width: 60,
+                  height: 60,
+                ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: Text('Awaiting result...'),
+                )
+              ];
+            }
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: children,
+              ),
+            );
+          },
+        ),
+      )
+    ]);
   }
 
   Future scan() async {
@@ -182,6 +222,7 @@ class ScanState extends State<Scan> {
       if (baseResponseBody == null) {
         setState(() => itemController =
             TextEditingController(text: '${baseResponse.items[0].title}'));
+        barcodeInfo();
       }
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {

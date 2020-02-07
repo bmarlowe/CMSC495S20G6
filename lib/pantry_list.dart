@@ -8,7 +8,7 @@ part 'pantry_list.g.dart';
 
 Future<List<Inventory>> fetchInventory(http.Client client) async {
   final response = await http
-      .get('https://2c0fb3de-8d5e-4930-aed7-35d266bb88b7.mock.pstmn.io');
+      .get('https://14186d37-8753-4052-924a-c403f155a8bb.mock.pstmn.io');
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON.
@@ -26,17 +26,20 @@ List<Inventory> parseItems(String responseBody) {
 
 @JsonSerializable()
 class Inventory {
-  final int quantity;
-  final String title;
+  final String name;
   final String acquisition;
+  final int quantity;
+  final String unit;
   final String expiration;
 
-  Inventory({this.title, this.acquisition, this.quantity, this.expiration});
+  Inventory(
+      {this.name, this.acquisition, this.unit, this.quantity, this.expiration});
 
   factory Inventory.fromJson(Map<String, dynamic> json) {
     return Inventory(
         quantity: json['quantity'] as int,
-        title: json['title'] as String,
+        name: json['name'] as String,
+        unit: json['unit'],
         acquisition: json['acquisition'] as String,
         expiration: json['expiration'] as String);
   } //factory
@@ -56,21 +59,20 @@ class PantryListState extends State<PantryList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading
-        ? Center(
+        body: isLoading
+            ? Center(
           child: CircularProgressIndicator(),
-          )
+        )
             : FutureBuilder<List<Inventory>>(
-              future: fetchInventory(http.Client()),
-              builder: (context, snapshot) {
+            future: fetchInventory(http.Client()),
+            builder: (context, snapshot) {
               if (snapshot.hasError) {
                 return Text("${snapshot.error}");
               }
               return snapshot.hasData
-                ? InventoryList(inventory: snapshot.data)
+                  ? InventoryList(inventory: snapshot.data)
                   : Center(child: CircularProgressIndicator());
-              }
-            ));
+            }));
   }
 }
 
@@ -82,22 +84,23 @@ class InventoryList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      key: key,
-      itemCount: inventory.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-      itemBuilder: (BuildContext context, int index) {
-        return new Column(children: [
-          Text(inventory[index].title),
-          Text('Quantity: ' + inventory[index].quantity.toString()),
-          Text('Acquisition: ' + inventory[index].acquisition),
-          Text('Expiration: ' + inventory[index].expiration),
-        ]);
-      }
-    );
+        key: key,
+        itemCount: inventory.length,
+        gridDelegate:
+        SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        itemBuilder: (BuildContext context, int index) {
+          return new Column(children: [
+            Text(inventory[index].name),
+            Text('Quantity: ' + inventory[index].quantity.toString()),
+            Text('Unit: ' + inventory[index].unit),
+            Text('Acquisition: ' + inventory[index].acquisition),
+            Text('Expiration: ' + inventory[index].expiration),
+          ]);
+        });
   }
 
   //Widget _buildTile() {
-    //TODO - Build clean tiles to pass to GridView.builder in build Widget.
+//TODO - Build clean tiles to pass to GridView.builder in build Widget.
 
   //}
 }

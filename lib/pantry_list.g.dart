@@ -8,15 +8,17 @@ part of 'pantry_list.dart';
 
 Inventory _$InventoryFromJson(Map<String, dynamic> json) {
   return Inventory(
-      title: json['title'] as String,
+      name: json['name'] as String,
       acquisition: json['acquisition'] as String,
+      unit: json['unit'] as String,
       quantity: json['quantity'] as int,
       expiration: json['expiration'] as String);
 }
 
 Map<String, dynamic> _$InventoryToJson(Inventory instance) => <String, dynamic>{
-      'quantity': instance.quantity,
-      'title': instance.title,
+      'name': instance.name,
       'acquisition': instance.acquisition,
+      'quantity': instance.quantity,
+      'unit': instance.unit,
       'expiration': instance.expiration
     };
