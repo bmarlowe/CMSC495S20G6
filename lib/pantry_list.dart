@@ -6,10 +6,11 @@ import 'package:http/http.dart' as http;
 import 'package:json_annotation/json_annotation.dart';
 part 'pantry_list.g.dart';
 
-Future<List<Inventory>> fetchInventory(http.Client client) async {
-  final response = await http
-      .get('https://14186d37-8753-4052-924a-c403f155a8bb.mock.pstmn.io');
+//TODO - Change url to correct url for post/get.
+String url = 'http://10.0.2.2:8000/item';
 
+Future<List<Inventory>> fetchInventory(http.Client client) async {
+  final response = await http.get(url);
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON.
     return compute(parseItems, response.body);
@@ -35,14 +36,10 @@ class Inventory {
   Inventory(
       {this.name, this.acquisition, this.unit, this.quantity, this.expiration});
 
-  factory Inventory.fromJson(Map<String, dynamic> json) {
-    return Inventory(
-        quantity: json['quantity'] as int,
-        name: json['name'] as String,
-        unit: json['unit'],
-        acquisition: json['acquisition'] as String,
-        expiration: json['expiration'] as String);
-  } //factory
+  factory Inventory.fromJson(Map<String, dynamic> json) =>
+      _$InventoryFromJson(json);
+
+  Map<String, dynamic> toJson() => _$InventoryToJson(this);
 } //Inventory
 
 class PantryList extends StatefulWidget {

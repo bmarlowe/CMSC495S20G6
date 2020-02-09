@@ -14,12 +14,10 @@ class LoginScreen extends StatelessWidget {
   //TODO - More secure login handling that doesn't tell which is incorrect
   Future<String> _loginUser(LoginData data) {
     return Future.delayed(loginTime).then((_) {
-      if (!userLoginData.containsKey(data.name)) {
+      if (!userLoginData.containsKey(data.name) ||
+          (userLoginData[data.name] != data.password)) {
         //need to replace const with API
-        return 'Username not found';
-      }
-      if (userLoginData[data.name] != data.password) {
-        return 'Password does not match';
+        return 'Email Or Password does not match';
       }
       return null;
     });
