@@ -57,6 +57,9 @@ dev_dependencies:
 
   build_runner: ^1.0.0
   json_serializable: ^2.0.0
+  dcdg: ^2.0.1
+
+
 
 
 # For information on the generic Dart part of this file, see the

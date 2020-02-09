@@ -6,11 +6,12 @@ import 'package:http/http.dart' as http;
 import 'package:json_annotation/json_annotation.dart';
 part 'pantry_list.g.dart';
 
-//TODO - Change url to correct url for post/get.
+//String url = 'https://14186d37-8753-4052-924a-c403f155a8bb.mock.pstmn.io';
 String url = 'http://10.0.2.2:8000/item';
 
 Future<List<Inventory>> fetchInventory(http.Client client) async {
   final response = await http.get(url);
+
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON.
     return compute(parseItems, response.body);
@@ -29,16 +30,19 @@ List<Inventory> parseItems(String responseBody) {
 class Inventory {
   final String name;
   final String acquisition;
-  final int quantity;
-  final String unit;
+  //final int quantity;
+  //final String unit;
   final String expiration;
 
   Inventory(
-      {this.name, this.acquisition, this.unit, this.quantity, this.expiration});
+      {this.name,
+      this.acquisition,
+      //this.unit,
+      //this.quantity,
+      this.expiration});
 
   factory Inventory.fromJson(Map<String, dynamic> json) =>
       _$InventoryFromJson(json);
-
   Map<String, dynamic> toJson() => _$InventoryToJson(this);
 } //Inventory
 
@@ -58,18 +62,18 @@ class PantryListState extends State<PantryList> {
     return Scaffold(
         body: isLoading
             ? Center(
-          child: CircularProgressIndicator(),
-        )
+                child: CircularProgressIndicator(),
+              )
             : FutureBuilder<List<Inventory>>(
-            future: fetchInventory(http.Client()),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
-              return snapshot.hasData
-                  ? InventoryList(inventory: snapshot.data)
-                  : Center(child: CircularProgressIndicator());
-            }));
+                future: fetchInventory(http.Client()),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  }
+                  return snapshot.hasData
+                      ? InventoryList(inventory: snapshot.data)
+                      : Center(child: CircularProgressIndicator());
+                }));
   }
 }
 
@@ -78,28 +82,34 @@ class InventoryList extends StatelessWidget {
 
   InventoryList({Key key, this.inventory}) : super(key: key);
 
-  @override
   Widget build(BuildContext context) {
     return GridView.builder(
-        key: key,
-        itemCount: inventory.length,
-        gridDelegate:
-        SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-        itemBuilder: (BuildContext context, int index) {
-          return new Column(children: [
-            Text(inventory[index].name),
-            Text('Quantity: ' + inventory[index].quantity.toString()),
-            Text('Unit: ' + inventory[index].unit),
-            Text('Acquisition: ' + inventory[index].acquisition),
-            Text('Expiration: ' + inventory[index].expiration),
-          ]);
-        });
+      itemCount: inventory.length,
+      gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      itemBuilder: (context, index) {
+        return Center(
+            child: Card(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Center(
+                child: ListTile(
+                  title: Text(inventory[index].name.toString()),
+                ),
+              ),
+              Column(children: <Widget>[
+                Text('Expiration: ' + inventory[index].expiration.toString()),
+                //Text('Unit: ' + inventory[index].unit.toString()),
+                //Text('Quantity: ' + inventory[index].quantity.toString()),
+                Text('Acquisition: ' + inventory[index].acquisition.toString()),
+              ])
+            ],
+          ),
+        ));
+      },
+    );
   }
-
-  //Widget _buildTile() {
-//TODO - Build clean tiles to pass to GridView.builder in build Widget.
-
-  //}
 }
 
 /**

@@ -26,7 +26,8 @@ class ScanState extends State<Scan> {
   var formatter = new DateFormat('MM/dd/yyyy');
 
 //TODO - Change url to correct url for post/get.
-  String url = 'http://10.0.2.2:8000/item';
+  //String url = 'http://10.0.2.2:8000/item';
+  String url = 'https://14186d37-8753-4052-924a-c403f155a8bb.mock.pstmn.io';
 
   /// Inputs
   var itemController = TextEditingController();
@@ -240,10 +241,9 @@ class ScanState extends State<Scan> {
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           color: Colors.teal,
-          onPressed: () =>
-              Navigator.of(context).pushReplacement(FadePageRoute(
-                builder: (context) => HomeScreen(),
-              )),
+          onPressed: () => Navigator.of(context).pushReplacement(FadePageRoute(
+            builder: (context) => HomeScreen(),
+          )),
         ),
       ],
     ).show();

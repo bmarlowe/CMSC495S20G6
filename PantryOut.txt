@@ -1,0 +1,198 @@
+@startuml
+set namespaceSeparator ::
+
+class "pantry::scan_screen.dart::Scan" {
+  +ScanState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pantry::scan_screen.dart::Scan"
+
+class "pantry::scan_screen.dart::ScanState" {
+  +GlobalKey<ScaffoldState> scaffoldKey
+  +String barcode
+  +Client client
+  +BaseResponse baseResponse
+  +DateFormat formatter
+  +TextEditingController itemController
+  +TextEditingController quantityController
+  +String acquisition
+  +String expiration
+  +void dispose()
+  +void initState()
+  -dynamic _itemController()
+  -dynamic _quantityController()
+  +Future fetchBarcodeInfo()
+  +Widget build()
+  +Widget pantryInfoInputsWidget()
+  +Widget barcodeInfo()
+  +Future scan()
+  +void debugFillProperties()
+}
+
+"pantry::scan_screen.dart::ScanState" o-- "flutter::src::widgets::framework.dart::GlobalKey<ScaffoldState>"
+"pantry::scan_screen.dart::ScanState" o-- "http::src::client.dart::Client"
+"pantry::scan_screen.dart::ScanState" o-- "pantry::upc_base_response.dart::BaseResponse"
+"pantry::scan_screen.dart::ScanState" o-- "intl::intl.dart::DateFormat"
+"pantry::scan_screen.dart::ScanState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "pantry::scan_screen.dart::ScanState"
+
+class "pantry::fade_route.dart::FadePageRoute<T>" {
+  +Duration transitionDuration
+  +Widget buildTransitions()
+}
+
+"flutter::src::material::page.dart::MaterialPageRoute<T>" <|-- "pantry::fade_route.dart::FadePageRoute<T>"
+
+class "pantry::main.dart::MyApp" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pantry::main.dart::MyApp"
+
+class "pantry::upc_base_response.dart::BaseResponse" {
+  +String code
+  +int total
+  +int offset
+  +List<Item> items
+  +Map toJson()
+}
+
+class "pantry::upc_base_response.dart::Item" {
+  +String ean
+  +String title
+  +String description
+  +String upc
+  +String brand
+  +String model
+  +String color
+  +String size
+  +String dimension
+  +String weight
+  +String currency
+  +int lowestRecordedPrice
+  +double highestRecordedPrice
+  +List<String> images
+  +List<Offer> offers
+  +String asin
+  +String elid
+  +Map toJson()
+}
+
+class "pantry::upc_base_response.dart::Offer" {
+  +String merchant
+  +String domain
+  +String title
+  +String currency
+  +String listPrice
+  +double price
+  +String shipping
+  +String link
+  +int updatedT
+  +Map toJson()
+}
+
+class "pantry::login_screen.dart::LoginScreen" {
+  {static} +String routeName
+  +Duration loginTime
+  -Future _loginUser()
+  -Future _recoverPassword()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pantry::login_screen.dart::LoginScreen"
+
+class "pantry::pantry_list.dart::Inventory" {
+  +String name
+  +String acquisition
+  +int quantity
+  +String unit
+  +String expiration
+}
+
+class "pantry::pantry_list.dart::PantryList" {
+  +PantryListState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pantry::pantry_list.dart::PantryList"
+
+class "pantry::pantry_list.dart::PantryListState" {
+  +Future<Inventory> inventory
+  +bool isLoading
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "pantry::pantry_list.dart::PantryListState"
+
+class "pantry::pantry_list.dart::InventoryList" {
+  +List<Inventory> inventory
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "pantry::pantry_list.dart::InventoryList"
+
+class "pantry::Authentication::users.dart::User" {
+  +String uid
+  +String pwd
+  +Map toJson()
+}
+
+class "pantry::home_screen.dart::HomeScreen" {
+  +HomeScreenState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pantry::home_screen.dart::HomeScreen"
+
+class "pantry::home_screen.dart::HomeScreenState" {
+  +int selectedIndex
+  +List<Widget> widgetOptions
+  +Widget build()
+  +void onItemTapped()
+}
+
+"flutter::src::widgets::framework.dart::State<T>" <|-- "pantry::home_screen.dart::HomeScreenState"
+
+class "pantry::camera.dart::CameraWidget" {
+  +CameraState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "pantry::camera.dart::CameraWidget"
+
+class "pantry::camera.dart::CameraState" {
+  +GlobalKey<ScaffoldState> scaffoldKey
+  +List<CameraDescription> cameras
+  +CameraController controller
+  +bool isReady
+  +bool showCamera
+  +String imagePath
+  +DateFormat formatter
+  +TextEditingController itemController
+  +TextEditingController quantityController
+  +String acquisition
+  +String expiration
+  +void dispose()
+  +void initState()
+  -dynamic _itemController()
+  -dynamic _quantityController()
+  +Future setupCameras()
+  +IconData getCameraLensIcon()
+  +Widget build()
+  +Widget cameraPreviewWidget()
+  +Widget imagePreviewWidget()
+  +Widget captureControlRowWidget()
+  +Widget editCaptureControlRowWidget()
+  +void onTakePictureButtonPressed()
+  +Future takePicture()
+  +Widget cameraOptionsWidget()
+  +Widget cameraTogglesRowWidget()
+  +void onNewCameraSelected()
+  +Widget pantryInfoInputsWidget()
+}
+
+"pantry::camera.dart::CameraState" o-- "flutter::src::widgets::framework.dart::GlobalKey<ScaffoldState>"
+"pantry::camera.dart::CameraState" o-- "camera::camera.dart::CameraController"
+"pantry::camera.dart::CameraState" o-- "intl::intl.dart::DateFormat"
+"pantry::camera.dart::CameraState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State<T>" <|-- "pantry::camera.dart::CameraState"
+
+
+@enduml
