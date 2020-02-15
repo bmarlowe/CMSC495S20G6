@@ -9,12 +9,20 @@ part 'pantry_list.g.dart';
 
 //TODO - Change url to correct url for post/get.
 //String url = 'http://localhost:8000/item'; //iOS TESTING
-//String url = 'http://10.0.2.2:8000/item/'; //ANDROID TESTING
-String url = 'https://14186d37-8753-4052-924a-c403f155a8bb.mock.pstmn.io';
+String url = 'http://10.0.2.2:8000/item/'; //ANDROID TESTING
+//String url = 'https://14186d37-8753-4052-924a-c403f155a8bb.mock.pstmn.io';
 
 
 Future<List<Inventory>> fetchInventory(http.Client client, BuildContext context) async {
-  final response = await http.get(url);
+  String username = 'root';
+  String password = 'pass';
+  String basicAuth =
+      'Basic ' + base64Encode(utf8.encode('$username:$password'));
+  print(basicAuth);
+  final response = await http.get(url,
+  headers: <String,String>{'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authentication': basicAuth});
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON.
@@ -93,25 +101,27 @@ class InventoryList extends StatelessWidget {
       gridDelegate:
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemBuilder: (context, index) {
-        return Center(
-            child: Card(
+        return Card(
+        color: new Color(0xFF11AA33),
+        child: SizedBox(
+          width: 200,
+          height: 100,
+          //margin: new EdgeInsets.all(1),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Center(
-                child: ListTile(
-                  title: Text(inventory[index].name.toString()),
-                ),
+            //mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(inventory[index].name.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
               ),
-              Column(children: <Widget>[
-                Text('Expiration: ' + inventory[index].expiration.toString()),
-                //Text('Unit: ' + inventory[index].unit.toString()),
-                //Text('Quantity: ' + inventory[index].quantity.toString()),
-                Text('Acquisition: ' + inventory[index].acquisition.toString()),
-              ])
-            ],
-          ),
-        ));
+              //Text('Quantity: ' + inventory[index].quantity.toString()),
+              Text('Acquisition: ' + inventory[index].acquisition.toString()),
+              Text('Expiration: ' + inventory[index].expiration.toString()),
+            ]
+          )
+        )
+      );
+        
       },
     );
   }

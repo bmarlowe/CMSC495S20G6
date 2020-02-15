@@ -40,3 +40,7 @@ lib/generated_plugin_registrant.dart
 .dart_tool/package_config.json
 android/local.properties
 android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+build/app/intermediates/incremental/debug-mergeNativeLibs/merge-state
+build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin
+build/app/intermediates/incremental/debug-mergeJavaRes/merge-state
+android/local.properties
