@@ -91,15 +91,16 @@ class InventoryList extends StatelessWidget {
   final List<Inventory> inventory;
 
   InventoryList({Key key, this.inventory}) : super(key: key);
-
+  
   Widget build(BuildContext context) {
     return GridView.builder(
       itemCount: inventory.length,
       gridDelegate:
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemBuilder: (context, index) {
+        Color cardColor = colorCode(inventory[index].expiration);
         return Card(
-        color: new Color(0xFF11AA33),
+        color: cardColor,
         child: SizedBox(
           width: 200,
           height: 100,
@@ -121,6 +122,30 @@ class InventoryList extends StatelessWidget {
         
       },
     );
+  }
+  Color colorCode(String expiration) {
+    var todayRaw = new DateTime.now();
+    DateTime today = new DateTime(todayRaw.year, todayRaw.month, todayRaw.day);
+    //print(today);
+    String yearStr = expiration.substring(0,4);
+    String monthStr = expiration.substring(5,7);
+    String dayStr = expiration.substring(8,10);
+    int yearInt = int.parse(yearStr);
+    int monthInt = int.parse(monthStr);
+    int dayInt = int.parse(dayStr);
+    DateTime itemExpire = new DateTime(yearInt, monthInt, dayInt);
+    //print(itemExpire);
+    int check = itemExpire.compareTo(today);
+    //print(check);
+    if(check <= 0) {
+      return new Color(0xFFFF2222);
+    }
+    var difference = itemExpire.difference(today);
+    //print(difference.inDays);
+    if(difference.inDays <= 7) {
+      return new Color(0xFFFFFF33);
+    }
+    return new Color(0xFF11BB33);
   }
 }
 
