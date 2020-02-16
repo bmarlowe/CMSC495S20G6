@@ -44,3 +44,4 @@ build/app/intermediates/incremental/debug-mergeNativeLibs/merge-state
 build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin
 build/app/intermediates/incremental/debug-mergeJavaRes/merge-state
 android/local.properties
+build/app/intermediates/flutter/debug/flutter_assets/kernel_blob.bin

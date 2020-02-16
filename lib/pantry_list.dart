@@ -83,8 +83,11 @@ class PantryListState extends State<PantryList> {
                   return snapshot.hasData
                       ? InventoryList(inventory: snapshot.data)
                       : Center(child: CircularProgressIndicator());
-                }));
+                }
+              )
+      );
   }
+
 }
 
 class InventoryList extends StatelessWidget {
@@ -93,12 +96,13 @@ class InventoryList extends StatelessWidget {
   InventoryList({Key key, this.inventory}) : super(key: key);
   
   Widget build(BuildContext context) {
+    List<Inventory> invSorted = sortInventory(context, inventory);
     return GridView.builder(
-      itemCount: inventory.length,
+      itemCount: invSorted.length,
       gridDelegate:
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemBuilder: (context, index) {
-        Color cardColor = colorCode(inventory[index].expiration);
+        Color cardColor = colorCode(invSorted[index].expiration);
         return Card(
         color: cardColor,
         child: SizedBox(
@@ -108,13 +112,13 @@ class InventoryList extends StatelessWidget {
           child: Column(
             //mainAxisSize: MainAxisSize.min,
             children: [
-              Text(inventory[index].name.toString(),
+              Text(invSorted[index].name.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
               ),
               //Text('Quantity: ' + inventory[index].quantity.toString()),
-              Text('Acquisition: ' + inventory[index].acquisition.toString()),
-              Text('Expiration: ' + inventory[index].expiration.toString()),
+              Text('Acquisition: ' + invSorted[index].acquisition.toString()),
+              Text('Expiration: ' + invSorted[index].expiration.toString()),
             ]
           )
         )
@@ -123,6 +127,7 @@ class InventoryList extends StatelessWidget {
       },
     );
   }
+
   Color colorCode(String expiration) {
     var todayRaw = new DateTime.now();
     DateTime today = new DateTime(todayRaw.year, todayRaw.month, todayRaw.day);
@@ -147,6 +152,39 @@ class InventoryList extends StatelessWidget {
     }
     return new Color(0xFF11BB33);
   }
+
+  List<Inventory> sortInventory(BuildContext context, List<Inventory> inventory) {
+    List<Inventory> sortedInventory = new List<Inventory>();
+    List<Inventory> inv = inventory;
+    //List<int> expirationOrder;
+    bool allRed = false;
+    bool allYellow = false;
+    bool allGreen = false;
+    //TODO - This is very ugly, needs rewritten
+    for(var i=0; i<inv.length; i++) {
+      Color colorCheck = colorCode(inv[i].expiration);
+      if (colorCheck == Color(0xFFFF2222)) {
+        sortedInventory.add(inv[i]);
+      }
+    }
+    allRed = true;
+    for(var i=0; i<inv.length; i++) {
+      Color colorCheck = colorCode(inv[i].expiration);
+      if (colorCheck == Color(0xFFFFFF33)) {
+        sortedInventory.add(inv[i]);
+      }
+    }
+    allYellow = true;
+    for(var i=0; i<inv.length; i++) {
+      Color colorCheck = colorCode(inv[i].expiration);
+      if (colorCheck == Color(0xFF11BB33)) {
+        sortedInventory.add(inv[i]);
+      }
+    }
+    allGreen = true;
+    return sortedInventory;
+  }
+
 }
 
 void _alertFail(context) {
