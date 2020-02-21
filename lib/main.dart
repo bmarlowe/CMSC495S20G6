@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:pantry/scan_screen.dart';
-import 'home_screen.dart';
-import 'login_screen.dart';
+import 'screens/scan_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/login_screen.dart';
 
 void main() => runApp(new MyApp());
-
-class GlobalData {
-  static String auth;
-}
 
 class MyApp extends StatelessWidget {
   @override
