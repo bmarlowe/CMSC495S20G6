@@ -6,6 +6,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../models/upc_base_response.dart';
 import '../data/connect_repository.dart';
@@ -51,10 +52,27 @@ class ScanState extends State<Scan> {
 
   _itemController() {
     print("${Connections.itemController.text}");
+    if (Connections.itemController.text == null) {
+      _alertNull(context);
+    }
   }
 
   _unitController() {
     print("${Connections.unitController.text}");
+  }
+
+  _expiration(context, dt) {
+    Connections.expiration = dt.toString();
+    if (Connections.expiration == null) {
+      _alertNull(context);
+    }
+  }
+
+  _acquisition(context, dt) {
+    Connections.acquisition = dt.toString();
+    if (Connections.acquisition == null) {
+      _alertNull(context);
+    }
   }
 
   @override
@@ -111,8 +129,7 @@ class ScanState extends State<Scan> {
                   initialDate: currentValue ?? DateTime.now(),
                   lastDate: DateTime(DateTime.now().year + 40));
             },
-            onChanged: (dt) =>
-                setState(() => Connections.acquisition = dt.toIso8601String()),
+            onChanged: (dt) => setState(() => _acquisition(context, dt)),
           ),
         ),
         Padding(
@@ -129,8 +146,7 @@ class ScanState extends State<Scan> {
                   initialDate: currentValue ?? DateTime.now(),
                   lastDate: DateTime(DateTime.now().year + 40));
             },
-            onChanged: (dt) =>
-                setState(() => Connections.expiration = dt.toIso8601String()),
+            onChanged: (dt) => setState(() => _expiration(context, dt)),
           ),
         ),
         Padding(
@@ -172,4 +188,23 @@ class ScanState extends State<Scan> {
       setState(() => this.barcode = 'Unknown error: $e');
     }
   }
+
+  void _alertNull(context) {
+    new Alert(
+      context: context,
+      type: AlertType.error,
+      title: "ERROR",
+      desc: "This field must have an entry.  Please try again.",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "TRY AGAIN",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          color: Colors.teal,
+          onPressed: () => Navigator.pop(context),
+        ),
+      ],
+    ).show();
+  } //_alertFail
 }

@@ -51,15 +51,9 @@ Future<String> login(loginData, BuildContext context) async {
 // Once you have the client, you can use it just like any other HTTP client.
   var response;
 
-// Once we're done with the client, save the credentials file. This will allow
-// us to re-use the credentials and avoid storing the username and password
-// directly.
-  new File("~/.myapp/credentials.json")
-      .writeAsString(client.credentials.toJson());
-
   try {
     await Future<void>.delayed(Duration(seconds: 1));
-    response = await client.get(url);
+    response = await client.get(url).timeout(const Duration(seconds: 10));
   } on TimeoutException catch (e) {
     _alertFailLogin(context, 'Failed to login to server. ' + e.toString());
   } on SocketException catch (e) {
@@ -89,7 +83,7 @@ Future<List<Item>> fetchInventory(BuildContext context) async {
       response = await client.get(url, headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
-      }).timeout(const Duration(seconds: 3));
+      }).timeout(const Duration(seconds: 10));
       await Future<void>.delayed(Duration(seconds: 1));
     } on TimeoutException catch (e) {
       _alertFail(context, 'Failed to load server pantry. ' + e.toString());
@@ -114,12 +108,14 @@ List<Item> parseItems(String responseBody) {
 
 Future addToInventory(context) async {
   Item item = new Item(
-      name: "${Connections.itemController.text}",
-      quantity_with_unit: "${Connections.unitController.text}",
-      acquisition: Connections.acquisition.substring(0, 10),
-      expiration: Connections.expiration.substring(0, 10));
+    name: "${Connections.itemController.text}",
+    quantity_with_unit: "${Connections.unitController.text}",
+    acquisition_date: "${Connections.acquisition.substring(0, 10)}",
+    expiration_date: "${Connections.expiration.substring(0, 10)}",
+  );
 
   var responseBody = json.encode(item);
+  print(responseBody);
   if (offline) {
     //TODO make offline persistent data work
   } else {
@@ -130,12 +126,14 @@ Future addToInventory(context) async {
         },
         body: responseBody);
     if (response.statusCode == 200) {
-      print(response.body);
-      print(responseBody);
       _alertSuccess(context, 'Item sucessfully added to inventory');
       return response;
     } else {
       // writeItem(responseBody);
+      print(response.body);
+      print(responseBody);
+      print(response.statusCode);
+      print(response.toString());
       _alertFail(context, 'Item not added to server');
       throw Exception('Failed to load to server Inventory');
     }

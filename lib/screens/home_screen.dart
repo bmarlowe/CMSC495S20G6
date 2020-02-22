@@ -108,8 +108,10 @@ class InventoryList extends StatelessWidget {
               ),
               Column(children: <Widget>[
                 Text('Unit: ' + inventory[index].quantity_with_unit.toString()),
-                Text('Expiration: ' + inventory[index].expiration.toString()),
-                Text('Acquisition: ' + inventory[index].acquisition.toString()),
+                Text('Expiration: ' +
+                    inventory[index].expiration_date.toString()),
+                Text('Acquisition: ' +
+                    inventory[index].acquisition_date.toString()),
               ])
             ],
           ),

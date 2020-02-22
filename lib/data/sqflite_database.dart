@@ -27,8 +27,8 @@ class ItemDatabase {
       // When creating the db, create the table
       await db.execute("Create TABLE Item ("
           "name TEXT,"
-          "acquisition TEXT,"
-          "expiration' TEXT,"
+          "acquisition_date TEXT,"
+          "expiration_date' TEXT,"
           "quantity_with_unit TEXT)");
     });
   } //initDB
@@ -62,8 +62,8 @@ class ItemDatabase {
       return Item(
         name: maps[i]['name'],
         quantity_with_unit: maps[i]['quantity_with_unit'],
-        acquisition: maps[i]['acquisition'],
-        expiration: maps[i]['expiration'],
+        acquisition_date: maps[i]['acquisition'],
+        expiration_date: maps[i]['expiration'],
       );
     });
   }

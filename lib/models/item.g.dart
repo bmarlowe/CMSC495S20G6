@@ -18,8 +18,8 @@ class ItemAdapter extends TypeAdapter<Item> {
     };
     return Item(
       name: fields[0] as String,
-      acquisition: fields[1] as String,
-      expiration: fields[3] as String,
+      acquisition_date: fields[1] as String,
+      expiration_date: fields[3] as String,
       quantity_with_unit: fields[2] as String,
     );
   }
@@ -31,11 +31,11 @@ class ItemAdapter extends TypeAdapter<Item> {
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
-      ..write(obj.acquisition)
+      ..write(obj.acquisition_date)
       ..writeByte(2)
       ..write(obj.quantity_with_unit)
       ..writeByte(3)
-      ..write(obj.expiration);
+      ..write(obj.expiration_date);
   }
 }
 
@@ -46,15 +46,15 @@ class ItemAdapter extends TypeAdapter<Item> {
 Item _$ItemFromJson(Map<String, dynamic> json) {
   return Item(
     name: json['name'] as String,
-    acquisition: json['acquisition'] as String,
-    expiration: json['expiration'] as String,
+    acquisition_date: json['acquisition_date'] as String,
+    expiration_date: json['expiration'] as String,
     quantity_with_unit: json['quantity_with_unit'] as String,
   );
 }
 
 Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
       'name': instance.name,
-      'acquisition': instance.acquisition,
+      'acquisition_date_date': instance.acquisition_date,
       'quantity_with_unit': instance.quantity_with_unit,
-      'expiration': instance.expiration,
+      'expiration_date': instance.expiration_date,
     };

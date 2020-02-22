@@ -8,13 +8,17 @@ class Item {
   @HiveField(0)
   final String name;
   @HiveField(1)
-  final String acquisition;
+  final String acquisition_date;
   @HiveField(2)
   final String quantity_with_unit;
   @HiveField(3)
-  final String expiration;
+  final String expiration_date;
 
-  Item({this.name, this.acquisition, this.expiration, this.quantity_with_unit});
+  Item(
+      {this.name,
+      this.acquisition_date,
+      this.expiration_date,
+      this.quantity_with_unit});
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
   Map<String, dynamic> toJson() => _$ItemToJson(this);
@@ -24,8 +28,8 @@ class Item {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
-      'acquisition': acquisition,
-      'expiration': expiration,
+      'acquisition_date': acquisition_date,
+      'expiration_date': expiration_date,
       'quantity_with_unit': quantity_with_unit,
     };
   }
@@ -36,7 +40,7 @@ class Item {
   String toString() {
     return 'Item{name: $name, '
         'quantity_with_unit: $quantity_with_unit '
-        'acquisition: $acquisition, '
-        'expiration: $expiration)}';
+        'acquisition_date: $acquisition_date, '
+        'expiration_date: $expiration_date)}';
   }
 } //Inventory
