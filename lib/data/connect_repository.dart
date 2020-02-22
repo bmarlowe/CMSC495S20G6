@@ -116,6 +116,7 @@ Future addToInventory(context) async {
 
   var responseBody = json.encode(item);
   print(responseBody);
+
   if (offline) {
     //TODO make offline persistent data work
   } else {

@@ -47,14 +47,14 @@ Item _$ItemFromJson(Map<String, dynamic> json) {
   return Item(
     name: json['name'] as String,
     acquisition_date: json['acquisition_date'] as String,
-    expiration_date: json['expiration'] as String,
+    expiration_date: json['expiration_date'] as String,
     quantity_with_unit: json['quantity_with_unit'] as String,
   );
 }
 
 Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
       'name': instance.name,
-      'acquisition_date_date': instance.acquisition_date,
+      'acquisition_date': instance.acquisition_date,
       'quantity_with_unit': instance.quantity_with_unit,
       'expiration_date': instance.expiration_date,
     };
