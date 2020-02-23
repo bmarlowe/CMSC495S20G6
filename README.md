@@ -103,9 +103,53 @@ Interesting find today...makes my dart classes for me from the raw json input, n
 #Note!Testing with different OS on simulators to server on local machine: 
 Android: http://10.0.0.2:<PORT>/<URL>
 iOS: http://localhost:<PORT>/<URL>
+	
+With the backend up it is time to tackle post applications, I have the classes to parse the inventory from the get so post shouldn’t be so hard.  
+
+Nope I have a success and transfer pop-up showing but it will not actually show on the screen.  I can’t figure out what is wrong.  
+
+My educated guess is that it needs some sort of authentication to post?  This capability is not available yet.  So I will ask tonight about authentication.
+
+Nope...I had the date incorrectly formatted and the wrong json information Brad had this the whole time, I feel bad for changing it.  Once I got this straight with Tony, Joe and Brad during the Authentication conversation, I was able to produce a successful transfer of information.  I also saw the updated pantry listing on the simulator for both iOS and emulator for Android...YAY!
 
 @ Files produced as a result:  scan_screen.dart, upc_base_response.dart, upc_base_response.g.dart
 @ Files edited as a result:  application/android build.gradle, and pubspec.yaml, main.dart
+
+### basic authentication available on back end
+Experimented with actual authentication, Tony input basic auth into a workable back end for us to use.  This enabled us to alter the login_screen to us an actual authentication instead of using constants for authentication from another class.
+
+Brad found that the authentication is using Base64, and auth logic I attempted to use the link he found to authenticate: https://stackoverflow.com/questions/50244416/how-to-pass-basic-auth-credentials-in-api-call-for-a-flutter-mobile-application.  I had no success, and working with Brad on the issue also nothing for quite a few hours.
+
+During the conversation, I found that all authentication for basic authentication is held in the headers of a http get request encoded as indicated above.  This one fact I did not know as I was attempting to post username/password to the server...lesson learned.
+
+### Restructure the prototype
+
+Under the assets folder the following two files have been placed as holders for information.  These files should, in theory be local to the device once the application is loaded onto a device. The camera.dart file is not needed so it was erased from the project.  
+IN THEORY:
+Assets(Flutter File Structure)
+local_inventory.json - theory is this file will be written to when connection is unavailable
+server_inventory.json - theory is this file will be written as soon as the database is online and available.
+difference_inventory.json - theory is this file will be written with a merge of files then local and server inventory and server inventory can be updated
+
+New file structure as follows under the library: 
+
+main.dart
+data (File)
+connect_repository.dart - holds all functions for outside application connections
+local_repository.dart - holds all functions to read and write files to local OS
+models (File)
+inventory.dart/inventory.g.dart - holds the json parsing class for the inventory as acquired from the Application API and local files when raw json data is downloaded to the local file
+upc_base_response.dart/upc_base_response.g.dart - holds the json parsing class for the barcode as acquired from the UPC API
+users.dart/users.g.dart - holds the user information for possible future use with OAuth.
+screens(File)
+Home_screen - now incorporates widgets from old pantry_list.dart
+login_screen
+scan_screen
+search_screen - placeholder for search logic widgets
+Utils(File)
+fade_route.dart 
+
+This restructure caused a need for three global variables to be used throughout the application.  I placed those variables within the home_screen.dart. Removed thes variables from the home screen and placed them into the connect_repository file.
 
 ### search_screen.dart: 
 Flutter packages added: 
