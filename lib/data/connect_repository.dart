@@ -38,9 +38,9 @@ Future<String> login(loginData, BuildContext context) async {
   //
   // Some servers don't require the client to authenticate itself, in which case
   // these should be omitted.
-  final identifier = "lpIOmvC2DbGXVBH4XPxeAKVMHBleLvYvjirWGqig";
+  final identifier = "L06wkTUnzRxRJBJc6krhjl8deDmYzAivRAPF0f32";
   final secret =
-      "JuP8IpkOIjrQ6GjlyL9Xbi1UhDs7ZRa4oR93BiHvjA6UtB5xCJXNO5ae7I8uI4O0Q6d7YWxJJq7LW5j1GvirBeuZnG9E0EpirGoRN3nwKDBOrPKh48xgyhDwLkIMr8v7";
+      "sF2gNhfIXlkziMueSYBcqpbtZ9t9PCTXlMhk4fAfy6JI7nLfuiDS9UCKJrdSdRYhsTR7GzWrnCaWaM2FruMfNb5bEmEHlm3lyZ3TYunm13fX2K3BBCRTIE66pfXV0xo9";
 
   // Make a request to the authorization endpoint that will produce the fully
   // authenticated Client.
