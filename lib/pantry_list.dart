@@ -97,6 +97,7 @@ class InventoryList extends StatelessWidget {
   
   Widget build(BuildContext context) {
     List<Inventory> invSorted = sortInventory(context, inventory);
+    List<String> invNames = pullNames(invSorted);
     return GridView.builder(
       itemCount: invSorted.length,
       gridDelegate:
@@ -126,6 +127,15 @@ class InventoryList extends StatelessWidget {
         
       },
     );
+  }
+
+  List<String> pullNames(List<Inventory> inventory) {
+    List<Inventory> inv = inventory;
+    List<String> invNames = new List<String>();
+    for (var i=0; i<inv.length; i++) {
+      invNames.add(inv[i].name.toString());
+    }
+    return invNames;
   }
 
   Color colorCode(String expiration) {
