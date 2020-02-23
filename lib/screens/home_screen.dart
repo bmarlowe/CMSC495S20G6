@@ -25,8 +25,31 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pantry Application ' +
-            new DateFormat.yMMMMd('en_US').format(new DateTime.now())),
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              'Pantry Application',
+            ),
+            Visibility(
+              visible: true,
+              child: Text(
+                new DateFormat.yMMMMd('en_US').format(new DateTime.now()),
+                style: TextStyle(
+                  fontSize: 20.0,
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          new IconButton(
+            icon: Icon(Icons.highlight_off),
+            enableFeedback: true,
+            onPressed: () => logout(context),
+          ),
+        ],
       ),
       body: Center(
         child: widgetOptions.elementAt(selectedIndex),
@@ -120,17 +143,3 @@ class InventoryList extends StatelessWidget {
     );
   }
 }
-
-/**
- *  in pubspec.yaml:
-    dependencies:
-    flutter:
-    sdk: flutter
-    http: ^0.12.0
-    json_annotation: ^2.0.0
-    dev_dependencies:
-    flutter_test:
-    sdk: flutter
-    build_runner: ^1.0.0
-    json_serializable: ^2.0.0
- */

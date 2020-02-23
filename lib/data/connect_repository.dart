@@ -15,7 +15,7 @@ import '../screens/login_screen.dart';
 import '../utils/fade_route.dart';
 
 bool offline = false;
-var client;
+var client = new http.Client();
 
 //static String url = 'http://<YOUR IP>:8000/item'; //Testing real device
 //static String url = 'http://localhost:8000/item'; //iOS TESTING
@@ -24,42 +24,39 @@ String url = 'http://10.0.2.2:8000/item'; //ANDROID TESTING
 
 Future<String> login(loginData, BuildContext context) async {
   // This URL is an endpoint that's provided by the authorization server. It's
-// usually included in the server's documentation of its OAuth2 API.
+  // usually included in the server's documentation of its OAuth2 API.
   final authorizationEndpoint = Uri.parse("http://10.0.2.2:8000/o/token/");
 
-// The user should supply their own username and password.
+  // The user should supply their own username and password.
   final username = '${(loginData.name)}';
   final password = '${(loginData.password)}';
 
-// The authorization server may issue each client a separate client
-// identifier and secret, which allows the server to tell which client
-// is accessing it. Some servers may also have an anonymous
-// identifier/secret pair that any client may use.
-//
-// Some servers don't require the client to authenticate itself, in which case
-// these should be omitted.
+  // The authorization server may issue each client a separate client
+  // identifier and secret, which allows the server to tell which client
+  // is accessing it. Some servers may also have an anonymous
+  // identifier/secret pair that any client may use.
+  //
+  // Some servers don't require the client to authenticate itself, in which case
+  // these should be omitted.
   final identifier = "Hx6awFy7lQ7taut0vvslbHGRz0AUQWB3OpE5f86U";
   final secret =
       "7JkcdrekwdA2y5ptrylHaGsuzK5PzKiPnD3szsIGHQnxWNNBfP6VrFUcHZVSUkhn9gURAI7U8R4rTCWdqm8bBENh1xS3g14DfaMatJMA5YbI5T455mte9dYRl2rjl82p";
 
-// Make a request to the authorization endpoint that will produce the fully
-// authenticated Client.
+  // Make a request to the authorization endpoint that will produce the fully
+  // authenticated Client.
   client = await oauth2.resourceOwnerPasswordGrant(
       authorizationEndpoint, username, password,
       identifier: identifier, secret: secret);
 
-// Once you have the client, you can use it just like any other HTTP client.
+  // Once you have the client, you can use it just like any other HTTP client.
   var response;
 
   try {
     await Future<void>.delayed(Duration(seconds: 1));
-    response = await client.get(url).timeout(const Duration(seconds: 10));
-  } on TimeoutException catch (e) {
-    _alertFailLogin(context, 'Failed to login to server. ' + e.toString());
-  } on SocketException catch (e) {
+    response = await client.get(url).timeout(Duration(seconds: 10));
+  } on Exception catch (e) {
     _alertFailLogin(context, 'Failed to login to server. ' + e.toString());
   }
-
   if (response.statusCode == 200) {
     print(response.toString());
     return null;
@@ -71,6 +68,11 @@ Future<String> login(loginData, BuildContext context) async {
     throw Exception('Failed to load to Server Inventory');
   }
 } //login
+
+logout(context) {
+  client.close();
+  Navigator.pushReplacementNamed(context, "/");
+}
 
 Future<List<Item>> fetchInventory(BuildContext context) async {
   var response;
@@ -107,13 +109,26 @@ List<Item> parseItems(String responseBody) {
 }
 
 Future addToInventory(context) async {
-  Item item = new Item(
-    name: "${Connections.itemController.text}",
-    quantity_with_unit: "${Connections.unitController.text}",
-    acquisition_date: "${Connections.acquisition.substring(0, 10)}",
-    expiration_date: "${Connections.expiration.substring(0, 10)}",
-  );
-
+  Item item;
+  //try statement fo check for null items, show pop-up failure notices
+  try {
+    item = new Item(
+      name: "${Connections.itemController.text}",
+      quantity_with_unit: "${Connections.unitController.text}",
+      acquisition_date:
+          "${Connections.acquisitionController.text.substring(0, 10)}",
+      expiration_date:
+          "${Connections.expirationController.text.substring(0, 10)}",
+    );
+    if ("${Connections.itemController.text}" == null) {
+      throw new RangeError("item name is null");
+    }
+  } on RangeError {
+    _alertEmpty(
+        context,
+        "Item Name and Dates must be filled., "
+        "Please check your input and try again");
+  }
   var responseBody = json.encode(item);
   print(responseBody);
 
@@ -153,7 +168,7 @@ Future<dynamic> fetchBarcodeInfo(http.Client client, String barcode) async {
   }
 } //fetchBarcodeInfo
 
-void _alertSuccess(context, String message) {
+void _alertSuccess(BuildContext context, String message) {
   new Alert(
     context: context,
     type: AlertType.info,
@@ -174,7 +189,7 @@ void _alertSuccess(context, String message) {
   ).show();
 } //_alertSuccess
 
-void _alertFail(context, String message) {
+void _alertFail(BuildContext context, String message) {
   new Alert(
     context: context,
     type: AlertType.error,
@@ -207,7 +222,7 @@ void _alertFailLogin(context, String message) {
           ),
           color: Colors.teal,
           onPressed: () => Navigator.of(context).pushReplacement(
-              FadePageRoute(builder: (context) => LoginScreen()))),
+              FadePageRoute(builder: (BuildContext context) => LoginScreen()))),
       DialogButton(
         child: Text(
           "Work Offline",
@@ -221,6 +236,25 @@ void _alertFailLogin(context, String message) {
 
 void _workOffline(context) {
   offline = true;
-  Navigator.of(context)
-      .pushReplacement(FadePageRoute(builder: (context) => HomeScreen()));
+  Navigator.of(context).pushReplacement(
+      FadePageRoute(builder: (BuildContext context) => HomeScreen()));
 }
+
+void _alertEmpty(context, String message) {
+  new Alert(
+    context: context,
+    type: AlertType.error,
+    title: "OOPS!",
+    desc: message,
+    buttons: [
+      DialogButton(
+        child: Text(
+          "OK",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        color: Colors.teal,
+        onPressed: () => Navigator.pop(context),
+      ),
+    ],
+  ).show();
+} //_alertEmpty

@@ -6,7 +6,6 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../models/upc_base_response.dart';
 import '../data/connect_repository.dart';
@@ -15,11 +14,8 @@ class Connections {
   /// Inputs
   static var itemController = TextEditingController();
   static var unitController = TextEditingController();
-
-  ///Used for JSON compatibility
-  static String acquisition;
-  static String expiration;
-  static String unit;
+  static var expirationController = TextEditingController();
+  static var acquisitionController = TextEditingController();
 }
 
 class Scan extends StatefulWidget {
@@ -33,6 +29,7 @@ class ScanState extends State<Scan> {
   http.Client client = new http.Client();
   BaseResponse baseResponse = new BaseResponse();
   var formatter = new DateFormat('yyyy-MM-dd');
+  BuildContext context;
 
   @override
   void dispose() {
@@ -40,6 +37,8 @@ class ScanState extends State<Scan> {
     // widget tree.
     Connections.itemController.dispose();
     Connections.unitController.dispose();
+    Connections.acquisitionController.dispose();
+    Connections.expirationController.dispose();
     super.dispose();
   }
 
@@ -48,35 +47,28 @@ class ScanState extends State<Scan> {
     super.initState();
     Connections.itemController.addListener(_itemController);
     Connections.unitController.addListener(_unitController);
+    Connections.expirationController.addListener(_acquisitionController);
+    Connections.acquisitionController.addListener(_expirationController);
   }
 
   _itemController() {
     print("${Connections.itemController.text}");
-    if (Connections.itemController.text == null) {
-      _alertNull(context);
-    }
   }
 
   _unitController() {
     print("${Connections.unitController.text}");
   }
 
-  _expiration(context, dt) {
-    Connections.expiration = dt.toString();
-    if (Connections.expiration == null) {
-      _alertNull(context);
-    }
+  _acquisitionController() {
+    print("${Connections.acquisitionController.text}");
   }
 
-  _acquisition(context, dt) {
-    Connections.acquisition = dt.toString();
-    if (Connections.acquisition == null) {
-      _alertNull(context);
-    }
+  _expirationController() {
+    print("${Connections.expirationController.text}");
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Scaffold(
         key: scaffoldKey,
         body: Center(
@@ -121,6 +113,7 @@ class ScanState extends State<Scan> {
           padding: const EdgeInsets.only(left: 3),
           child: DateTimeField(
             format: formatter,
+            controller: Connections.acquisitionController,
             decoration: InputDecoration(labelText: 'Acquisition Date'),
             onShowPicker: (context, currentValue) {
               return showDatePicker(
@@ -129,13 +122,15 @@ class ScanState extends State<Scan> {
                   initialDate: currentValue ?? DateTime.now(),
                   lastDate: DateTime(DateTime.now().year + 40));
             },
-            onChanged: (dt) => setState(() => _acquisition(context, dt)),
+            onChanged: (dt) =>
+                setState(() => Connections.acquisitionController.text),
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 3),
           child: DateTimeField(
             format: formatter,
+            controller: Connections.expirationController,
             decoration: InputDecoration(
               labelText: 'Expiration Date',
             ),
@@ -146,7 +141,8 @@ class ScanState extends State<Scan> {
                   initialDate: currentValue ?? DateTime.now(),
                   lastDate: DateTime(DateTime.now().year + 40));
             },
-            onChanged: (dt) => setState(() => _expiration(context, dt)),
+            onChanged: (dt) =>
+                setState(() => Connections.expirationController.text),
           ),
         ),
         Padding(
@@ -188,23 +184,4 @@ class ScanState extends State<Scan> {
       setState(() => this.barcode = 'Unknown error: $e');
     }
   }
-
-  void _alertNull(context) {
-    new Alert(
-      context: context,
-      type: AlertType.error,
-      title: "ERROR",
-      desc: "This field must have an entry.  Please try again.",
-      buttons: [
-        DialogButton(
-          child: Text(
-            "TRY AGAIN",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          color: Colors.teal,
-          onPressed: () => Navigator.pop(context),
-        ),
-      ],
-    ).show();
-  } //_alertFail
 }
