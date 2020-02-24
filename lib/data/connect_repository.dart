@@ -19,13 +19,13 @@ var client = new http.Client();
 
 //static String url = 'http://<YOUR IP>:8000/item'; //Testing real device
 //static String url = 'http://localhost:8000/item'; //iOS TESTING
-String url = 'http://10.0.2.2:8000/item'; //ANDROID TESTING
+String url = 'http://10.0.3.2:8000/item'; //ANDROID TESTING
 //static String url ='https://17dfcfcc-63d3-456a-a5d8-c5f394434f7c.mock.pstmn.io';
 
 Future<String> login(loginData, BuildContext context) async {
   // This URL is an endpoint that's provided by the authorization server. It's
   // usually included in the server's documentation of its OAuth2 API.
-  final authorizationEndpoint = Uri.parse("http://10.0.2.2:8000/o/token/");
+  final authorizationEndpoint = Uri.parse("http://10.0.3.2:8000/o/token/");
 
   // The user should supply their own username and password.
   final username = '${(loginData.name)}';
