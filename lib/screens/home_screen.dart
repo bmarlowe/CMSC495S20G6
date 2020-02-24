@@ -114,32 +114,92 @@ class InventoryList extends StatelessWidget {
   InventoryList({Key key, this.inventory}) : super(key: key);
 
   Widget build(BuildContext context) {
+    List<Item> invSorted = sortInventory(context, inventory);
     return GridView.builder(
-      itemCount: inventory.length,
+      itemCount: invSorted.length,
       gridDelegate:
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemBuilder: (context, index) {
-        return Center(
-            child: Card(
+        Color cardColor = colorCode(invSorted[index].expiration_date);
+        return Card(
+        color: cardColor,
+        child: SizedBox(
+          width: 200,
+          height: 100,
+          //margin: new EdgeInsets.all(1),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Center(
-                child: ListTile(
-                  title: Text(inventory[index].name.toString()),
-                ),
+            //mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(invSorted[index].name.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
               ),
-              Column(children: <Widget>[
-                Text('Unit: ' + inventory[index].quantity_with_unit.toString()),
-                Text('Expiration: ' +
-                    inventory[index].expiration_date.toString()),
-                Text('Acquisition: ' +
-                    inventory[index].acquisition_date.toString()),
-              ])
-            ],
-          ),
-        ));
+              //Text('Quantity: ' + inventory[index].quantity.toString()),
+              Text('Acquisition: ' + invSorted[index].acquisition_date.toString()),
+              Text('Expiration: ' + invSorted[index].expiration_date.toString()),
+            ]
+          )
+        )
+      );
+        
       },
     );
+  }
+
+  Color colorCode(String expiration) {
+    var todayRaw = new DateTime.now();
+    DateTime today = new DateTime(todayRaw.year, todayRaw.month, todayRaw.day);
+    //print(today);
+    String yearStr = expiration.substring(0,4);
+    String monthStr = expiration.substring(5,7);
+    String dayStr = expiration.substring(8,10);
+    int yearInt = int.parse(yearStr);
+    int monthInt = int.parse(monthStr);
+    int dayInt = int.parse(dayStr);
+    DateTime itemExpire = new DateTime(yearInt, monthInt, dayInt);
+    //print(itemExpire);
+    int check = itemExpire.compareTo(today);
+    //print(check);
+    if(check <= 0) {
+      return new Color(0xFFFF2222);
+    }
+    var difference = itemExpire.difference(today);
+    //print(difference.inDays);
+    if(difference.inDays <= 7) {
+      return new Color(0xFFFFFF33);
+    }
+    return new Color(0xFF11BB33);
+  }
+
+  List<Item> sortInventory(BuildContext context, List<Item> inventory) {
+    List<Item> sortedInventory = new List<Item>();
+    List<Item> inv = inventory;
+    //List<int> expirationOrder;
+    bool allRed = false;
+    bool allYellow = false;
+    bool allGreen = false;
+    //TODO - This is very ugly, needs rewritten
+    for(var i=0; i<inv.length; i++) {
+      Color colorCheck = colorCode(inv[i].expiration_date);
+      if (colorCheck == Color(0xFFFF2222)) {
+        sortedInventory.add(inv[i]);
+      }
+    }
+    allRed = true;
+    for(var i=0; i<inv.length; i++) {
+      Color colorCheck = colorCode(inv[i].expiration_date);
+      if (colorCheck == Color(0xFFFFFF33)) {
+        sortedInventory.add(inv[i]);
+      }
+    }
+    allYellow = true;
+    for(var i=0; i<inv.length; i++) {
+      Color colorCheck = colorCode(inv[i].expiration_date);
+      if (colorCheck == Color(0xFF11BB33)) {
+        sortedInventory.add(inv[i]);
+      }
+    }
+    allGreen = true;
+    return sortedInventory;
   }
 }
