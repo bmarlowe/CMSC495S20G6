@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
+import 'search_screen.dart';
 import 'scan_screen.dart';
+import 'view_item.dart';
 import 'package:pantry/data/connect_repository.dart';
 import 'package:pantry/models/item.dart';
 
@@ -17,7 +19,7 @@ class HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
   final widgetOptions = [
     PantryList(),
-    Text('Search/Filter'),
+    Search(),
     Scan(),
   ];
 
@@ -121,27 +123,35 @@ class InventoryList extends StatelessWidget {
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
       itemBuilder: (context, index) {
         Color cardColor = colorCode(invSorted[index].expiration_date);
-        return Card(
-        color: cardColor,
-        child: SizedBox(
-          width: 200,
-          height: 100,
-          //margin: new EdgeInsets.all(1),
-          child: Column(
-            //mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(invSorted[index].name.toString(),
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)
-              ),
-              //Text('Quantity: ' + inventory[index].quantity.toString()),
-              Text('Acquisition: ' + invSorted[index].acquisition_date.toString()),
-              Text('Expiration: ' + invSorted[index].expiration_date.toString()),
-            ]
-          )
-        )
-      );
-        
+        return GestureDetector(
+              onLongPress: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewItem(item: invSorted[index]),
+                  ),
+                );
+              },
+                child: Card(
+                  color: cardColor,
+                  child: SizedBox(
+                    width: 200,
+                    height: 100,
+                    //margin: new EdgeInsets.all(1),
+                    child: Column(
+                        //mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(invSorted[index].name.toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text('Quantity: ' +
+                              inventory[index].quantity_with_unit.toString()),
+                          Text('Acquisition: ' +
+                              invSorted[index].acquisition_date.toString()),
+                          Text('Expiration: ' +
+                              invSorted[index].expiration_date.toString()),
+                        ]))));
       },
     );
   }
@@ -150,9 +160,9 @@ class InventoryList extends StatelessWidget {
     var todayRaw = new DateTime.now();
     DateTime today = new DateTime(todayRaw.year, todayRaw.month, todayRaw.day);
     //print(today);
-    String yearStr = expiration.substring(0,4);
-    String monthStr = expiration.substring(5,7);
-    String dayStr = expiration.substring(8,10);
+    String yearStr = expiration.substring(0, 4);
+    String monthStr = expiration.substring(5, 7);
+    String dayStr = expiration.substring(8, 10);
     int yearInt = int.parse(yearStr);
     int monthInt = int.parse(monthStr);
     int dayInt = int.parse(dayStr);
@@ -160,12 +170,12 @@ class InventoryList extends StatelessWidget {
     //print(itemExpire);
     int check = itemExpire.compareTo(today);
     //print(check);
-    if(check <= 0) {
+    if (check <= 0) {
       return new Color(0xFFFF2222);
     }
     var difference = itemExpire.difference(today);
     //print(difference.inDays);
-    if(difference.inDays <= 7) {
+    if (difference.inDays <= 7) {
       return new Color(0xFFFFFF33);
     }
     return new Color(0xFF11BB33);
@@ -179,21 +189,21 @@ class InventoryList extends StatelessWidget {
     bool allYellow = false;
     bool allGreen = false;
     //TODO - This is very ugly, needs rewritten
-    for(var i=0; i<inv.length; i++) {
+    for (var i = 0; i < inv.length; i++) {
       Color colorCheck = colorCode(inv[i].expiration_date);
       if (colorCheck == Color(0xFFFF2222)) {
         sortedInventory.add(inv[i]);
       }
     }
     allRed = true;
-    for(var i=0; i<inv.length; i++) {
+    for (var i = 0; i < inv.length; i++) {
       Color colorCheck = colorCode(inv[i].expiration_date);
       if (colorCheck == Color(0xFFFFFF33)) {
         sortedInventory.add(inv[i]);
       }
     }
     allYellow = true;
-    for(var i=0; i<inv.length; i++) {
+    for (var i = 0; i < inv.length; i++) {
       Color colorCheck = colorCode(inv[i].expiration_date);
       if (colorCheck == Color(0xFF11BB33)) {
         sortedInventory.add(inv[i]);
