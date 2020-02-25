@@ -37,7 +37,7 @@ class HomeScreenState extends State<HomeScreen> {
             Visibility(
               visible: true,
               child: Text(
-                new DateFormat.yMMMMd('en_US').format(new DateTime.now()),
+                new DateFormat.yMMMEd('en_US').format(new DateTime.now()),
                 style: TextStyle(
                   fontSize: 20.0,
                 ),
@@ -156,6 +156,10 @@ class InventoryList extends StatelessWidget {
     );
   }
 
+  List<Item> getInventory() {
+    return this.inventory;
+  }
+
   Color colorCode(String expiration) {
     var todayRaw = new DateTime.now();
     DateTime today = new DateTime(todayRaw.year, todayRaw.month, todayRaw.day);
@@ -212,4 +216,5 @@ class InventoryList extends StatelessWidget {
     allGreen = true;
     return sortedInventory;
   }
+  
 }
