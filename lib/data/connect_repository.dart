@@ -58,10 +58,9 @@ Future<String> login(loginData, BuildContext context) async {
   //
   // Some servers don't require the client to authenticate itself, in which case
   // these should be omitted.
-  final identifier = "swMGjzCf9s92ji4LHaFeDtTKS93L3py2zOcM3BkJ";
+  final identifier = "L06wkTUnzRxRJBJc6krhjl8deDmYzAivRAPF0f32";
   final secret =
-      "gXWHX7R3qzOU4ykaf9oUb2uuqoijVnEYmI9AobXjzXUHt862qtawTv6bdqxrAhNrmgUFeVptOXe981uho2qUuEw7i2fIliH5dsQjsjrqcrobes7FLMaWWsWXzvFHdezt";
-
+      "sF2gNhfIXlkziMueSYBcqpbtZ9t9PCTXlMhk4fAfy6JI7nLfuiDS9UCKJrdSdRYhsTR7GzWrnCaWaM2FruMfNb5bEmEHlm3lyZ3TYunm13fX2K3BBCRTIE66pfXV0xo9";
   // Make a request to the authorization endpoint that will produce the fully
   // authenticated Client.
   client = await oauth2.resourceOwnerPasswordGrant(
