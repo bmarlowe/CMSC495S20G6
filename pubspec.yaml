@@ -48,6 +48,9 @@ dependencies:
   # allow calendar selection for dates
   datetime_picker_formfield: ^1.0.0
 
+  # check the connection to server
+  data_connection_checker: ^0.3.4
+
   # database experiment
   sqflite: 1.2.1
   hive: ^1.0.0

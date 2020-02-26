@@ -18,13 +18,13 @@ import 'local_save_file.dart';
 bool offline = false;
 var client = new http.Client();
 
-//static String url = 'http://<YOUR IP>:8000/item'; //Testing real device
-//static String url = 'http://localhost:8000/item'; //iOS TESTING
-String url = 'http://10.0.2.2:8000/item'; //ANDROID TESTING
-//static String url ='https://17dfcfcc-63d3-456a-a5d8-c5f394434f7c.mock.pstmn.io';
+String url = 'http://172.16.10.60:8000'; //Testing real device
+//String url = 'http://localhost:8000'; //iOS TESTING
+//String url = 'http://10.0.2.2:8000'; //ANDROID TESTING
+//String url ='https://17dfcfcc-63d3-456a-a5d8-c5f394434f7c.mock.pstmn.io';
 
 Future<String> register(loginData, BuildContext context) async {
-  final registrationEndpoint = Uri.parse("http://10.0.2.2:8000/register/");
+  final registrationEndpoint = Uri.parse(url + "/register/");
   var response;
   await Future<void>.delayed(Duration(seconds: 1));
   response = await http.post(registrationEndpoint, body: {
@@ -34,18 +34,23 @@ Future<String> register(loginData, BuildContext context) async {
   if (response.statusCode == 201) {
     _alertRegister(context, "You have completed registration, please login.");
     return null;
-  } else {
+  } else if (response.statusCode != null) {
     print("Not Registered, try again");
     _alertFailLogin(
         context, 'Failed to register to Pantry Application, Please log in');
     throw Exception('Failed to register to Pantry Application, Please log in');
+  } else if (SocketException != null || TimeoutException != null) {
+    _alertFailLogin(
+        context,
+        'Failed to register to Pantry Application, '
+        'Please check your internet connection.');
   }
 } //register
 
 Future<String> login(loginData, BuildContext context) async {
   // This URL is an endpoint that's provided by the authorization server. It's
   // usually included in the server's documentation of its OAuth2 API.
-  final authorizationEndpoint = Uri.parse("http://10.0.2.2:8000/o/token/");
+  final authorizationEndpoint = Uri.parse(url + "/o/token/");
 
   // The user should supply their own username and password.
   final username = '${(loginData.name)}';
@@ -64,16 +69,13 @@ Future<String> login(loginData, BuildContext context) async {
 
   // Make a request to the authorization endpoint that will produce the fully
   // authenticated Client.
-  client = await oauth2.resourceOwnerPasswordGrant(
-      authorizationEndpoint, username, password,
-      identifier: identifier, secret: secret);
 
   // Once you have the client, you can use it just like any other HTTP client.
   var response;
-
   try {
-    await Future<void>.delayed(Duration(seconds: 1));
-    response = await client.get(url).timeout(Duration(seconds: 10));
+    client = await oauth2.resourceOwnerPasswordGrant(
+        authorizationEndpoint, username, password,
+        identifier: identifier, secret: secret);
   } on oauth2.AuthorizationException catch (e) {
     _alertFailLogin(
         context,
@@ -82,12 +84,23 @@ Future<String> login(loginData, BuildContext context) async {
             e.toString());
   } on TimeoutException catch (e) {
     _alertFailLogin(context, 'Failed to login to server. ' + e.toString());
+  } on SocketException catch (e) {
+    _alertFailLogin(context, 'Failed to login to server. ' + e.toString());
+  } on http.ClientException catch (e) {
+    _alertFailLogin(context, 'Failed to login to server. ' + e.toString());
+  } on Exception catch (e) {
+    _alertFailLogin(context, 'Failed to login to server. ' + e.toString());
   }
+  response =
+      await client.get(url + "/item").timeout(Duration(milliseconds: 1000));
   if (response.statusCode == 200) {
     print(response.toString());
     Navigator.of(context)
         .pushReplacement(FadePageRoute(builder: (context) => HomeScreen()));
     return null;
+  } else if (response == null) {
+    throw new Exception(
+        'HTTP request failed, statusCode: ${response?.statusCode}');
   } else {
     print("Not Logged In to server");
     print(response.body);
@@ -110,7 +123,7 @@ Future<List<Item>> fetchInventory(BuildContext context) async {
   } else {
     try {
       await Future<void>.delayed(Duration(seconds: 1));
-      response = await client.get(url, headers: {
+      response = await client.get(url + "/item", headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
       }).timeout(const Duration(seconds: 10));
@@ -163,7 +176,7 @@ Future addToInventory(context) async {
   if (offline) {
     //TODO make offline persistent data work
   } else {
-    final response = await client.post(url,
+    final response = await client.post(url + "/item",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -192,7 +205,7 @@ Future<dynamic> fetchBarcodeInfo(http.Client client, String barcode) async {
     var baseResponse = BaseResponse.fromJson(responseBody);
     return baseResponse;
   } else {
-    throw Exception('Failed to load item from website');
+    throw Exception('No information for this item is available.');
   }
 } //fetchBarcodeInfo
 

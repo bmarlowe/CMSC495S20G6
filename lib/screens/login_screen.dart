@@ -4,7 +4,6 @@ import 'package:flutter/scheduler.dart' show timeDilation;
 
 import '../data/connect_repository.dart';
 
-
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
 
@@ -34,7 +33,6 @@ class LoginScreenState extends State<LoginScreen> {
             'of the printing and typesetting industry',
         recoverPasswordSuccess: 'Password recovered successfully',
       ),
-      //TODO - More robust form validation for login
       emailValidator: (value) {
         if (!value.contains('@') || !value.endsWith('.com')) {
           return "Email must contain '@' and end with '.com'";
