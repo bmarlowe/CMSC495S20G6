@@ -8,28 +8,25 @@ import '../utils/fade_route.dart';
 
 File jsonFile;
 Directory dir;
-String local = "local_inventory.json";
 String server = "server_inventory.json";
 bool fileExists = false;
 
-void getDirectory() async {
+Future getDirectory() async {
   /*to store files temporary we use getTemporaryDirectory() but we want
     permanent storage so we use getApplicationDocumentsDirectory() */
-  await getApplicationSupportDirectory().then((Directory directory) {
-    dir = directory;
-    jsonFile = new File(dir.path + "/" + local);
-    fileExists = jsonFile.existsSync();
-  });
+  String dir = (await getApplicationSupportDirectory()).path;
+  print("Directory from getDirectory" + dir);
+  jsonFile = new File(dir + "/" + server);
+  fileExists = jsonFile.existsSync();
 }
 
 void existingFile(context) async {
-  getDirectory();
+  await getDirectory();
   if (fileExists) {
     print("File exists");
   } else {
     print("File does not exist!");
-    createFile(dir, local);
-    _alertCreatingFile(context);
+    createFile(context, dir);
   }
 }
 
@@ -37,7 +34,7 @@ Future<String> readLocalInventoryFile(context) async {
   existingFile(context);
   try {
     String dir = (await getApplicationSupportDirectory()).path;
-    Future<String> body = File(dir + "/" + local).readAsString();
+    Future<String> body = File(dir + "/" + server).readAsString();
     return body;
   } catch (e) {
     print(e.toString());
@@ -45,13 +42,11 @@ Future<String> readLocalInventoryFile(context) async {
   }
 } //readLocalInventoryFile
 
-Future<void> writeItem(response) async {
+Future<void> writeItem(response, context) async {
   try {
-    final filename = 'local_inventory.json';
     String dir = (await getApplicationSupportDirectory()).path;
-    File(dir + "/" + filename)
-        .writeAsStringSync(response, mode: FileMode.append);
-    print("write item try statement: " + dir + "/" + filename);
+    File(dir + "/" + server).writeAsStringSync(response, mode: FileMode.append);
+    print("write item try statement: " + dir + "/" + server);
     return null;
   } catch (e) {
     print(e.toString());
@@ -59,19 +54,22 @@ Future<void> writeItem(response) async {
   }
 } //writeItem
 
-Future<void> writeInventoryFromServer(response) async {
+Future<void> writeInventoryFromServer(response, context) async {
+  existingFile(context);
   try {
-    final filename = 'server_inventory.json';
     String dir = (await getApplicationSupportDirectory()).path;
-    File(dir + "/" + filename).writeAsStringSync(response);
+    print("Directory from writeInventoryFromServer: " + dir);
+    print(response);
+    File(dir + "/" + server).writeAsStringSync(response);
   } catch (e) {
     print(e.toString());
   }
 } //writeInventoryFromServer
 
-void createFile(Directory dir, String fileName) {
+void createFile(context, Directory dir) {
   print("Creating file!");
-  File file = new File(dir.path + "/" + fileName);
+  File file = new File(dir.toString() + "/" + server);
+  _alertCreatingFile(context);
   file.createSync();
   fileExists = true;
 }

@@ -3,7 +3,9 @@ import 'screens/scan_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 
-void main() => runApp(new MyApp());
+void main() {
+  runApp(new MyApp());
+}
 
 class MyApp extends StatelessWidget {
   @override

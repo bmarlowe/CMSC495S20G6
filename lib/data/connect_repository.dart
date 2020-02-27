@@ -19,8 +19,8 @@ bool offline = false;
 var client = new http.Client();
 
 String url = 'http://172.16.10.60:8000'; //Testing real device
-//String url = 'http://localhost:8000'; //iOS TESTING
-//String url = 'http://10.0.2.2:8000'; //ANDROID TESTING
+//String url = 'http://localhost:8000'; //iOS Simulator TESTING
+//String url = 'http://10.0.2.2:8000'; //ANDROID Emulator TESTING
 //String url ='https://17dfcfcc-63d3-456a-a5d8-c5f394434f7c.mock.pstmn.io';
 
 Future<String> register(loginData, BuildContext context) async {
@@ -45,6 +45,7 @@ Future<String> register(loginData, BuildContext context) async {
         'Failed to register to Pantry Application, '
         'Please check your internet connection.');
   }
+  return null;
 } //register
 
 Future<String> login(loginData, BuildContext context) async {
@@ -117,8 +118,8 @@ logout(context) {
 Future<List<Item>> fetchInventory(BuildContext context) async {
   var response;
   if (offline) {
-    //TODO make offline persistent data work
-    return null;
+    response = readLocalInventoryFile(context) as String;
+    return parseItems(response);
   } else {
     try {
       await Future<void>.delayed(Duration(seconds: 1));
@@ -133,6 +134,38 @@ Future<List<Item>> fetchInventory(BuildContext context) async {
       _alertFail(context, 'Failed to load server pantry. ' + e.toString());
     }
     if (response.statusCode == 200) {
+      writeInventoryFromServer(response.body, context);
+      return parseItems(response.body);
+    } else {
+      // If that call was not successful, throw an error.
+      _alertFail(context,
+          'Did not connect to server ' + response.statusCode.toString());
+      throw Exception('Failed to load pantry items');
+    }
+  }
+}
+
+Future<List<Item>> fetchSearch(
+    BuildContext context, String searchString) async {
+  var response;
+  if (offline) {
+    response = readLocalInventoryFile(context) as String;
+    return parseItems(response);
+  } else {
+    try {
+      await Future<void>.delayed(Duration(seconds: 1));
+      response = await client.get(url + "/item?name=" + searchString, headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      }).timeout(const Duration(seconds: 10));
+      await Future<void>.delayed(Duration(seconds: 1));
+    } on TimeoutException catch (e) {
+      _alertFail(context, 'Failed to load server pantry. ' + e.toString());
+    } on SocketException catch (e) {
+      _alertFail(context, 'Failed to load server pantry. ' + e.toString());
+    }
+    if (response.statusCode == 200) {
+      writeInventoryFromServer(response.body, context);
       return parseItems(response.body);
     } else {
       // If that call was not successful, throw an error.
@@ -173,7 +206,8 @@ Future addToInventory(context) async {
   print(responseBody);
 
   if (offline) {
-    //TODO make offline persistent data work
+    writeItem(responseBody, context);
+    print(readLocalInventoryFile(context).toString());
   } else {
     final response = await client.post(url + "/item",
         headers: {
@@ -185,7 +219,6 @@ Future addToInventory(context) async {
       _alertSuccess(context, 'Item sucessfully added to inventory');
       return response;
     } else {
-      writeItem(responseBody);
       print(response.body);
       print(responseBody);
       print(response.statusCode);
@@ -204,7 +237,7 @@ Future<dynamic> fetchBarcodeInfo(http.Client client, String barcode) async {
     var baseResponse = BaseResponse.fromJson(responseBody);
     return baseResponse;
   } else {
-    throw Exception('No information for this item is available.');
+    throw Exception('No information is available for this UPC.');
   }
 } //fetchBarcodeInfo
 
