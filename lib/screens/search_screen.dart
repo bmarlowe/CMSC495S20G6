@@ -1,88 +1,96 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
 import 'package:pantry/models/item.dart';
-import 'home_screen.dart';
+//import 'home_screen.dart';
+import 'package:pantry/data/connect_repository.dart';
+import 'scan_screen.dart';
 
-class Search extends StatelessWidget {
-final List<Item> foundItems;
-
-  Search({Key key, this.foundItems}) : super(key: key);
+class Search extends StatefulWidget {
 
   @override
-  Widget build(BuildContext context) {
-    //final inventory = InventoryList.of(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              'Search...',
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            enableFeedback: true,
-            onPressed: () {
-              showSearch(
-                context: context,
-                //delegate: PantrySearchDelegate(inventory),
-              );
-            },
-          ),
-        ],
-      )
-    );
-  }
+  SearchState createState() => new SearchState();
 
 }
-//TODO - Need a way for the search delegate to see the InventoryList inventory.
-class PantrySearchDelegate extends SearchDelegate<String> {
-  final InventoryList inventory;
-  List<Item> foundItems;
 
-  PantrySearchDelegate(this.inventory);
+class SearchState extends State<Search> {
+
+  final List<Item> foundItems = new List<Item>();
+  BuildContext context;
 
   @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
+  void dispose() {
+    Connections.searchController.dispose();
+    super.dispose();
   }
 
   @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null);
-      },
+  void initState() {
+    super.initState();
+    Connections.searchController.addListener(_searchController);
+  }
+
+  _searchController() {
+    print("${Connections.searchController.text}");
+  }
+  
+  @override
+  Widget build(context) {
+    return Scaffold(
+        body: Center(
+            child: SingleChildScrollView(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              pantrySearchWidget(context),
+              new Container(
+                child: new RaisedButton(
+                    onPressed: () {print("searching...");},
+                    color: Colors.teal,
+                    child: new Text("Search")),
+                padding: const EdgeInsets.all(8.0),
+              ),
+            ],
+          ),
+        )));
+  }
+
+  Widget pantrySearchWidget(context) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.only(left: 3, bottom: 4.0),
+          child: TextField(
+              controller: Connections.searchController,
+              decoration: InputDecoration(
+                labelText: 'Item name:',
+              )),
+        ),
+      ],
     );
   }
 
-  @override
-  Widget buildResults(BuildContext context) {
-    for (var i=0; i<inventory.inventory.length; i++) {
-      if (inventory.inventory[i].name.toLowerCase() == "chicken") {
-        this.foundItems.add(inventory.inventory[i]);
-        print("item found!");
+  /*Future scan() async {
+    try {
+      String barcode = await BarcodeScanner.scan();
+      setState(() => this.barcode = barcode);
+      baseResponse = await fetchBarcodeInfo(client, barcode);
+      if (baseResponse != null) {
+        setState(() => Connections.itemController =
+            TextEditingController(text: '${baseResponse.items[0].title}'));
       }
+    } on PlatformException catch (e) {
+      if (e.code == BarcodeScanner.CameraAccessDenied) {
+        setState(() {
+          this.barcode = 'The user did not grant the camera permission!';
+        });
+      } else {
+        setState(() => this.barcode = 'Unknown error: $e');
+      }
+    } on FormatException {
+      setState(() => this.barcode =
+          'null (User returned using the "back"-button before scanning anything. Result)');
+    } catch (e) {
+      setState(() => this.barcode = 'Unknown error: $e');
     }
-    return Container();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return Container();
-  }
+  }*/
 }

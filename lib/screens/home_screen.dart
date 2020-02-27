@@ -27,6 +27,7 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,23 +35,29 @@ class HomeScreenState extends State<HomeScreen> {
             Text(
               'Pantry Application',
             ),
-            Visibility(
+          ],
+        ),
+        leading: Visibility(
               visible: true,
               child: Text(
                 new DateFormat.yMMMEd('en_US').format(new DateTime.now()),
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 16.0,
                 ),
               ),
             ),
-          ],
-        ),
         actions: <Widget>[
           new IconButton(
-            icon: Icon(Icons.highlight_off),
+            icon: Icon(Icons.power),
+            tooltip: 'Logout',
             enableFeedback: true,
             onPressed: () => logout(context),
           ),
+          /*new IconButton(
+            icon: Icon(Icons.search),
+            enableFeedback: true,
+            onPressed: () => print("searching..."),
+          ),*/
         ],
       ),
       body: Center(
@@ -113,10 +120,11 @@ class PantryListState extends State<PantryList> {
 class InventoryList extends StatelessWidget {
   final List<Item> inventory;
 
-  InventoryList({Key key, this.inventory}) : super(key: key);
+  InventoryList({Key key, Widget child, this.inventory}) : super(key: key);
 
   Widget build(BuildContext context) {
     List<Item> invSorted = sortInventory(context, inventory);
+    //searchByName(context, invSorted);
     return GridView.builder(
       itemCount: invSorted.length,
       gridDelegate:
@@ -151,13 +159,18 @@ class InventoryList extends StatelessWidget {
                               invSorted[index].acquisition_date.toString()),
                           Text('Expiration: ' +
                               invSorted[index].expiration_date.toString()),
+                          Container(
+                            /*child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                WidgetsBinding.instance.addPostFrameCallback((_) => _insertSearch(context));
+                                WidgetsBinding.instance.addPostFrameCallback((_) => _showSearchField(context));
+                                return Container();
+                              }
+                            )*/
+                          )
                         ]))));
       },
     );
-  }
-
-  List<Item> getInventory() {
-    return this.inventory;
   }
 
   Color colorCode(String expiration) {
@@ -215,6 +228,15 @@ class InventoryList extends StatelessWidget {
     }
     allGreen = true;
     return sortedInventory;
+  }
+
+  List<Item> searchByName(BuildContext context, List<Item> inventory, String query) {
+    List<Item> foundItems;
+    print(query);
+    for(var i=0; i<inventory.length; i++) {
+      print(inventory[i].name);
+    }
+    return foundItems;
   }
   
 }

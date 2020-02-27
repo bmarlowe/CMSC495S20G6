@@ -38,7 +38,7 @@ class ViewItem extends StatelessWidget {
           new IconButton(
             icon: Icon(Icons.highlight_off),
             enableFeedback: true,
-            onPressed: () => logout(context),
+            onPressed: () => {print("delete item")},
           ),
         ],
       ),

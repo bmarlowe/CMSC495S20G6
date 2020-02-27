@@ -16,6 +16,7 @@ class Connections {
   static var unitController = TextEditingController();
   static var expirationController = TextEditingController();
   static var acquisitionController = TextEditingController();
+  static var searchController = TextEditingController();
 }
 
 class Scan extends StatefulWidget {
@@ -79,11 +80,15 @@ class ScanState extends State<Scan> {
               new Container(
                 child: new RaisedButton(
                     onPressed: scan,
-                    color: Colors.teal,
-                    child: new Text("Scan")),
+                    color: Colors.teal[50],
+                    child: new Text("Scan Barcode")),
                 padding: const EdgeInsets.all(8.0),
               ),
-              new Text(barcode),
+              new Text((() {
+                if (barcode != null) {
+                  return barcode;}
+                return '';
+              })()),
               pantryInfoInputsWidget(context),
             ],
           ),
@@ -151,6 +156,7 @@ class ScanState extends State<Scan> {
             builder: (context) {
               return RaisedButton(
                 onPressed: () => addToInventory(context),
+                color: Colors.teal,
                 child: Text('Add Item'),
               );
             },
@@ -172,16 +178,20 @@ class ScanState extends State<Scan> {
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
-          this.barcode = 'The user did not grant the camera permission!';
+          this.barcode = '';
+          print("Camera has not been granted permission");
         });
       } else {
-        setState(() => this.barcode = 'Unknown error: $e');
+        setState(() => this.barcode = '');
+        print("Unknown error: $e");
       }
     } on FormatException {
       setState(() => this.barcode =
-          'null (User returned using the "back"-button before scanning anything. Result)');
+          '');
+          print("null: User used the back arrow to return before scanning.");
     } catch (e) {
-      setState(() => this.barcode = 'Unknown error: $e');
+      setState(() => this.barcode = '');
+      print("Unknown error: $e");
     }
   }
 }
