@@ -44,7 +44,9 @@ class SearchState extends State<Search> {
               pantrySearchWidget(context),
               new Container(
                 child: new RaisedButton(
-                    onPressed: () {print("searching...");},
+                    onPressed: () {print("searching...");
+                      fetchSearch(context, "${Connections.searchController.text}");},
+                      //fetchSearch(context, "chicken");},
                     color: Colors.teal,
                     child: new Text("Search")),
                 padding: const EdgeInsets.all(8.0),

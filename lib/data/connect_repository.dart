@@ -13,6 +13,7 @@ import '../screens/home_screen.dart';
 import '../screens/scan_screen.dart';
 import '../screens/login_screen.dart';
 import '../utils/fade_route.dart';
+import 'local_save_file.dart';
 
 bool offline = false;
 var client = new http.Client();
@@ -39,9 +40,9 @@ Future<String> login(loginData, BuildContext context) async {
   //
   // Some servers don't require the client to authenticate itself, in which case
   // these should be omitted.
-  final identifier = "L06wkTUnzRxRJBJc6krhjl8deDmYzAivRAPF0f32";
+  final identifier = "S1MOqTT711HmXKhYcMe82LQHFNBYxCuMLqihtBCe";
   final secret =
-      "sF2gNhfIXlkziMueSYBcqpbtZ9t9PCTXlMhk4fAfy6JI7nLfuiDS9UCKJrdSdRYhsTR7GzWrnCaWaM2FruMfNb5bEmEHlm3lyZ3TYunm13fX2K3BBCRTIE66pfXV0xo9";
+      "NFN4brwzeVWVtfmXyyGs1zmEZN9jMuVJ6gvv9Ncv0Xe6UwU3NH8dZZwd53DL2WRcGFR9jIHuoFl0aV1qlqyP8rVu1NewM2OiXt9gpjY7azwXBXNzL9KBvTQ87wBuFEsc";
 
   // Make a request to the authorization endpoint that will produce the fully
   // authenticated Client.
@@ -94,6 +95,38 @@ Future<List<Item>> fetchInventory(BuildContext context) async {
       _alertFail(context, 'Failed to load server pantry. ' + e.toString());
     }
     if (response.statusCode == 200) {
+      return parseItems(response.body);
+    } else {
+      // If that call was not successful, throw an error.
+      _alertFail(context,
+          'Did not connect to server ' + response.statusCode.toString());
+      throw Exception('Failed to load pantry items');
+    }
+  }
+}
+
+Future<List<Item>> fetchSearch(
+    BuildContext context, String searchString) async {
+      print(searchString);
+  var response;
+  if (offline) {
+    response = readLocalInventoryFile(context) as String;
+    return parseItems(response);
+  } else {
+    try {
+      await Future<void>.delayed(Duration(seconds: 1));
+      response = await client.get(url + "?name=" + searchString, headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      }).timeout(const Duration(seconds: 10));
+      await Future<void>.delayed(Duration(seconds: 1));
+    } on TimeoutException catch (e) {
+      _alertFail(context, 'Failed to load server pantry. ' + e.toString());
+    } on SocketException catch (e) {
+      _alertFail(context, 'Failed to load server pantry. ' + e.toString());
+    }
+    if (response.statusCode == 200) {
+      writeInventoryFromServer(response.body, context);
       return parseItems(response.body);
     } else {
       // If that call was not successful, throw an error.

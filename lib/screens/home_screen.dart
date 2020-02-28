@@ -154,7 +154,7 @@ class InventoryList extends StatelessWidget {
                               style: TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.bold)),
                           Text('Quantity: ' +
-                              inventory[index].quantity_with_unit.toString()),
+                              invSorted[index].quantity_with_unit.toString()),
                           Text('Acquisition: ' +
                               invSorted[index].acquisition_date.toString()),
                           Text('Expiration: ' +

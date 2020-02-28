@@ -25,7 +25,7 @@ class Scan extends StatefulWidget {
 }
 
 class ScanState extends State<Scan> {
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+  //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   String barcode = '';
   http.Client client = new http.Client();
   BaseResponse baseResponse = new BaseResponse();
@@ -71,7 +71,7 @@ class ScanState extends State<Scan> {
   @override
   Widget build(context) {
     return Scaffold(
-        key: scaffoldKey,
+        //key: scaffoldKey,
         body: Center(
             child: SingleChildScrollView(
           padding: const EdgeInsets.all(8.0),
