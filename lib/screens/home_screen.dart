@@ -16,16 +16,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
+  //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   int selectedIndex = 0;
   final widgetOptions = [
-    PantryList(),
-    Search(),
-    Scan(),
+    new PantryList(),
+    new Search(),
+    new Scan(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return new Scaffold(
+      //key: scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
         title: Column(
@@ -99,7 +101,7 @@ class PantryListState extends State<PantryList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return new Scaffold(
         body: isLoading
             ? Center(
                 child: CircularProgressIndicator(),

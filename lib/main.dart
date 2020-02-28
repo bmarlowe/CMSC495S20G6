@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         // When navigating to the "/add" route, build the Scan widget.
         '/add': (context) => Scan(),
         // When navigating to the "/search" route, build the SearchScreen widget.
-        //'/search' : (context) => Search(),
+        '/search' : (context) => Search(),
       },
     );
   }

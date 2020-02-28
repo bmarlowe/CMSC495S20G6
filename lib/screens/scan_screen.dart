@@ -33,17 +33,6 @@ class ScanState extends State<Scan> {
   BuildContext context;
 
   @override
-  void dispose() {
-    // Clean up the controller when the widget is removed from the
-    // widget tree.
-    Connections.itemController.dispose();
-    Connections.unitController.dispose();
-    Connections.acquisitionController.dispose();
-    Connections.expirationController.dispose();
-    super.dispose();
-  }
-
-  @override
   void initState() {
     super.initState();
     Connections.itemController.addListener(_itemController);
@@ -70,7 +59,7 @@ class ScanState extends State<Scan> {
 
   @override
   Widget build(context) {
-    return Scaffold(
+    return new Scaffold(
         //key: scaffoldKey,
         body: Center(
             child: SingleChildScrollView(

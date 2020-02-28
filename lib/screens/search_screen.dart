@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 //import 'package:intl/intl.dart';
 import 'package:pantry/models/item.dart';
-//import 'home_screen.dart';
+import 'home_screen.dart';
 import 'package:pantry/data/connect_repository.dart';
 import 'scan_screen.dart';
 
@@ -13,15 +13,9 @@ class Search extends StatefulWidget {
 }
 
 class SearchState extends State<Search> {
-
+  //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final List<Item> foundItems = new List<Item>();
   BuildContext context;
-
-  @override
-  void dispose() {
-    Connections.searchController.dispose();
-    super.dispose();
-  }
 
   @override
   void initState() {
@@ -35,7 +29,8 @@ class SearchState extends State<Search> {
   
   @override
   Widget build(context) {
-    return Scaffold(
+    return new Scaffold(
+      //key: scaffoldKey,
         body: Center(
             child: SingleChildScrollView(
           padding: const EdgeInsets.all(8.0),
