@@ -124,7 +124,7 @@ void logout(context) {
 Future<List<Item>> fetchInventory(BuildContext context) async {
   var response;
   if (offline) {
-    response = readLocalInventoryFile(context) as String;
+    response = readLocalInventoryFile(context);
     return parseItems(response);
   } else {
     try {
@@ -317,7 +317,28 @@ void _workOffline(context) {
   offline = true;
   Navigator.of(context).pushReplacement(
       FadePageRoute(builder: (BuildContext context) => HomeScreen()));
+  _offlineAlert(context);
 }
+
+void _offlineAlert(context) {
+  new Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "Working Offline",
+    desc: "While working offline you will not be able to modify, add or delete "
+        "items from your pantry inventory connected to the server.",
+    buttons: [
+      DialogButton(
+        child: Text(
+          "OK",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        color: Colors.teal,
+        onPressed: () => Navigator.pop(context),
+      ),
+    ],
+  ).show();
+} //_offlineAlert
 
 void _alertEmpty(context, String message) {
   new Alert(

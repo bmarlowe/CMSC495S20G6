@@ -14,9 +14,9 @@ bool fileExists = false;
 Future getDirectory() async {
   /*to store files temporary we use getTemporaryDirectory() but we want
     permanent storage so we use getApplicationDocumentsDirectory() */
-  String dir = (await getApplicationSupportDirectory()).path;
-  print("Directory from getDirectory" + dir);
-  jsonFile = new File(dir + "/" + server);
+  dir = (await getApplicationSupportDirectory());
+  print("Directory from getDirectory" + dir.toString());
+  jsonFile = new File(dir.toString() + "/" + server);
   fileExists = jsonFile.existsSync();
 }
 
@@ -33,8 +33,7 @@ void existingFile(context) async {
 Future<String> readLocalInventoryFile(context) async {
   existingFile(context);
   try {
-    String dir = (await getApplicationSupportDirectory()).path;
-    Future<String> body = File(dir + "/" + server).readAsString();
+    String body = File(dir.toString() + "/" + server).readAsString() as String;
     return body;
   } catch (e) {
     print(e.toString());
@@ -60,7 +59,7 @@ Future<void> writeInventoryFromServer(response, context) async {
     String dir = (await getApplicationSupportDirectory()).path;
     print("Directory from writeInventoryFromServer: " + dir);
     print(response);
-    File(dir + "/" + server).writeAsStringSync(response);
+    new File(dir + "/" + server).writeAsStringSync(response);
   } catch (e) {
     print(e.toString());
   }
@@ -77,19 +76,19 @@ void createFile(context, Directory dir) {
 void _alertCreatingFile(context) {
   new Alert(
     context: context,
-    type: AlertType.info,
+    type: AlertType.warning,
     title: "Creating file on your phone.",
-    desc: "Please transfer to add an item to begin.",
+    desc: "Please navigate to add an item to begin, remember, this inventory "
+        "will not connect to the server and no data will be saved once you "
+        "connect to a server!",
     buttons: [
       DialogButton(
         child: Text(
-          "Transfer",
+          "OK",
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
         color: Colors.teal,
-        onPressed: () => Navigator.of(context).pushReplacement(FadePageRoute(
-          builder: (context) => Scan(),
-        )),
+        onPressed: () => Navigator.pop(context),
       ),
     ],
   ).show();
