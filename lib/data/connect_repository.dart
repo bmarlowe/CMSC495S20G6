@@ -110,8 +110,14 @@ Future<String> login(loginData, BuildContext context) async {
   }
 } //login
 
-logout(context) {
+void logout(context) {
   client.close();
+  //Clean up the controller when the widget is removed from the
+  // widget tree.
+  Connections.itemController.dispose();
+  Connections.unitController.dispose();
+  Connections.acquisitionController.dispose();
+  Connections.expirationController.dispose();
   Navigator.pushReplacementNamed(context, "/");
 }
 

@@ -24,23 +24,11 @@ class Scan extends StatefulWidget {
 }
 
 class ScanState extends State<Scan> {
-  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   String barcode = '';
   http.Client client = new http.Client();
   BaseResponse baseResponse = new BaseResponse();
   var formatter = new DateFormat('yyyy-MM-dd');
   BuildContext context;
-
-  @override
-  void dispose() {
-    // Clean up the controller when the widget is removed from the
-    // widget tree.
-    Connections.itemController.dispose();
-    Connections.unitController.dispose();
-    Connections.acquisitionController.dispose();
-    Connections.expirationController.dispose();
-    super.dispose();
-  }
 
   @override
   void initState() {
@@ -70,24 +58,21 @@ class ScanState extends State<Scan> {
   @override
   Widget build(context) {
     return Scaffold(
-        key: scaffoldKey,
         body: Center(
             child: SingleChildScrollView(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              new Container(
-                child: new RaisedButton(
-                    onPressed: scan,
-                    color: Colors.teal,
-                    child: new Text("Scan")),
-                padding: const EdgeInsets.all(8.0),
-              ),
-              new Text(barcode),
-              pantryInfoInputsWidget(context),
-            ],
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: <Widget>[
+          new Container(
+            child: new RaisedButton(
+                onPressed: scan, color: Colors.teal, child: new Text("Scan")),
+            padding: const EdgeInsets.all(8.0),
           ),
-        )));
+          new Text(barcode),
+          pantryInfoInputsWidget(context),
+        ],
+      ),
+    )));
   }
 
   Widget pantryInfoInputsWidget(context) {
@@ -150,8 +135,21 @@ class ScanState extends State<Scan> {
           child: Builder(
             builder: (context) {
               return RaisedButton(
+                color: Colors.teal,
+                textColor: Colors.white,
                 onPressed: () => addToInventory(context),
                 child: Text('Add Item'),
+              );
+            },
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Builder(
+            builder: (context) {
+              return RaisedButton(
+                onPressed: () => clearText(),
+                child: Text('Clear Text'),
               );
             },
           ),
@@ -184,4 +182,11 @@ class ScanState extends State<Scan> {
       setState(() => this.barcode = 'Unknown error: $e');
     }
   }
+}
+
+void clearText() {
+  Connections.itemController.clear();
+  Connections.unitController.clear();
+  Connections.acquisitionController.clear();
+  Connections.expirationController.clear();
 }

@@ -3,9 +3,7 @@ import 'screens/scan_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 
-void main() {
-  runApp(new MyApp());
-}
+void main() => runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
   @override
@@ -20,13 +18,13 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         // When navigating to the "/" route, build the LoginScreen widget.
-        '/': (context) => LoginScreen(),
+        '/': (BuildContext context) => LoginScreen(),
         // When navigating to the "/home" route, build the HomeScreen widget.
-        '/home': (context) => HomeScreen(),
+        '/home': (BuildContext context) => HomeScreen(),
         // When navigating to the "/login" route, build the LoginScreen widget.
-        '/login': (context) => LoginScreen(),
+        '/login': (BuildContext context) => LoginScreen(),
         // When navigating to the "/add" route, build the Scan widget.
-        '/add': (context) => Scan(),
+        '/add': (BuildContext context) => Scan(),
         // When navigating to the "/search" route, build the SearchScreen widget.
         //'/search' : (context) => Search(),
       },

@@ -7,18 +7,17 @@ import 'package:pantry/data/connect_repository.dart';
 import 'package:pantry/models/item.dart';
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({Key key}) : super(key: key);
-
   @override
   HomeScreenState createState() => HomeScreenState();
 }
 
 class HomeScreenState extends State<HomeScreen> {
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   int selectedIndex = 0;
   final widgetOptions = [
-    PantryList(),
-    Text('Search/Filter'),
-    Scan(),
+    new PantryList(),
+    new Text('Search/Filter'),
+    new Scan(),
   ];
 
   @override
