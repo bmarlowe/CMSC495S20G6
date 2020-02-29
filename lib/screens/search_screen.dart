@@ -14,7 +14,6 @@ class Search extends StatefulWidget {
 }
 
 class SearchState extends State<Search> {
-  //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   final List<Item> foundItems = new List<Item>();
   BuildContext context;
 
@@ -31,7 +30,6 @@ class SearchState extends State<Search> {
   @override
   Widget build(context) {
     return new Scaffold(
-      //key: scaffoldKey,
         body: Center(
             child: SingleChildScrollView(
           padding: const EdgeInsets.all(8.0),
@@ -145,9 +143,7 @@ class SearchDisplayState extends State<SearchDisplay> {
                   child: SizedBox(
                     width: 200,
                     height: 100,
-                    //margin: new EdgeInsets.all(1),
                     child: Column(
-                        //mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(inventory[index].name.toString(),
                               textAlign: TextAlign.center,

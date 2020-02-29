@@ -59,7 +59,6 @@ class ScanState extends State<Scan> {
   @override
   Widget build(context) {
     return new Scaffold(
-        //key: scaffoldKey,
         body: Center(
             child: SingleChildScrollView(
       padding: const EdgeInsets.all(8.0),
