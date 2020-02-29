@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/scan_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
+import 'screens/search_screen.dart';
 
 void main() => runApp(new MyApp());
 
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
         // When navigating to the "/add" route, build the Scan widget.
         '/add': (BuildContext context) => Scan(),
         // When navigating to the "/search" route, build the SearchScreen widget.
-        //'/search' : (context) => Search(),
+        '/search' : (context) => Search(),
       },
     );
   }
