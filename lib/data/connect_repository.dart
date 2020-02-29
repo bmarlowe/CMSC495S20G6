@@ -18,7 +18,7 @@ import '../utils/fade_route.dart';
 bool offline = false;
 var client = new http.Client();
 
-String url = 'http://<Your IP>:8000'; //Testing real device
+String url = 'http://172.16.10.60:8000'; //Testing real device
 //String url = 'http://localhost:8000'; //iOS Simulator TESTING
 //String url = 'http://10.0.2.2:8000'; //ANDROID Emulator TESTING
 //String url ='https://17dfcfcc-63d3-456a-a5d8-c5f394434f7c.mock.pstmn.io';

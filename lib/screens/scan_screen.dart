@@ -25,7 +25,6 @@ class Scan extends StatefulWidget {
 }
 
 class ScanState extends State<Scan> {
-  //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   String barcode = '';
   http.Client client = new http.Client();
   BaseResponse baseResponse = new BaseResponse();
@@ -63,25 +62,26 @@ class ScanState extends State<Scan> {
         //key: scaffoldKey,
         body: Center(
             child: SingleChildScrollView(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              new Container(
-                child: new RaisedButton(
-                    onPressed: scan,
-                    color: Colors.teal[50],
-                    child: new Text("Scan Barcode")),
-                padding: const EdgeInsets.all(8.0),
-              ),
-              new Text((() {
-                if (barcode != null) {
-                  return barcode;}
-                return '';
-              })()),
-              pantryInfoInputsWidget(context),
-            ],
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: <Widget>[
+          new Container(
+            child: new RaisedButton(
+                onPressed: scan,
+                color: Colors.teal[50],
+                child: new Text("Scan Barcode")),
+            padding: const EdgeInsets.all(8.0),
           ),
-        )));
+          new Text((() {
+            if (barcode != null) {
+              return barcode;
+            }
+            return '';
+          })()),
+          pantryInfoInputsWidget(context),
+        ],
+      ),
+    )));
   }
 
   Widget pantryInfoInputsWidget(context) {
@@ -175,9 +175,8 @@ class ScanState extends State<Scan> {
         print("Unknown error: $e");
       }
     } on FormatException {
-      setState(() => this.barcode =
-          '');
-          print("null: User used the back arrow to return before scanning.");
+      setState(() => this.barcode = '');
+      print("null: User used the back arrow to return before scanning.");
     } catch (e) {
       setState(() => this.barcode = '');
       print("Unknown error: $e");
