@@ -3,8 +3,6 @@ import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 
 import '../data/connect_repository.dart';
-import '../utils/fade_route.dart';
-import 'home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key key}) : super(key: key);
@@ -35,7 +33,6 @@ class LoginScreenState extends State<LoginScreen> {
             'of the printing and typesetting industry',
         recoverPasswordSuccess: 'Password recovered successfully',
       ),
-      //TODO - More robust form validation for login
       emailValidator: (value) {
         if (!value.contains('@') || !value.endsWith('.com')) {
           return "Email must contain '@' and end with '.com'";
@@ -58,22 +55,20 @@ class LoginScreenState extends State<LoginScreen> {
         print('Password: ${loginData.password}');
         return login(loginData, context);
       },
-      onSignup: (loginData) {
-        print('Signup info');
-        print('E-mail: ${loginData.name}');
-        print('Password: ${loginData.password}');
-        return login(loginData, context);
-      },
       onSubmitAnimationCompleted: () {
-        Navigator.of(context).pushReplacement(FadePageRoute(
-          builder: (context) => HomeScreen(),
-        ));
+        return null;
       },
       onRecoverPassword: (email) {
         print('Recover password info');
         print('E-mail: $email');
         return null;
         //Show new password dialog
+      },
+      onSignup: (loginData) {
+        print('Signup info');
+        print('E-mail: ${loginData.name}');
+        print('Password: ${loginData.password}');
+        return register(loginData, context);
       },
       showDebugButtons: false,
     );

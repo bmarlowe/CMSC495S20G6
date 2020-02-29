@@ -195,5 +195,6 @@
     <orderEntry type="library" name="Gradle: io.flutter:x86_64_debug:1.0.0-e1e6ced81d029258d449bdec2ba3cddca9c2ca0c@jar" level="project" />
     <orderEntry type="library" name="Gradle: io.flutter:armeabi_v7a_debug:1.0.0-e1e6ced81d029258d449bdec2ba3cddca9c2ca0c@jar" level="project" />
     <orderEntry type="library" name="Gradle: io.flutter:x86_debug:1.0.0-e1e6ced81d029258d449bdec2ba3cddca9c2ca0c@jar" level="project" />
+    <orderEntry type="library" name="Gradle: __local_aars__:./../build/app/intermediates/flutter/debug/libs.jar:unspecified@jar" level="project" />
   </component>
 </module>

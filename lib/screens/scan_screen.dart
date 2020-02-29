@@ -1,14 +1,14 @@
 import 'dart:async';
-import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
-import '../models/upc_base_response.dart';
 import '../data/connect_repository.dart';
+import '../models/upc_base_response.dart';
 
 class Connections {
   /// Inputs
@@ -25,7 +25,6 @@ class Scan extends StatefulWidget {
 }
 
 class ScanState extends State<Scan> {
-  //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   String barcode = '';
   http.Client client = new http.Client();
   BaseResponse baseResponse = new BaseResponse();
@@ -63,25 +62,26 @@ class ScanState extends State<Scan> {
         //key: scaffoldKey,
         body: Center(
             child: SingleChildScrollView(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-              new Container(
-                child: new RaisedButton(
-                    onPressed: scan,
-                    color: Colors.teal[50],
-                    child: new Text("Scan Barcode")),
-                padding: const EdgeInsets.all(8.0),
-              ),
-              new Text((() {
-                if (barcode != null) {
-                  return barcode;}
-                return '';
-              })()),
-              pantryInfoInputsWidget(context),
-            ],
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: <Widget>[
+          new Container(
+            child: new RaisedButton(
+                onPressed: scan,
+                color: Colors.teal[50],
+                child: new Text("Scan Barcode")),
+            padding: const EdgeInsets.all(8.0),
           ),
-        )));
+          new Text((() {
+            if (barcode != null) {
+              return barcode;
+            }
+            return '';
+          })()),
+          pantryInfoInputsWidget(context),
+        ],
+      ),
+    )));
   }
 
   Widget pantryInfoInputsWidget(context) {
@@ -151,8 +151,27 @@ class ScanState extends State<Scan> {
             },
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Builder(
+            builder: (context) {
+              return RaisedButton(
+                onPressed: () => clear(),
+                color: Colors.teal,
+                child: Text('Clear All Text'),
+              );
+            },
+          ),
+        ),
       ],
     );
+  }
+
+  void clear(){
+    Connections.itemController.clear();
+    Connections.unitController.clear();
+    Connections.expirationController.clear();
+    Connections.acquisitionController.clear();
   }
 
   Future scan() async {
@@ -175,9 +194,8 @@ class ScanState extends State<Scan> {
         print("Unknown error: $e");
       }
     } on FormatException {
-      setState(() => this.barcode =
-          '');
-          print("null: User used the back arrow to return before scanning.");
+      setState(() => this.barcode = '');
+      print("null: User used the back arrow to return before scanning.");
     } catch (e) {
       setState(() => this.barcode = '');
       print("Unknown error: $e");
