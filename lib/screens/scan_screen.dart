@@ -1,14 +1,14 @@
 import 'dart:async';
-import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
+
 import 'package:barcode_scan_fix/barcode_scan.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 
-import '../models/upc_base_response.dart';
 import '../data/connect_repository.dart';
+import '../models/upc_base_response.dart';
 
 class Connections {
   /// Inputs
@@ -151,8 +151,27 @@ class ScanState extends State<Scan> {
             },
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Builder(
+            builder: (context) {
+              return RaisedButton(
+                onPressed: () => clear(),
+                color: Colors.teal,
+                child: Text('Clear All Text'),
+              );
+            },
+          ),
+        ),
       ],
     );
+  }
+
+  void clear(){
+    Connections.itemController.clear();
+    Connections.unitController.clear();
+    Connections.expirationController.clear();
+    Connections.acquisitionController.clear();
   }
 
   Future scan() async {
