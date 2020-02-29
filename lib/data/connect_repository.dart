@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:flutter/material.dart';
@@ -112,14 +113,7 @@ Future<String> login(loginData, BuildContext context) async {
 
 void logout(context) {
   client.close();
-  //Clean up the controller when the widget is removed from the
-  // widget tree.
-  Connections.itemController.dispose();
-  Connections.unitController.dispose();
-  Connections.acquisitionController.dispose();
-  Connections.expirationController.dispose();
-  Navigator.pushReplacementNamed(context, "/");
-  TickerCanceled();
+  SystemChannels.platform.invokeMethod('SystemNavigator.pop');
 }
 
 List<Item> items = [];
@@ -160,10 +154,11 @@ Future<List<Item>> fetchInventory(BuildContext context) async {
 Future<List<Item>> fetchSearch(
     BuildContext context, String searchString) async {
   var response;
+  SharedPreferences sp = await SharedPreferences.getInstance();
+  final String inventoryList = 'inventoryList';
   if (offline) {
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    final String inventoryList = 'inventoryList';
     response = sp.getString(inventoryList);
+    return parseItemsOfflineSearch(response, searchString);
   } else {
     try {
       await Future<void>.delayed(Duration(seconds: 1));
@@ -192,6 +187,66 @@ List<Item> parseItems(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
   return parsed.map<Item>((json) => Item.fromJson(json)).toList();
 }
+
+List<Item> parseItemsOfflineSearch(String responseBody, String searchString) {
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+  parsed.map<Item>((json) => Item.fromJson(json)).toList();
+  for (var index = 0; index < parsed.length; ++index) {
+    if (parsed.Item[index].name.contains(searchString)) {
+      items.add(parsed.item);
+    }
+  }
+  return items;
+}
+
+Future<String> delete(BuildContext context, String itemId) async {
+  var response;
+  if (offline) {
+    _offlineAlert(context);
+    return null;
+  } else {
+    _alertAreYouSure(context, itemId);
+    try {
+      await Future<void>.delayed(Duration(seconds: 1));
+      response = await client.delete(url + "/item/?id=$itemId", headers: {
+        "Content-Type": "application/json"
+      }).timeout(Duration(seconds: 10));
+      await Future<void>.delayed(Duration(seconds: 1));
+    } on TimeoutException catch (e) {
+      _alertFail(context, 'Failed to delete item. ' + e.toString());
+    } on SocketException catch (e) {
+      _alertFail(context, 'Failed to delete item. ' + e.toString());
+    }
+    if (response.statusCode == 200) {
+      _alertSuccess(context, "Your Item was Deleted");
+      return response.statusCode;
+    } else {
+      // If that call was not successful, throw an error.
+      _alertFail(context,
+          'Did not connect to server ' + response.statusCode.toString());
+      throw Exception('Failed to delete item');
+    }
+  }
+}
+
+void _alertAreYouSure(BuildContext context, String itemId) {
+  new Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "Are You Sure?",
+    desc: "If you choose to delete this cannot be undone!",
+    buttons: [
+      DialogButton(
+        child: Text(
+          "OK",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        color: Colors.teal,
+        onPressed: () => delete(context, itemId),
+      ),
+    ],
+  ).show();
+} //_offlineAlert
 
 Future addToInventory(context) async {
   Item item;
@@ -372,15 +427,12 @@ void _alertRegister(BuildContext context, String message) {
     desc: message,
     buttons: [
       DialogButton(
-        child: Text(
-          "Transfer",
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-        color: Colors.teal,
-        onPressed: () => Navigator.of(context).pushReplacement(FadePageRoute(
-          builder: (context) => LoginScreen(),
-        )),
-      ),
+          child: Text(
+            "Transfer",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          color: Colors.teal,
+          onPressed: () => Navigator.pushReplacementNamed(context, "/")),
     ],
   ).show();
 } //_alertSuccess
