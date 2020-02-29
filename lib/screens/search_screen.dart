@@ -4,6 +4,7 @@ import 'package:pantry/models/item.dart';
 import 'home_screen.dart';
 import 'package:pantry/data/connect_repository.dart';
 import 'scan_screen.dart';
+import 'view_item.dart';
 
 class Search extends StatefulWidget {
 
@@ -40,8 +41,13 @@ class SearchState extends State<Search> {
               new Container(
                 child: new RaisedButton(
                     onPressed: () {print("searching...");
-                      fetchSearch(context, "${Connections.searchController.text}");},
-                      //fetchSearch(context, "chicken");},
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SearchDisplay(),
+                        ),
+                      );
+                    },
                     color: Colors.teal,
                     child: new Text("Search")),
                 padding: const EdgeInsets.all(8.0),
@@ -66,28 +72,97 @@ class SearchState extends State<Search> {
     );
   }
 
-  /*Future scan() async {
-    try {
-      String barcode = await BarcodeScanner.scan();
-      setState(() => this.barcode = barcode);
-      baseResponse = await fetchBarcodeInfo(client, barcode);
-      if (baseResponse != null) {
-        setState(() => Connections.itemController =
-            TextEditingController(text: '${baseResponse.items[0].title}'));
-      }
-    } on PlatformException catch (e) {
-      if (e.code == BarcodeScanner.CameraAccessDenied) {
-        setState(() {
-          this.barcode = 'The user did not grant the camera permission!';
-        });
-      } else {
-        setState(() => this.barcode = 'Unknown error: $e');
-      }
-    } on FormatException {
-      setState(() => this.barcode =
-          'null (User returned using the "back"-button before scanning anything. Result)');
-    } catch (e) {
-      setState(() => this.barcode = 'Unknown error: $e');
+}
+
+class SearchDisplay extends StatefulWidget {
+
+  @override
+  SearchDisplayState createState() => SearchDisplayState();
+
+}
+
+class SearchDisplayState extends State<SearchDisplay> {
+  Future<Item> inventory;
+  var isLoading = false;
+
+  @override
+  Widget build(context){
+    return new Scaffold(
+      appBar: AppBar(
+        leading:
+        new IconButton(
+            icon: Icon(Icons.arrow_back),
+            tooltip: 'Return to Search',
+            enableFeedback: true,
+            onPressed: () => Navigator.pop(context),
+        ),
+      ),
+        body: isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : FutureBuilder<List<Item>>(
+                future: fetchSearch(context, "${Connections.searchController.text}"),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  }
+                  return snapshot.hasData
+                      ? SearchResults(inventory: snapshot.data)
+                      : Center(child: CircularProgressIndicator());
+                }));
+  
+  }
+}
+
+  class SearchResults extends StatelessWidget {
+    final List<Item> inventory;
+
+    SearchResults({this.inventory});
+  
+  @override
+  Widget build(context) {
+    Connections.searchController.text = "";
+    if (inventory.length == 0){
+      return Text("No results found");
+    } else {
+    return GridView.builder(
+      itemCount: inventory.length,
+      gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      itemBuilder: (context, index) {
+        return GestureDetector(
+              onLongPress: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ViewItem(item: inventory[index]),
+                  ),
+                );
+              },
+                child: Card(
+                  color: Colors.teal,
+                  child: SizedBox(
+                    width: 200,
+                    height: 100,
+                    //margin: new EdgeInsets.all(1),
+                    child: Column(
+                        //mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(inventory[index].name.toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text('Quantity: ' +
+                              inventory[index].quantity_with_unit.toString()),
+                          Text('Acquisition: ' +
+                              inventory[index].acquisition_date.toString()),
+                          Text('Expiration: ' +
+                              inventory[index].expiration_date.toString()),
+                          Container()
+                        ]))));
+      },
+    );
     }
-  }*/
+  }
 }
