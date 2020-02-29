@@ -11,30 +11,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="025e7661-bfed-4713-bf94-9ba50be62b0b" name="Default Changelist" comment="Changed offline alert to show.">
-      <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.packages" beforeDir="false" afterPath="$PROJECT_DIR$/.packages" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/android.iml" beforeDir="false" afterPath="$PROJECT_DIR$/android/android.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/pantry_android.iml" beforeDir="false" afterPath="$PROJECT_DIR$/android/pantry_android.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/local_inventory.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/server_inventory.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/connect_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/connect_repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/hive_database.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/local_save_file.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/sqflite_database.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/models/item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/item.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/models/item.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/item.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/scan_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/scan_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
