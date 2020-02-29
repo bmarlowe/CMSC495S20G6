@@ -10,10 +10,31 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="025e7661-bfed-4713-bf94-9ba50be62b0b" name="Default Changelist" comment="">
+    <list default="true" id="025e7661-bfed-4713-bf94-9ba50be62b0b" name="Default Changelist" comment="Changed offline alert to show.">
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins-dependencies" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.packages" beforeDir="false" afterPath="$PROJECT_DIR$/.packages" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/android.iml" beforeDir="false" afterPath="$PROJECT_DIR$/android/android.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/pantry_android.iml" beforeDir="false" afterPath="$PROJECT_DIR$/android/pantry_android.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/local_inventory.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/server_inventory.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/connect_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/connect_repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/local_save_file.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/local_save_file.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/hive_database.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/local_save_file.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/sqflite_database.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/item.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/item.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/item.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/scan_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/scan_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,26 +48,13 @@
   <component name="DevPartner.ProjectWorkspace">
     <option name="runtimeAnalysisType" value="-1" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="R58M967M7DD" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_3_API_28" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Dart File" />
       </list>
     </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>manufacture</find>
-      <find>job</find>
-      <find>InventoryList</find>
-      <find>Inventory</find>
-      <find>expiration</find>
-    </findStrings>
-    <replaceStrings>
-      <replace>Item</replace>
-      <replace>expiration_date</replace>
-    </replaceStrings>
   </component>
   <component name="FlutterView" splitter-proportion="0.42395437" />
   <component name="Git.Settings">
@@ -83,6 +91,13 @@
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$APPLICATION_CONFIG_DIR$/scratches" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/lib" />
+      <recent name="$APPLICATION_CONFIG_DIR$/scratches/barcode_model" />
+      <recent name="$PROJECT_DIR$/lib/Authentication" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
     </key>
@@ -92,13 +107,6 @@
       <recent name="$PROJECT_DIR$/lib/models" />
       <recent name="$PROJECT_DIR$/assets" />
       <recent name="$PROJECT_DIR$/lib/pan_inv_json" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/lib" />
-      <recent name="$APPLICATION_CONFIG_DIR$/scratches" />
-      <recent name="$APPLICATION_CONFIG_DIR$/scratches/barcode_model" />
-      <recent name="$PROJECT_DIR$/lib/Authentication" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -224,7 +232,14 @@
       <option name="project" value="LOCAL" />
       <updated>1582929940807</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Changed offline alert to show.">
+      <created>1582932981574</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1582932981574</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -250,7 +265,8 @@
     <MESSAGE value="Fixed date fields" />
     <MESSAGE value="created fetchSearch(BuildContext context, String searchString) in connect_repository to work with new backend" />
     <MESSAGE value="Clear button and navigation fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="Clear button and navigation fix" />
+    <MESSAGE value="Changed offline alert to show." />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed offline alert to show." />
   </component>
   <component name="WindowStateProjectService">
     <state x="382" y="117" key="CommitChangelistDialog2" />

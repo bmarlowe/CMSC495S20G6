@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/item.dart';
 import '../models/upc_base_response.dart';
@@ -13,7 +14,6 @@ import '../screens/home_screen.dart';
 import '../screens/scan_screen.dart';
 import '../screens/login_screen.dart';
 import '../utils/fade_route.dart';
-import 'local_save_file.dart';
 
 bool offline = false;
 var client = new http.Client();
@@ -106,7 +106,7 @@ Future<String> login(loginData, BuildContext context) async {
     print(response.body);
     _alertFailLogin(context,
         'Failed to login to server. ' + response.statusCode.toString());
-    throw Exception('Failed to load to Server Inventory');
+    throw Exception('Failed to load Inventory from Server');
   }
 } //login
 
@@ -119,12 +119,17 @@ void logout(context) {
   Connections.acquisitionController.dispose();
   Connections.expirationController.dispose();
   Navigator.pushReplacementNamed(context, "/");
+  TickerCanceled();
 }
 
+List<Item> items = [];
+
 Future<List<Item>> fetchInventory(BuildContext context) async {
+  SharedPreferences sp = await SharedPreferences.getInstance();
+  final String inventoryList = 'inventoryList';
   var response;
   if (offline) {
-    response = readLocalInventoryFile(context);
+    response = sp.getString(inventoryList);
     return parseItems(response);
   } else {
     try {
@@ -140,7 +145,8 @@ Future<List<Item>> fetchInventory(BuildContext context) async {
       _alertFail(context, 'Failed to load server pantry. ' + e.toString());
     }
     if (response.statusCode == 200) {
-      writeInventoryFromServer(response.body, context);
+      SharedPreferences sp = await SharedPreferences.getInstance();
+      sp.setString(inventoryList, response.body);
       return parseItems(response.body);
     } else {
       // If that call was not successful, throw an error.
@@ -155,8 +161,9 @@ Future<List<Item>> fetchSearch(
     BuildContext context, String searchString) async {
   var response;
   if (offline) {
-    response = readLocalInventoryFile(context) as String;
-    return parseItems(response);
+    SharedPreferences sp = await SharedPreferences.getInstance();
+    final String inventoryList = 'inventoryList';
+    response = sp.getString(inventoryList);
   } else {
     try {
       await Future<void>.delayed(Duration(seconds: 1));
@@ -171,7 +178,6 @@ Future<List<Item>> fetchSearch(
       _alertFail(context, 'Failed to load server pantry. ' + e.toString());
     }
     if (response.statusCode == 200) {
-      writeInventoryFromServer(response.body, context);
       return parseItems(response.body);
     } else {
       // If that call was not successful, throw an error.
@@ -212,8 +218,7 @@ Future addToInventory(context) async {
   print(responseBody);
 
   if (offline) {
-    writeItem(responseBody, context);
-    print(readLocalInventoryFile(context).toString());
+    _offlineAlert(context);
   } else {
     final response = await client.post(url + "/item",
         headers: {
@@ -230,7 +235,7 @@ Future addToInventory(context) async {
       print(response.statusCode);
       print(response.toString());
       _alertFail(context, 'Item not added to server');
-      throw Exception('Failed to load to server Inventory');
+      throw Exception('Failed to load server Inventory');
     }
   }
 } //addToInventory

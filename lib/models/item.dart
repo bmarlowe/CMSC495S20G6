@@ -1,17 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:hive/hive.dart';
 part 'item.g.dart';
 
 @JsonSerializable()
-@HiveType(typeId: 0)
 class Item {
-  @HiveField(0)
   final String name;
-  @HiveField(1)
   final String acquisition_date;
-  @HiveField(2)
   final String quantity_with_unit;
-  @HiveField(3)
   final String expiration_date;
 
   Item(

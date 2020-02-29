@@ -16,6 +16,7 @@ class Connections {
   static var unitController = TextEditingController();
   static var expirationController = TextEditingController();
   static var acquisitionController = TextEditingController();
+  static var searchController = TextEditingController();
 }
 
 class Scan extends StatefulWidget {
@@ -24,6 +25,7 @@ class Scan extends StatefulWidget {
 }
 
 class ScanState extends State<Scan> {
+  //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   String barcode = '';
   http.Client client = new http.Client();
   BaseResponse baseResponse = new BaseResponse();
@@ -57,7 +59,8 @@ class ScanState extends State<Scan> {
 
   @override
   Widget build(context) {
-    return Scaffold(
+    return new Scaffold(
+        //key: scaffoldKey,
         body: Center(
             child: SingleChildScrollView(
       padding: const EdgeInsets.all(8.0),
@@ -65,10 +68,18 @@ class ScanState extends State<Scan> {
         children: <Widget>[
           new Container(
             child: new RaisedButton(
-                onPressed: scan, color: Colors.teal, child: new Text("Scan")),
+                onPressed: scan,
+                color: Colors.teal,
+                textColor: Colors.white,
+                child: new Text("Scan Barcode")),
             padding: const EdgeInsets.all(8.0),
           ),
-          new Text(barcode),
+          new Text((() {
+            if (barcode != null) {
+              return barcode;
+            }
+            return '';
+          })()),
           pantryInfoInputsWidget(context),
         ],
       ),
@@ -135,21 +146,10 @@ class ScanState extends State<Scan> {
           child: Builder(
             builder: (context) {
               return RaisedButton(
+                onPressed: () => addToInventory(context),
                 color: Colors.teal,
                 textColor: Colors.white,
-                onPressed: () => addToInventory(context),
                 child: Text('Add Item'),
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Builder(
-            builder: (context) {
-              return RaisedButton(
-                onPressed: () => clearText(),
-                child: Text('Clear Text'),
               );
             },
           ),
@@ -170,23 +170,19 @@ class ScanState extends State<Scan> {
     } on PlatformException catch (e) {
       if (e.code == BarcodeScanner.CameraAccessDenied) {
         setState(() {
-          this.barcode = 'The user did not grant the camera permission!';
+          this.barcode = '';
+          print("Camera has not been granted permission");
         });
       } else {
-        setState(() => this.barcode = 'Unknown error: $e');
+        setState(() => this.barcode = '');
+        print("Unknown error: $e");
       }
     } on FormatException {
-      setState(() => this.barcode =
-          'null (User returned using the "back"-button before scanning anything. Result)');
+      setState(() => this.barcode = '');
+      print("null: User used the back arrow to return before scanning.");
     } catch (e) {
-      setState(() => this.barcode = 'Unknown error: $e');
+      setState(() => this.barcode = '');
+      print("Unknown error: $e");
     }
   }
-}
-
-void clearText() {
-  Connections.itemController.clear();
-  Connections.unitController.clear();
-  Connections.acquisitionController.clear();
-  Connections.expirationController.clear();
 }
