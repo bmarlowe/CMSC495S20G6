@@ -13,19 +13,21 @@ import '../screens/home_screen.dart';
 import '../screens/scan_screen.dart';
 import '../screens/login_screen.dart';
 import '../utils/fade_route.dart';
+import 'local_save_file.dart';
 
 bool offline = false;
 var client = new http.Client();
 
-//static String url = 'http://<YOUR IP>:8000/item'; //Testing real device
+//String url = 'http://192.168.0.102:8000/item'; //Testing real device
 //static String url = 'http://localhost:8000/item'; //iOS TESTING
-String url = 'http://10.0.2.2:8000/item'; //ANDROID TESTING
+String url = 'http://10.0.3.2:8000/item'; //ANDROID TESTING
 //static String url ='https://17dfcfcc-63d3-456a-a5d8-c5f394434f7c.mock.pstmn.io';
 
 Future<String> login(loginData, BuildContext context) async {
   // This URL is an endpoint that's provided by the authorization server. It's
   // usually included in the server's documentation of its OAuth2 API.
-  final authorizationEndpoint = Uri.parse("http://10.0.2.2:8000/o/token/");
+  final authorizationEndpoint = Uri.parse("http://10.0.3.2:8000/o/token/");
+  //final authorizationEndpoint = Uri.parse("http://192.168.0.102:8000/o/token/");
 
   // The user should supply their own username and password.
   final username = '${(loginData.name)}';
@@ -38,9 +40,9 @@ Future<String> login(loginData, BuildContext context) async {
   //
   // Some servers don't require the client to authenticate itself, in which case
   // these should be omitted.
-  final identifier = "L06wkTUnzRxRJBJc6krhjl8deDmYzAivRAPF0f32";
+  final identifier = "S1MOqTT711HmXKhYcMe82LQHFNBYxCuMLqihtBCe";
   final secret =
-      "sF2gNhfIXlkziMueSYBcqpbtZ9t9PCTXlMhk4fAfy6JI7nLfuiDS9UCKJrdSdRYhsTR7GzWrnCaWaM2FruMfNb5bEmEHlm3lyZ3TYunm13fX2K3BBCRTIE66pfXV0xo9";
+      "NFN4brwzeVWVtfmXyyGs1zmEZN9jMuVJ6gvv9Ncv0Xe6UwU3NH8dZZwd53DL2WRcGFR9jIHuoFl0aV1qlqyP8rVu1NewM2OiXt9gpjY7azwXBXNzL9KBvTQ87wBuFEsc";
 
   // Make a request to the authorization endpoint that will produce the fully
   // authenticated Client.
@@ -71,6 +73,13 @@ Future<String> login(loginData, BuildContext context) async {
 
 logout(context) {
   client.close();
+    // Clean up the controller when the widget is removed from the
+    // widget tree.
+  Connections.itemController.dispose();
+  Connections.unitController.dispose();
+  Connections.acquisitionController.dispose();
+  Connections.expirationController.dispose();
+  Connections.searchController.dispose();
   Navigator.pushReplacementNamed(context, "/");
 }
 
@@ -93,6 +102,38 @@ Future<List<Item>> fetchInventory(BuildContext context) async {
       _alertFail(context, 'Failed to load server pantry. ' + e.toString());
     }
     if (response.statusCode == 200) {
+      return parseItems(response.body);
+    } else {
+      // If that call was not successful, throw an error.
+      _alertFail(context,
+          'Did not connect to server ' + response.statusCode.toString());
+      throw Exception('Failed to load pantry items');
+    }
+  }
+}
+
+Future<List<Item>> fetchSearch(
+    BuildContext context, String searchString) async {
+      print(searchString);
+  var response;
+  if (offline) {
+    response = readLocalInventoryFile(context) as String;
+    return parseItems(response);
+  } else {
+    try {
+      await Future<void>.delayed(Duration(seconds: 1));
+      response = await client.get(url + "?name=" + searchString, headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      }).timeout(const Duration(seconds: 10));
+      await Future<void>.delayed(Duration(seconds: 1));
+    } on TimeoutException catch (e) {
+      _alertFail(context, 'Failed to load server pantry. ' + e.toString());
+    } on SocketException catch (e) {
+      _alertFail(context, 'Failed to load server pantry. ' + e.toString());
+    }
+    if (response.statusCode == 200) {
+      writeInventoryFromServer(response.body, context);
       return parseItems(response.body);
     } else {
       // If that call was not successful, throw an error.

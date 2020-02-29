@@ -59,7 +59,7 @@ Future<void> writeItem(response) async {
   }
 } //writeItem
 
-Future<void> writeInventoryFromServer(response) async {
+Future<void> writeInventoryFromServer(response, context) async {
   try {
     final filename = 'server_inventory.json';
     String dir = (await getApplicationSupportDirectory()).path;
