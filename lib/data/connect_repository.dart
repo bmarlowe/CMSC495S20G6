@@ -203,7 +203,7 @@ List<Item> parseItemsOfflineSearch(String responseBody, String searchString) {
   return items;
 }
 
-Future<String> delete(BuildContext context, String itemId) async {
+Future<String> delete(BuildContext context, int itemId) async {
   var response;
   if (offline) {
     _offlineAlert(context);
@@ -233,7 +233,7 @@ Future<String> delete(BuildContext context, String itemId) async {
   }
 }
 
-void _alertAreYouSure(BuildContext context, String itemId) {
+void _alertAreYouSure(BuildContext context, int itemId) {
   new Alert(
     context: context,
     type: AlertType.warning,
@@ -253,17 +253,13 @@ void _alertAreYouSure(BuildContext context, String itemId) {
 } //_offlineAlert
 
 Future addToInventory(context) async {
-  Item item;
+  var item;
   //try statement fo check for null items, show pop-up failure notices
   try {
-    item = new Item(
-      name: "${Connections.itemController.text}",
-      quantity_with_unit: "${Connections.unitController.text}",
-      acquisition_date:
-          "${Connections.acquisitionController.text.substring(0, 10)}",
-      expiration_date:
-          "${Connections.expirationController.text.substring(0, 10)}",
-    );
+    item = ("{\"name\":\"${Connections.itemController.text}\",\"quantity_with_unit"
+        "\":\"${Connections.unitController.text}\",\"acquisition_date\":\""
+        "${Connections.acquisitionController.text.substring(0, 10)}\",\""
+        "expiration_date\":\"${Connections.expirationController.text.substring(0, 10)}\"}");
     if ("${Connections.itemController.text}" == null) {
       throw new RangeError("item name is null");
     }
@@ -273,9 +269,7 @@ Future addToInventory(context) async {
         "Item Name and Dates must be filled., "
         "Please check your input and try again");
   }
-  var responseBody = json.encode(item);
-  print(responseBody);
-
+  print(item);
   if (offline) {
     _offlineAlert(context);
   } else {
@@ -284,7 +278,7 @@ Future addToInventory(context) async {
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
-        body: responseBody);
+        body: item);
     if (response.statusCode == 200) {
       _alertSuccess(context, 'Item sucessfully added to inventory');
       return response;
@@ -295,19 +289,14 @@ Future addToInventory(context) async {
   }
 } //addToInventory
 
-Future updateInventory(context, itemId) async {
-  Item item;
+Future updateInventory(context, int itemId) async {
+  var item;
   //try statement fo check for null items, show pop-up failure notices
   try {
-    item = new Item(
-      id: itemId,
-      name: "${Connections.itemController.text}",
-      quantity_with_unit: "${Connections.unitController.text}",
-      acquisition_date:
-          "${Connections.acquisitionController.text.substring(0, 10)}",
-      expiration_date:
-          "${Connections.expirationController.text.substring(0, 10)}",
-    );
+    item = ("{\"id\":\"$itemId\",\"name\":\"${Connections.itemController.text}\",\"quantity_with_unit"
+        "\":\"${Connections.unitController.text}\",\"acquisition_date\":\""
+        "${Connections.acquisitionController.text.substring(0, 10)}\",\""
+        "expiration_date\":\"${Connections.expirationController.text.substring(0, 10)}\"}");
     if ("${Connections.itemController.text}" == null) {
       throw new RangeError("item name is null");
     }
@@ -317,9 +306,7 @@ Future updateInventory(context, itemId) async {
         "Item Name and Dates must be filled., "
         "Please check your input and try again");
   }
-  var responseBody = json.encode(item);
-  print(responseBody);
-
+  print(item);
   if (offline) {
     _offlineAlert(context);
   } else {
@@ -328,7 +315,7 @@ Future updateInventory(context, itemId) async {
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
-        body: responseBody);
+        body: item);
     if (response.statusCode == 200) {
       _alertSuccess(context, 'Item sucessfully added to inventory');
       return response;
