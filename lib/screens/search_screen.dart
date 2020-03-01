@@ -134,7 +134,7 @@ class SearchDisplayState extends State<SearchDisplay> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ViewItem(item: inventory[index]),
+                    builder: (context) => ViewItem(item: inventory[index], color: Colors.teal),
                   ),
                 );
               },

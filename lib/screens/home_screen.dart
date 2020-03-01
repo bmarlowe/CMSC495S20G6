@@ -131,7 +131,7 @@ class InventoryList extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ViewItem(item: invSorted[index]),
+                    builder: (context) => ViewItem(item: invSorted[index], color: cardColor),
                   ),
                 );
               },
