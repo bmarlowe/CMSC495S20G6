@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
-import 'package:pantry/data/connect_repository.dart';
+
 import 'package:pantry/models/item.dart';
 
 

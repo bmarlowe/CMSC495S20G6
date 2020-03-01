@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
   final widgetOptions = [
-    new PantryList(),
+    new PantryList(isSearch: false),
     new Search(),
     new Scan(),
   ];
@@ -83,7 +83,8 @@ class HomeScreenState extends State<HomeScreen> {
 }
 
 class PantryList extends StatefulWidget {
-  PantryList({Key key}) : super(key: key);
+  final bool isSearch;
+  PantryList({Key key, @required this.isSearch}) : super(key: key);
   @override
   PantryListState createState() => PantryListState();
 }
@@ -94,7 +95,26 @@ class PantryListState extends State<PantryList> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isSearch) {
     return new Scaffold(
+        body: isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : FutureBuilder<List<Item>>(
+               future: fetchSearch(context, "${Connections.searchController.text}"),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  }
+                  return snapshot.hasData
+                      ? InventoryList(inventory: snapshot.data, isSearch: true)
+                      : Center(child: CircularProgressIndicator());
+                }),
+    );
+    }
+    else {
+      return new Scaffold(
         body: isLoading
             ? Center(
                 child: CircularProgressIndicator(),
@@ -106,18 +126,26 @@ class PantryListState extends State<PantryList> {
                     return Text("${snapshot.error}");
                   }
                   return snapshot.hasData
-                      ? InventoryList(inventory: snapshot.data)
+                      ? InventoryList(inventory: snapshot.data, isSearch: false)
                       : Center(child: CircularProgressIndicator());
                 }));
+    }
   }
 }
 
 class InventoryList extends StatelessWidget {
   final List<Item> inventory;
+  final bool isSearch;
 
-  InventoryList({Key key, Widget child, this.inventory}) : super(key: key);
+  InventoryList({Key key, Widget child, this.inventory, this.isSearch}) : super(key: key);
 
   Widget build(BuildContext context) {
+    if (inventory.length == 0 && isSearch){
+      return Align(
+        alignment: Alignment.center,
+        child: Text("No results found"),
+      );
+    } else {
     List<Item> invSorted = sortInventory(context, inventory);
     return GridView.builder(
       padding: const EdgeInsets.all(10),
@@ -165,6 +193,7 @@ class InventoryList extends StatelessWidget {
                         ])));
       },
     );
+    }
   }
 
   Color colorCode(String expiration) {
@@ -196,31 +225,28 @@ class InventoryList extends StatelessWidget {
     List<Item> sortedInventory = new List<Item>();
     List<Item> inv = inventory;
 
-    bool allRed = false;
-    bool allYellow = false;
-    bool allGreen = false;
-    //TODO - This is very ugly, needs rewritten
+
     for (var i = 0; i < inv.length; i++) {
       Color colorCheck = colorCode(inv[i].expiration_date);
       if (colorCheck == Color(0xBBFF2222)) {
         sortedInventory.add(inv[i]);
       }
     }
-    allRed = true;
+
     for (var i = 0; i < inv.length; i++) {
       Color colorCheck = colorCode(inv[i].expiration_date);
       if (colorCheck == Color(0xFFFFFF33)) {
         sortedInventory.add(inv[i]);
       }
     }
-    allYellow = true;
+
     for (var i = 0; i < inv.length; i++) {
       Color colorCheck = colorCode(inv[i].expiration_date);
       if (colorCheck == Color(0xFF11BB33)) {
         sortedInventory.add(inv[i]);
       }
     }
-    allGreen = true;
+
     return sortedInventory;
   }
   

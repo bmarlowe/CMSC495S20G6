@@ -158,7 +158,7 @@ Future<List<Item>> fetchInventory(BuildContext context) async {
 }
 
 Future<List<Item>> fetchSearch(
-    BuildContext context, String searchString) async {
+  BuildContext context, String searchString) async {
   var response;
   if (offline) {
     SharedPreferences sp = await SharedPreferences.getInstance();
@@ -178,6 +178,7 @@ Future<List<Item>> fetchSearch(
       _alertFail(context, 'Failed to load server pantry. ' + e.toString());
     }
     if (response.statusCode == 200) {
+      Connections.searchController.text = "";
       return parseItems(response.body);
     } else {
       // If that call was not successful, throw an error.

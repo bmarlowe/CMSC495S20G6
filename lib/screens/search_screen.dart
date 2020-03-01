@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-//import 'package:intl/intl.dart';
+
 import 'package:pantry/models/item.dart';
 import 'home_screen.dart';
-import 'package:pantry/data/connect_repository.dart';
 import 'scan_screen.dart';
-import 'view_item.dart';
+
 
 class Search extends StatefulWidget {
 
@@ -59,7 +58,7 @@ class SearchState extends State<Search> {
     return Column(
       children: <Widget>[
         Padding(
-          padding: const EdgeInsets.only(left: 3, bottom: 4.0),
+          padding: const EdgeInsets.only(left: 10, right: 10, bottom: 40),
           child: TextField(
               controller: Connections.searchController,
               decoration: InputDecoration(
@@ -95,70 +94,10 @@ class SearchDisplayState extends State<SearchDisplay> {
             onPressed: () => Navigator.pop(context),
         ),
       ),
-        body: isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : FutureBuilder<List<Item>>(
-                future: fetchSearch(context, "${Connections.searchController.text}"),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
-                  }
-                  return snapshot.hasData
-                      ? SearchResults(inventory: snapshot.data)
-                      : Center(child: CircularProgressIndicator());
-                }));
-  
-  }
-}
-
-  class SearchResults extends StatelessWidget {
-    final List<Item> inventory;
-
-    SearchResults({this.inventory});
-  
-  @override
-  Widget build(context) {
-    Connections.searchController.text = "";
-    if (inventory.length == 0){
-      return Text("No results found");
-    } else {
-    return GridView.builder(
-      itemCount: inventory.length,
-      gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-      itemBuilder: (context, index) {
-        return GestureDetector(
-              onLongPress: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewItem(item: inventory[index], color: Colors.teal),
-                  ),
-                );
-              },
-                child: Card(
-                  color: Colors.teal,
-                  child: SizedBox(
-                    width: 200,
-                    height: 100,
-                    child: Column(
-                        children: [
-                          Text(inventory[index].name.toString(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text('Quantity: ' +
-                              inventory[index].quantity_with_unit.toString()),
-                          Text('Acquisition: ' +
-                              inventory[index].acquisition_date.toString()),
-                          Text('Expiration: ' +
-                              inventory[index].expiration_date.toString()),
-                          Container()
-                        ]))));
-      },
+        body: Center(
+          child: PantryList(isSearch: true),
+        )
     );
-    }
+  
   }
 }
