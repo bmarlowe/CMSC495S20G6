@@ -212,7 +212,7 @@ Future<String> delete(BuildContext context, String itemId) async {
     _alertAreYouSure(context, itemId);
     try {
       await Future<void>.delayed(Duration(seconds: 1));
-      response = await client.delete(url + "/item/?id=$itemId", headers: {
+      response = await client.delete(url + "/item/$itemId/", headers: {
         "Content-Type": "application/json"
       }).timeout(Duration(seconds: 10));
       await Future<void>.delayed(Duration(seconds: 1));
@@ -289,15 +289,55 @@ Future addToInventory(context) async {
       _alertSuccess(context, 'Item sucessfully added to inventory');
       return response;
     } else {
-      print(response.body);
-      print(responseBody);
-      print(response.statusCode);
-      print(response.toString());
       _alertFail(context, 'Item not added to server');
       throw Exception('Failed to load server Inventory');
     }
   }
 } //addToInventory
+
+Future updateInventory(context, itemId) async {
+  Item item;
+  //try statement fo check for null items, show pop-up failure notices
+  try {
+    item = new Item(
+      id: itemId,
+      name: "${Connections.itemController.text}",
+      quantity_with_unit: "${Connections.unitController.text}",
+      acquisition_date:
+          "${Connections.acquisitionController.text.substring(0, 10)}",
+      expiration_date:
+          "${Connections.expirationController.text.substring(0, 10)}",
+    );
+    if ("${Connections.itemController.text}" == null) {
+      throw new RangeError("item name is null");
+    }
+  } on RangeError {
+    _alertEmpty(
+        context,
+        "Item Name and Dates must be filled., "
+        "Please check your input and try again");
+  }
+  var responseBody = json.encode(item);
+  print(responseBody);
+
+  if (offline) {
+    _offlineAlert(context);
+  } else {
+    final response = await client.post(url + "/item",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: responseBody);
+    if (response.statusCode == 200) {
+      _alertSuccess(context, 'Item sucessfully added to inventory');
+      return response;
+    } else {
+      _alertFail(context, 'Item not added to server');
+      throw Exception('Failed to load server Inventory');
+    }
+  }
+} //updateInventory
 
 Future<dynamic> fetchBarcodeInfo(http.Client client, String barcode) async {
   final response = await http
