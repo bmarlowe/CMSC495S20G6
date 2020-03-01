@@ -59,7 +59,6 @@ class ScanState extends State<Scan> {
   @override
   Widget build(context) {
     return new Scaffold(
-        //key: scaffoldKey,
         body: Center(
             child: SingleChildScrollView(
       padding: const EdgeInsets.all(8.0),
@@ -68,7 +67,7 @@ class ScanState extends State<Scan> {
           new Container(
             child: new RaisedButton(
                 onPressed: scan,
-                color: Colors.teal[50],
+                color: Colors.teal[100],
                 child: new Text("Scan Barcode")),
             padding: const EdgeInsets.all(8.0),
           ),
@@ -139,18 +138,9 @@ class ScanState extends State<Scan> {
                 setState(() => Connections.expirationController.text),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Builder(
-            builder: (context) {
-              return RaisedButton(
-                onPressed: () => addToInventory(context),
-                color: Colors.teal,
-                child: Text('Add Item'),
-              );
-            },
-          ),
-        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Builder(
@@ -163,6 +153,20 @@ class ScanState extends State<Scan> {
             },
           ),
         ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Builder(
+            builder: (context) {
+              return RaisedButton(
+                onPressed: () => addToInventory(context),
+                color: Colors.teal,
+                child: Text('Add Item'),
+              );
+            },
+          ),
+        ),
+          ]
+        )
       ],
     );
   }

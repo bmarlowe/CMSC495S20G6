@@ -16,10 +16,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   int selectedIndex = 0;
   final widgetOptions = [
-    new PantryList(),
+    new PantryList(isSearch: false),
     new Search(),
     new Scan(),
   ];
@@ -27,7 +26,6 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      //key: scaffoldKey,
       appBar: AppBar(
         centerTitle: true,
         title: Column(
@@ -55,11 +53,6 @@ class HomeScreenState extends State<HomeScreen> {
             enableFeedback: true,
             onPressed: () => logout(context),
           ),
-          /*new IconButton(
-            icon: Icon(Icons.search),
-            enableFeedback: true,
-            onPressed: () => print("searching..."),
-          ),*/
         ],
       ),
       body: Center(
@@ -90,7 +83,8 @@ class HomeScreenState extends State<HomeScreen> {
 }
 
 class PantryList extends StatefulWidget {
-  PantryList({Key key}) : super(key: key);
+  final bool isSearch;
+  PantryList({Key key, @required this.isSearch}) : super(key: key);
   @override
   PantryListState createState() => PantryListState();
 }
@@ -101,7 +95,26 @@ class PantryListState extends State<PantryList> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isSearch) {
     return new Scaffold(
+        body: isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : FutureBuilder<List<Item>>(
+               future: fetchSearch(context, "${Connections.searchController.text}"),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text("${snapshot.error}");
+                  }
+                  return snapshot.hasData
+                      ? InventoryList(inventory: snapshot.data, isSearch: true)
+                      : Center(child: CircularProgressIndicator());
+                }),
+    );
+    }
+    else {
+      return new Scaffold(
         body: isLoading
             ? Center(
                 child: CircularProgressIndicator(),
@@ -113,21 +126,29 @@ class PantryListState extends State<PantryList> {
                     return Text("${snapshot.error}");
                   }
                   return snapshot.hasData
-                      ? InventoryList(inventory: snapshot.data)
+                      ? InventoryList(inventory: snapshot.data, isSearch: false)
                       : Center(child: CircularProgressIndicator());
                 }));
+    }
   }
 }
 
 class InventoryList extends StatelessWidget {
   final List<Item> inventory;
+  final bool isSearch;
 
-  InventoryList({Key key, Widget child, this.inventory}) : super(key: key);
+  InventoryList({Key key, Widget child, this.inventory, this.isSearch}) : super(key: key);
 
   Widget build(BuildContext context) {
+    if (inventory.length == 0 && isSearch){
+      return Align(
+        alignment: Alignment.center,
+        child: Text("No results found"),
+      );
+    } else {
     List<Item> invSorted = sortInventory(context, inventory);
-    //searchByName(context, invSorted);
     return GridView.builder(
+      padding: const EdgeInsets.all(10),
       itemCount: invSorted.length,
       gridDelegate:
           SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
@@ -138,47 +159,47 @@ class InventoryList extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ViewItem(item: invSorted[index]),
+                    builder: (context) => ViewItem(item: invSorted[index], color: cardColor),
                   ),
                 );
               },
                 child: Card(
+                  margin: EdgeInsets.only(left: 5, right: 5, bottom: 20),
                   color: cardColor,
-                  child: SizedBox(
-                    width: 200,
-                    height: 100,
-                    //margin: new EdgeInsets.all(1),
                     child: Column(
-                        //mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(invSorted[index].name.toString(),
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                                fontSize: 20, fontWeight: FontWeight.bold, decoration: TextDecoration.underline)
+                              ),
                           Text('Quantity: ' +
-                              invSorted[index].quantity_with_unit.toString()),
-                          Text('Acquisition: ' +
-                              invSorted[index].acquisition_date.toString()),
+                              invSorted[index].quantity_with_unit.toString(),
+                              style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold)
+                              ),
+                          Text('Acquired: ' +
+                              invSorted[index].acquisition_date.toString(),
+                              style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold)
+                              ),
                           Text('Expiration: ' +
-                              invSorted[index].expiration_date.toString()),
-                          Container(
-                            /*child: LayoutBuilder(
-                              builder: (context, constraints) {
-                                WidgetsBinding.instance.addPostFrameCallback((_) => _insertSearch(context));
-                                WidgetsBinding.instance.addPostFrameCallback((_) => _showSearchField(context));
-                                return Container();
-                              }
-                            )*/
-                          )
-                        ]))));
+                              invSorted[index].expiration_date.toString(),
+                              style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold)
+                              ),
+                        ])));
       },
     );
+    }
   }
 
   Color colorCode(String expiration) {
     var todayRaw = new DateTime.now();
     DateTime today = new DateTime(todayRaw.year, todayRaw.month, todayRaw.day);
-    //print(today);
+
     String yearStr = expiration.substring(0, 4);
     String monthStr = expiration.substring(5, 7);
     String dayStr = expiration.substring(8, 10);
@@ -186,14 +207,14 @@ class InventoryList extends StatelessWidget {
     int monthInt = int.parse(monthStr);
     int dayInt = int.parse(dayStr);
     DateTime itemExpire = new DateTime(yearInt, monthInt, dayInt);
-    //print(itemExpire);
+
     int check = itemExpire.compareTo(today);
-    //print(check);
+
     if (check <= 0) {
-      return new Color(0xFFFF2222);
+      return new Color(0xBBFF2222);
     }
     var difference = itemExpire.difference(today);
-    //print(difference.inDays);
+
     if (difference.inDays <= 7) {
       return new Color(0xFFFFFF33);
     }
@@ -203,42 +224,30 @@ class InventoryList extends StatelessWidget {
   List<Item> sortInventory(BuildContext context, List<Item> inventory) {
     List<Item> sortedInventory = new List<Item>();
     List<Item> inv = inventory;
-    //List<int> expirationOrder;
-    bool allRed = false;
-    bool allYellow = false;
-    bool allGreen = false;
-    //TODO - This is very ugly, needs rewritten
+
+
     for (var i = 0; i < inv.length; i++) {
       Color colorCheck = colorCode(inv[i].expiration_date);
-      if (colorCheck == Color(0xFFFF2222)) {
+      if (colorCheck == Color(0xBBFF2222)) {
         sortedInventory.add(inv[i]);
       }
     }
-    allRed = true;
+
     for (var i = 0; i < inv.length; i++) {
       Color colorCheck = colorCode(inv[i].expiration_date);
       if (colorCheck == Color(0xFFFFFF33)) {
         sortedInventory.add(inv[i]);
       }
     }
-    allYellow = true;
+
     for (var i = 0; i < inv.length; i++) {
       Color colorCheck = colorCode(inv[i].expiration_date);
       if (colorCheck == Color(0xFF11BB33)) {
         sortedInventory.add(inv[i]);
       }
     }
-    allGreen = true;
-    return sortedInventory;
-  }
 
-  List<Item> searchByName(BuildContext context, List<Item> inventory, String query) {
-    List<Item> foundItems;
-    print(query);
-    for(var i=0; i<inventory.length; i++) {
-      print(inventory[i].name);
-    }
-    return foundItems;
+    return sortedInventory;
   }
   
 }
