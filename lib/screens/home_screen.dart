@@ -16,7 +16,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  //final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
   int selectedIndex = 0;
   final widgetOptions = [
     new PantryList(),
@@ -40,14 +39,14 @@ class HomeScreenState extends State<HomeScreen> {
           ],
         ),
         leading: Visibility(
-              visible: true,
-              child: Text(
-                new DateFormat.yMMMEd('en_US').format(new DateTime.now()),
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
+          visible: true,
+          child: Text(
+            new DateFormat.yMMMEd('en_US').format(new DateTime.now()),
+            style: TextStyle(
+              fontSize: 16.0,
             ),
+          ),
+        ),
         actions: <Widget>[
           new IconButton(
             icon: Icon(Icons.power),
@@ -134,17 +133,17 @@ class InventoryList extends StatelessWidget {
       itemBuilder: (context, index) {
         Color cardColor = colorCode(invSorted[index].expiration_date);
         return GestureDetector(
-              onLongPress: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ViewItem(item: invSorted[index]),
-                  ),
-                );
-              },
-                child: Card(
-                  color: cardColor,
-                  child: SizedBox(
+            onLongPress: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ViewItem(item: invSorted[index]),
+                ),
+              );
+            },
+            child: Card(
+                color: cardColor,
+                child: SizedBox(
                     width: 200,
                     height: 100,
                     //margin: new EdgeInsets.all(1),
@@ -162,14 +161,14 @@ class InventoryList extends StatelessWidget {
                           Text('Expiration: ' +
                               invSorted[index].expiration_date.toString()),
                           Container(
-                            /*child: LayoutBuilder(
+                              /*child: LayoutBuilder(
                               builder: (context, constraints) {
                                 WidgetsBinding.instance.addPostFrameCallback((_) => _insertSearch(context));
                                 WidgetsBinding.instance.addPostFrameCallback((_) => _showSearchField(context));
                                 return Container();
                               }
                             )*/
-                          )
+                              )
                         ]))));
       },
     );
@@ -232,13 +231,13 @@ class InventoryList extends StatelessWidget {
     return sortedInventory;
   }
 
-  List<Item> searchByName(BuildContext context, List<Item> inventory, String query) {
+  List<Item> searchByName(
+      BuildContext context, List<Item> inventory, String query) {
     List<Item> foundItems;
     print(query);
-    for(var i=0; i<inventory.length; i++) {
+    for (var i = 0; i < inventory.length; i++) {
       print(inventory[i].name);
     }
     return foundItems;
   }
-  
 }

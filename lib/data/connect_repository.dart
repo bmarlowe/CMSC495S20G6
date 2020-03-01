@@ -112,11 +112,14 @@ Future<String> login(loginData, BuildContext context) async {
 } //login
 
 void logout(context) {
+  Connections.searchController.dispose();
+  Connections.itemController.dispose();
+  Connections.acquisitionController.dispose();
+  Connections.expirationController.dispose();
+  Connections.unitController.dispose();
   client.close();
   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
 }
-
-List<Item> items = [];
 
 Future<List<Item>> fetchInventory(BuildContext context) async {
   SharedPreferences sp = await SharedPreferences.getInstance();
@@ -189,11 +192,12 @@ List<Item> parseItems(String responseBody) {
 }
 
 List<Item> parseItemsOfflineSearch(String responseBody, String searchString) {
-  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-  parsed.map<Item>((json) => Item.fromJson(json)).toList();
-  for (var index = 0; index < parsed.length; ++index) {
-    if (parsed.Item[index].name.contains(searchString)) {
-      items.add(parsed.item);
+  List<Item> items = new List<Item>();
+  var parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+  List<Item> parse = parsed.map<Item>((json) => Item.fromJson(json)).toList();
+  for (var i = 0; i < parse.length; i++) {
+    if (parse[i].name.toLowerCase().contains(searchString.toLowerCase())) {
+      items.add(parse[i]);
     }
   }
   return items;
