@@ -3,6 +3,7 @@ part 'item.g.dart';
 
 @JsonSerializable()
 class Item {
+  final int id;
   final String name;
   final String acquisition_date;
   final String quantity_with_unit;
@@ -10,7 +11,8 @@ class Item {
   final int id;
 
   Item(
-      {this.name,
+      {this.id,
+      this.name,
       this.acquisition_date,
       this.expiration_date,
       this.quantity_with_unit,
