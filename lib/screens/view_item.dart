@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
+import 'package:pantry/data/connect_repository.dart';
 
 import 'package:pantry/models/item.dart';
 
@@ -29,13 +30,6 @@ class ViewItem extends StatelessWidget {
                   fontSize: 18.0,
                 ),
               ),
-            ],
-          ),
-          actions: <Widget>[
-            new IconButton(
-              icon: Icon(Icons.highlight_off),
-              enableFeedback: true,
-              onPressed: () => delete(context, item.id),
             ),
           ],
         ),
