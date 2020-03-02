@@ -38,14 +38,14 @@ class HomeScreenState extends State<HomeScreen> {
           ],
         ),
         leading: Visibility(
-              visible: true,
-              child: Text(
-                new DateFormat.yMMMEd('en_US').format(new DateTime.now()),
-                style: TextStyle(
-                  fontSize: 16.0,
-                ),
-              ),
+          visible: true,
+          child: Text(
+            new DateFormat.yMMMEd('en_US').format(new DateTime.now()),
+            style: TextStyle(
+              fontSize: 16.0,
             ),
+          ),
+        ),
         actions: <Widget>[
           new IconButton(
             icon: Icon(Icons.power),
@@ -246,8 +246,6 @@ class InventoryList extends StatelessWidget {
         sortedInventory.add(inv[i]);
       }
     }
-
     return sortedInventory;
   }
-  
 }

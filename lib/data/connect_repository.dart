@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:flutter/material.dart';
@@ -111,18 +112,14 @@ Future<String> login(loginData, BuildContext context) async {
 } //login
 
 void logout(context) {
-  client.close();
-  //Clean up the controller when the widget is removed from the
-  // widget tree.
+  Connections.searchController.dispose();
   Connections.itemController.dispose();
-  Connections.unitController.dispose();
   Connections.acquisitionController.dispose();
   Connections.expirationController.dispose();
-  Navigator.pushReplacementNamed(context, "/");
-  TickerCanceled();
+  Connections.unitController.dispose();
+  client.close();
+  SystemChannels.platform.invokeMethod('SystemNavigator.pop');
 }
-
-List<Item> items = [];
 
 Future<List<Item>> fetchInventory(BuildContext context) async {
   SharedPreferences sp = await SharedPreferences.getInstance();
@@ -160,10 +157,11 @@ Future<List<Item>> fetchInventory(BuildContext context) async {
 Future<List<Item>> fetchSearch(
   BuildContext context, String searchString) async {
   var response;
+  SharedPreferences sp = await SharedPreferences.getInstance();
+  final String inventoryList = 'inventoryList';
   if (offline) {
-    SharedPreferences sp = await SharedPreferences.getInstance();
-    final String inventoryList = 'inventoryList';
     response = sp.getString(inventoryList);
+    return parseItemsOfflineSearch(response, searchString);
   } else {
     try {
       await Future<void>.delayed(Duration(seconds: 1));
@@ -194,18 +192,75 @@ List<Item> parseItems(String responseBody) {
   return parsed.map<Item>((json) => Item.fromJson(json)).toList();
 }
 
+List<Item> parseItemsOfflineSearch(String responseBody, String searchString) {
+  List<Item> items = new List<Item>();
+  var parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+  List<Item> parse = parsed.map<Item>((json) => Item.fromJson(json)).toList();
+  for (var i = 0; i < parse.length; i++) {
+    if (parse[i].name.toLowerCase().contains(searchString.toLowerCase())) {
+      items.add(parse[i]);
+    }
+  }
+  return items;
+}
+
+Future<String> delete(BuildContext context, int itemId) async {
+  var response;
+  if (offline) {
+    _offlineAlert(context);
+    return null;
+  } else {
+    _alertAreYouSure(context, itemId);
+    try {
+      await Future<void>.delayed(Duration(seconds: 1));
+      response = await client.delete(url + "/item/$itemId/", headers: {
+        "Content-Type": "application/json"
+      }).timeout(Duration(seconds: 10));
+      await Future<void>.delayed(Duration(seconds: 1));
+    } on TimeoutException catch (e) {
+      _alertFail(context, 'Failed to delete item. ' + e.toString());
+    } on SocketException catch (e) {
+      _alertFail(context, 'Failed to delete item. ' + e.toString());
+    }
+    if (response.statusCode == 200) {
+      _alertSuccess(context, "Your Item was Deleted");
+      return response.statusCode;
+    } else {
+      // If that call was not successful, throw an error.
+      _alertFail(context,
+          'Did not connect to server ' + response.statusCode.toString());
+      throw Exception('Failed to delete item');
+    }
+  }
+}
+
+void _alertAreYouSure(BuildContext context, int itemId) {
+  new Alert(
+    context: context,
+    type: AlertType.warning,
+    title: "Are You Sure?",
+    desc: "If you choose to delete this cannot be undone!",
+    buttons: [
+      DialogButton(
+        child: Text(
+          "OK",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        color: Colors.teal,
+        onPressed: () => delete(context, itemId),
+      ),
+    ],
+  ).show();
+} //_offlineAlert
+
 Future addToInventory(context) async {
-  Item item;
+  var item;
   //try statement fo check for null items, show pop-up failure notices
   try {
-    item = new Item(
-      name: "${Connections.itemController.text}",
-      quantity_with_unit: "${Connections.unitController.text}",
-      acquisition_date:
-          "${Connections.acquisitionController.text.substring(0, 10)}",
-      expiration_date:
-          "${Connections.expirationController.text.substring(0, 10)}",
-    );
+    item = ("{\"name\":\"${Connections.itemController.text}\",\"quantity_with_unit"
+        "\":\"${Connections.unitController.text}\",\"acquisition_date\":\""
+        "${Connections.acquisitionController.text.substring(0, 10)}\",\""
+        "expiration_date\":\"${Connections.expirationController.text.substring(0, 10)}\"}");
     if ("${Connections.itemController.text}" == null) {
       throw new RangeError("item name is null");
     }
@@ -215,9 +270,7 @@ Future addToInventory(context) async {
         "Item Name and Dates must be filled., "
         "Please check your input and try again");
   }
-  var responseBody = json.encode(item);
-  print(responseBody);
-
+  print(item);
   if (offline) {
     _offlineAlert(context);
   } else {
@@ -226,7 +279,7 @@ Future addToInventory(context) async {
           "Content-Type": "application/json",
           "Accept": "application/json",
         },
-        body: responseBody);
+        body: item);
     if (response.statusCode == 200) {
       _alertSuccess(context, 'Item sucessfully added to inventory');
       Connections.itemController.clear();
@@ -235,15 +288,48 @@ Future addToInventory(context) async {
       Connections.acquisitionController.clear();
       return response;
     } else {
-      print(response.body);
-      print(responseBody);
-      print(response.statusCode);
-      print(response.toString());
       _alertFail(context, 'Item not added to server');
       throw Exception('Failed to load server Inventory');
     }
   }
 } //addToInventory
+
+Future updateInventory(context, int itemId) async {
+  var item;
+  //try statement fo check for null items, show pop-up failure notices
+  try {
+    item = ("{\"id\":\"$itemId\",\"name\":\"${Connections.itemController.text}\",\"quantity_with_unit"
+        "\":\"${Connections.unitController.text}\",\"acquisition_date\":\""
+        "${Connections.acquisitionController.text.substring(0, 10)}\",\""
+        "expiration_date\":\"${Connections.expirationController.text.substring(0, 10)}\"}");
+    if ("${Connections.itemController.text}" == null) {
+      throw new RangeError("item name is null");
+    }
+  } on RangeError {
+    _alertEmpty(
+        context,
+        "Item Name and Dates must be filled., "
+        "Please check your input and try again");
+  }
+  print(item);
+  if (offline) {
+    _offlineAlert(context);
+  } else {
+    final response = await client.post(url + "/item",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: item);
+    if (response.statusCode == 200) {
+      _alertSuccess(context, 'Item sucessfully added to inventory');
+      return response;
+    } else {
+      _alertFail(context, 'Item not added to server');
+      throw Exception('Failed to load server Inventory');
+    }
+  }
+} //updateInventory
 
 Future<dynamic> fetchBarcodeInfo(http.Client client, String barcode) async {
   final response = await http
@@ -377,15 +463,12 @@ void _alertRegister(BuildContext context, String message) {
     desc: message,
     buttons: [
       DialogButton(
-        child: Text(
-          "Transfer",
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-        color: Colors.teal,
-        onPressed: () => Navigator.of(context).pushReplacement(FadePageRoute(
-          builder: (context) => LoginScreen(),
-        )),
-      ),
+          child: Text(
+            "Transfer",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          color: Colors.teal,
+          onPressed: () => Navigator.pushReplacementNamed(context, "/")),
     ],
   ).show();
 } //_alertSuccess

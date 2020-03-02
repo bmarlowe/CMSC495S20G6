@@ -4,9 +4,7 @@ import 'package:intl/intl.dart';
 
 import 'package:pantry/models/item.dart';
 
-
 class ViewItem extends StatelessWidget {
-
   final Item item;
   final Color color;
 
@@ -14,7 +12,6 @@ class ViewItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Column(
@@ -32,6 +29,13 @@ class ViewItem extends StatelessWidget {
                   fontSize: 18.0,
                 ),
               ),
+            ],
+          ),
+          actions: <Widget>[
+            new IconButton(
+              icon: Icon(Icons.highlight_off),
+              enableFeedback: true,
+              onPressed: () => delete(context, item.id),
             ),
           ],
         ),
@@ -44,7 +48,7 @@ class ViewItem extends StatelessWidget {
                 icon: Icon(Icons.highlight_off),
                 iconSize: 20,
                 enableFeedback: true,
-                onPressed: () => {print("delete item")},
+                onPressed: () => delete(context, item.id),
               ),
             ]
           ),
@@ -82,5 +86,6 @@ class ViewItem extends StatelessWidget {
         )
       )
     );
+
   }
 }
