@@ -19,9 +19,9 @@ import '../utils/fade_route.dart';
 bool offline = false;
 var client = new http.Client();
 
-//String url = 'http://172.16.10.60:8000'; //Testing real device
+String url = 'http://172.16.10.60:8000'; //Testing real device
 //String url = 'http://localhost:8000'; //iOS Simulator TESTING
-String url = 'http://10.0.3.2:8000'; //ANDROID Emulator TESTING
+//String url = 'http://10.0.3.2:8000'; //ANDROID Emulator TESTING
 //String url ='https://17dfcfcc-63d3-456a-a5d8-c5f394434f7c.mock.pstmn.io';
 
 Future<String> register(loginData, BuildContext context) async {
@@ -65,9 +65,9 @@ Future<String> login(loginData, BuildContext context) async {
   //
   // Some servers don't require the client to authenticate itself, in which case
   // these should be omitted.
-  final identifier = "S1MOqTT711HmXKhYcMe82LQHFNBYxCuMLqihtBCe";
+  final identifier = "L06wkTUnzRxRJBJc6krhjl8deDmYzAivRAPF0f32";
   final secret =
-      "NFN4brwzeVWVtfmXyyGs1zmEZN9jMuVJ6gvv9Ncv0Xe6UwU3NH8dZZwd53DL2WRcGFR9jIHuoFl0aV1qlqyP8rVu1NewM2OiXt9gpjY7azwXBXNzL9KBvTQ87wBuFEsc";
+      "sF2gNhfIXlkziMueSYBcqpbtZ9t9PCTXlMhk4fAfy6JI7nLfuiDS9UCKJrdSdRYhsTR7GzWrnCaWaM2FruMfNb5bEmEHlm3lyZ3TYunm13fX2K3BBCRTIE66pfXV0xo9";
   // Make a request to the authorization endpoint that will produce the fully
   // authenticated Client.
 
@@ -120,6 +120,8 @@ void logout(context) async {
   var response = await client.post(url + "/o/revoke_token/");
   if (response.statusCode == 200) {
     print("token revoked");
+  } else {
+    print("token not revoked");
   }
   client.close();
   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
@@ -159,7 +161,7 @@ Future<List<Item>> fetchInventory(BuildContext context) async {
 }
 
 Future<List<Item>> fetchSearch(
-  BuildContext context, String searchString) async {
+    BuildContext context, String searchString) async {
   var response;
   SharedPreferences sp = await SharedPreferences.getInstance();
   final String inventoryList = 'inventoryList';
@@ -194,7 +196,7 @@ Future<List<Item>> fetchSearch(
 List<Item> parseItems(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
   return parsed.map<Item>((json) => Item.fromJson(json)).toList();
-}
+} //parse items for fetchInventory
 
 List<Item> parseItemsOfflineSearch(String responseBody, String searchString) {
   List<Item> items = new List<Item>();
@@ -206,15 +208,14 @@ List<Item> parseItemsOfflineSearch(String responseBody, String searchString) {
     }
   }
   return items;
-}
+} //parse offline Search items
 
-Future<String> delete(BuildContext context, int itemId) async {
+Future<String> deleteItemForSure(context, itemId) async {
   var response;
   if (offline) {
     _offlineAlert(context);
     return null;
   } else {
-    _alertAreYouSure(context, itemId);
     try {
       await Future<void>.delayed(Duration(seconds: 1));
       response = await client.delete(url + "/item/$itemId/", headers: {
@@ -236,7 +237,16 @@ Future<String> delete(BuildContext context, int itemId) async {
       throw Exception('Failed to delete item');
     }
   }
-}
+} //delete item for sure!
+
+void delete(BuildContext context, int itemId) {
+  if (offline) {
+    _offlineAlert(context);
+    return null;
+  } else {
+    _alertAreYouSure(context, itemId);
+  }
+} //delete called by view_item
 
 void _alertAreYouSure(BuildContext context, int itemId) {
   new Alert(
@@ -247,11 +257,18 @@ void _alertAreYouSure(BuildContext context, int itemId) {
     buttons: [
       DialogButton(
         child: Text(
-          "OK",
+          "I Am Sure",
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
         color: Colors.teal,
-        onPressed: () => delete(context, itemId),
+        onPressed: () => deleteItemForSure(context, itemId),
+      ),
+      DialogButton(
+        child: Text(
+          "Cancel",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        onPressed: () => Navigator.pop(context),
       ),
     ],
   ).show();

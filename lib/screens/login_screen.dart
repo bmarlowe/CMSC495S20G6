@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
@@ -44,6 +45,7 @@ class LoginScreenState extends State<LoginScreen> {
         }
         return null;
       },
+      onRecoverPassword: (_) => Future(null),
       onLogin: (loginData) {
         print('Login info');
         print('E-mal: ${loginData.name.trim()}');

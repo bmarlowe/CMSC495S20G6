@@ -11,8 +11,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="025e7661-bfed-4713-bf94-9ba50be62b0b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/.flutter-plugins" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.packages" beforeDir="false" afterPath="$PROJECT_DIR$/.packages" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/local.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/connect_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/connect_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/item.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/models/item.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/models/item.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/login_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/login_screen.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -287,7 +296,14 @@
       <option name="project" value="LOCAL" />
       <updated>1583107590428</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="added to logoff to revoke token and added functionality to check null or empty string">
+      <created>1583111496735</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1583111496735</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -322,45 +338,38 @@
     <MESSAGE value="offline search works with current UI" />
     <MESSAGE value="new fields available from backend to update and delete corrected Item class and added delete function to view_item.dart" />
     <MESSAGE value="fixed login page" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed login page" />
+    <MESSAGE value="added to logoff to revoke token and added functionality to check null or empty string" />
+    <option name="LAST_COMMIT_MESSAGE" value="added to logoff to revoke token and added functionality to check null or empty string" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="539" y="242" key="#All_Tests" timestamp="1583042123956">
-      <screen x="0" y="23" width="1680" height="990" />
-    </state>
-    <state x="539" y="242" key="#All_Tests/0.23.1680.990@0.23.1680.990" timestamp="1583042123956" />
-    <state x="382" y="117" key="CommitChangelistDialog2" timestamp="1583041889924">
-      <screen x="0" y="23" width="1680" height="990" />
-    </state>
-    <state x="382" y="117" key="CommitChangelistDialog2/0.23.1680.987@0.23.1680.987" timestamp="1583039089964" />
-    <state x="382" y="117" key="CommitChangelistDialog2/0.23.1680.988@0.23.1680.988" timestamp="1583039089964" />
-    <state x="382" y="117" key="CommitChangelistDialog2/0.23.1680.989@0.23.1680.989" timestamp="1583039089964" />
-    <state x="382" y="117" key="CommitChangelistDialog2/0.23.1680.990@0.23.1680.990" timestamp="1583041889924" />
-    <state width="842" height="250" key="GridCell.Tab.0.bottom" timestamp="1583039089964" />
-    <state width="842" height="250" key="GridCell.Tab.0.bottom/0.23.1680.987@0.23.1680.987" timestamp="1583039089964" />
-    <state width="842" height="221" key="GridCell.Tab.0.bottom/0.23.1680.988@0.23.1680.988" timestamp="1583039089964" />
-    <state width="842" height="250" key="GridCell.Tab.0.center" timestamp="1583039089964" />
-    <state width="842" height="250" key="GridCell.Tab.0.center/0.23.1680.987@0.23.1680.987" timestamp="1583039089964" />
-    <state width="842" height="221" key="GridCell.Tab.0.center/0.23.1680.988@0.23.1680.988" timestamp="1583039089964" />
-    <state width="842" height="250" key="GridCell.Tab.0.left" timestamp="1583039089964" />
-    <state width="842" height="250" key="GridCell.Tab.0.left/0.23.1680.987@0.23.1680.987" timestamp="1583039089964" />
-    <state width="842" height="221" key="GridCell.Tab.0.left/0.23.1680.988@0.23.1680.988" timestamp="1583039089964" />
-    <state width="842" height="250" key="GridCell.Tab.0.right" timestamp="1583039089964" />
-    <state width="842" height="250" key="GridCell.Tab.0.right/0.23.1680.987@0.23.1680.987" timestamp="1583039089964" />
-    <state width="842" height="221" key="GridCell.Tab.0.right/0.23.1680.988@0.23.1680.988" timestamp="1583039089964" />
-    <state x="683" y="291" key="SettingsEditor" timestamp="1583041670779">
-      <screen x="0" y="23" width="1680" height="990" />
-    </state>
-    <state x="683" y="153" key="SettingsEditor/0.23.1680.988@0.23.1680.988" timestamp="1583039089964" />
-    <state x="683" y="291" key="SettingsEditor/0.23.1680.990@0.23.1680.990" timestamp="1583041670779" />
-    <state x="683" y="153" key="SettingsEditor/0.23.1680.991@0.23.1680.991" timestamp="1583041144195" />
-    <state x="444" y="254" key="Vcs.Push.Dialog.v2" timestamp="1583041894859">
-      <screen x="0" y="23" width="1680" height="990" />
-    </state>
-    <state x="444" y="254" key="Vcs.Push.Dialog.v2/0.23.1680.990@0.23.1680.990" timestamp="1583041894859" />
-    <state x="1021" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1583039089964" />
-    <state x="1021" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1680.988@0.23.1680.988" timestamp="1583039089964" />
-    <state x="1021" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1680.989@0.23.1680.989" timestamp="1583039089964" />
+    <state x="539" y="242" key="#All_Tests" />
+    <state x="539" y="242" key="#All_Tests/0.23.1680.990@0.23.1680.990" />
+    <state x="382" y="117" key="CommitChangelistDialog2" />
+    <state x="382" y="117" key="CommitChangelistDialog2/0.23.1680.987@0.23.1680.987" />
+    <state x="382" y="117" key="CommitChangelistDialog2/0.23.1680.988@0.23.1680.988" />
+    <state x="382" y="117" key="CommitChangelistDialog2/0.23.1680.989@0.23.1680.989" />
+    <state x="382" y="117" key="CommitChangelistDialog2/0.23.1680.990@0.23.1680.990" />
+    <state width="842" height="250" key="GridCell.Tab.0.bottom" />
+    <state width="842" height="250" key="GridCell.Tab.0.bottom/0.23.1680.987@0.23.1680.987" />
+    <state width="842" height="221" key="GridCell.Tab.0.bottom/0.23.1680.988@0.23.1680.988" />
+    <state width="842" height="250" key="GridCell.Tab.0.center" />
+    <state width="842" height="250" key="GridCell.Tab.0.center/0.23.1680.987@0.23.1680.987" />
+    <state width="842" height="221" key="GridCell.Tab.0.center/0.23.1680.988@0.23.1680.988" />
+    <state width="842" height="250" key="GridCell.Tab.0.left" />
+    <state width="842" height="250" key="GridCell.Tab.0.left/0.23.1680.987@0.23.1680.987" />
+    <state width="842" height="221" key="GridCell.Tab.0.left/0.23.1680.988@0.23.1680.988" />
+    <state width="842" height="250" key="GridCell.Tab.0.right" />
+    <state width="842" height="250" key="GridCell.Tab.0.right/0.23.1680.987@0.23.1680.987" />
+    <state width="842" height="221" key="GridCell.Tab.0.right/0.23.1680.988@0.23.1680.988" />
+    <state x="683" y="291" key="SettingsEditor" />
+    <state x="683" y="153" key="SettingsEditor/0.23.1680.988@0.23.1680.988" />
+    <state x="683" y="291" key="SettingsEditor/0.23.1680.990@0.23.1680.990" />
+    <state x="683" y="153" key="SettingsEditor/0.23.1680.991@0.23.1680.991" />
+    <state x="444" y="254" key="Vcs.Push.Dialog.v2" />
+    <state x="444" y="254" key="Vcs.Push.Dialog.v2/0.23.1680.990@0.23.1680.990" />
+    <state x="1021" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" />
+    <state x="1021" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1680.988@0.23.1680.988" />
+    <state x="1021" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1680.989@0.23.1680.989" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
