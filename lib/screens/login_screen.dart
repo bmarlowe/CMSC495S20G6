@@ -21,17 +21,12 @@ class LoginScreenState extends State<LoginScreen> {
       title: 'Pantry Login',
       messages: LoginMessages(
         usernameHint: 'Username',
-        passwordHint: 'Pass',
+        passwordHint: 'Password',
         confirmPasswordHint: 'Confirm',
         loginButton: 'LOG IN',
         signupButton: 'REGISTER',
-        forgotPasswordButton: 'Forgot huh?',
         goBackButton: 'GO BACK',
         confirmPasswordError: 'Passwords do not match!',
-        recoverPasswordIntro: 'Don\'t feel bad. Happens all the time.',
-        recoverPasswordDescription: 'Lorem Ipsum is simply dummy text '
-            'of the printing and typesetting industry',
-        recoverPasswordSuccess: 'Password recovered successfully',
       ),
       emailValidator: (value) {
         if (!value.contains('@') || !value.endsWith('.com')) {
@@ -51,22 +46,16 @@ class LoginScreenState extends State<LoginScreen> {
       },
       onLogin: (loginData) {
         print('Login info');
-        print('E-mal: ${loginData.name}');
+        print('E-mal: ${loginData.name.trim()}');
         print('Password: ${loginData.password}');
         return login(loginData, context);
       },
       onSubmitAnimationCompleted: () {
         return null;
       },
-      onRecoverPassword: (email) {
-        print('Recover password info');
-        print('E-mail: $email');
-        return null;
-        //Show new password dialog
-      },
       onSignup: (loginData) {
         print('Signup info');
-        print('E-mail: ${loginData.name}');
+        print('E-mail: ${loginData.name.trim()}');
         print('Password: ${loginData.password}');
         return register(loginData, context);
       },

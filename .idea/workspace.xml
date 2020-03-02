@@ -11,16 +11,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="025e7661-bfed-4713-bf94-9ba50be62b0b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/UML.puml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.packages" beforeDir="false" afterPath="$PROJECT_DIR$/.packages" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/UML.png" beforeDir="false" afterPath="$PROJECT_DIR$/UML.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/models/users.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/screens/login_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/login_screen.dart" afterDir="false" />
     </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -32,7 +28,7 @@
   <component name="DevPartner.ProjectWorkspace">
     <option name="runtimeAnalysisType" value="-1" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="R58M967M7DD" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="Pixel_3_API_28" />
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
@@ -83,13 +79,6 @@
     <property name="show.migrate.to.gradle.popup" value="false" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$APPLICATION_CONFIG_DIR$/scratches" />
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/lib" />
-      <recent name="$APPLICATION_CONFIG_DIR$/scratches/barcode_model" />
-      <recent name="$PROJECT_DIR$/lib/Authentication" />
-    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
     </key>
@@ -100,6 +89,25 @@
       <recent name="$PROJECT_DIR$/assets" />
       <recent name="$PROJECT_DIR$/lib/pan_inv_json" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$APPLICATION_CONFIG_DIR$/scratches" />
+      <recent name="$PROJECT_DIR$/lib" />
+      <recent name="$APPLICATION_CONFIG_DIR$/scratches/barcode_model" />
+      <recent name="$PROJECT_DIR$/lib/Authentication" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -117,6 +125,8 @@
       <workItem from="1583039136115" duration="895000" />
       <workItem from="1583040865858" duration="154000" />
       <workItem from="1583041039941" duration="479000" />
+      <workItem from="1583041700729" duration="1002000" />
+      <workItem from="1583043587708" duration="965000" />
     </task>
     <task id="LOCAL-00001" summary="Test Commit">
       <created>1580528208743</created>
@@ -265,7 +275,14 @@
       <option name="project" value="LOCAL" />
       <updated>1583034216409</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="new fields available from backend to update and delete corrected Item class and added delete function to view_item.dart">
+      <created>1583041890269</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1583041890269</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -302,10 +319,17 @@
     <option name="LAST_COMMIT_MESSAGE" value="new fields available from backend to update and delete corrected Item class and added delete function to view_item.dart" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="382" y="117" key="CommitChangelistDialog2" timestamp="1583039089962" />
+    <state x="539" y="242" key="#All_Tests" timestamp="1583042123956">
+      <screen x="0" y="23" width="1680" height="990" />
+    </state>
+    <state x="539" y="242" key="#All_Tests/0.23.1680.990@0.23.1680.990" timestamp="1583042123956" />
+    <state x="382" y="117" key="CommitChangelistDialog2" timestamp="1583041889924">
+      <screen x="0" y="23" width="1680" height="990" />
+    </state>
     <state x="382" y="117" key="CommitChangelistDialog2/0.23.1680.987@0.23.1680.987" timestamp="1583039089964" />
     <state x="382" y="117" key="CommitChangelistDialog2/0.23.1680.988@0.23.1680.988" timestamp="1583039089964" />
     <state x="382" y="117" key="CommitChangelistDialog2/0.23.1680.989@0.23.1680.989" timestamp="1583039089964" />
+    <state x="382" y="117" key="CommitChangelistDialog2/0.23.1680.990@0.23.1680.990" timestamp="1583041889924" />
     <state width="842" height="250" key="GridCell.Tab.0.bottom" timestamp="1583039089964" />
     <state width="842" height="250" key="GridCell.Tab.0.bottom/0.23.1680.987@0.23.1680.987" timestamp="1583039089964" />
     <state width="842" height="221" key="GridCell.Tab.0.bottom/0.23.1680.988@0.23.1680.988" timestamp="1583039089964" />
@@ -324,6 +348,10 @@
     <state x="683" y="153" key="SettingsEditor/0.23.1680.988@0.23.1680.988" timestamp="1583039089964" />
     <state x="683" y="291" key="SettingsEditor/0.23.1680.990@0.23.1680.990" timestamp="1583041670779" />
     <state x="683" y="153" key="SettingsEditor/0.23.1680.991@0.23.1680.991" timestamp="1583041144195" />
+    <state x="444" y="254" key="Vcs.Push.Dialog.v2" timestamp="1583041894859">
+      <screen x="0" y="23" width="1680" height="990" />
+    </state>
+    <state x="444" y="254" key="Vcs.Push.Dialog.v2/0.23.1680.990@0.23.1680.990" timestamp="1583041894859" />
     <state x="1021" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1583039089964" />
     <state x="1021" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1680.988@0.23.1680.988" timestamp="1583039089964" />
     <state x="1021" y="438" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.23.1680.989@0.23.1680.989" timestamp="1583039089964" />
