@@ -8,15 +8,13 @@ class Item {
   final String acquisition_date;
   final String quantity_with_unit;
   final String expiration_date;
-  final int id;
 
   Item(
       {this.id,
       this.name,
       this.acquisition_date,
       this.expiration_date,
-      this.quantity_with_unit,
-      this.id});
+      this.quantity_with_unit,});
 
   factory Item.fromJson(Map<String, dynamic> json) => _$ItemFromJson(json);
   Map<String, dynamic> toJson() => _$ItemToJson(this);
