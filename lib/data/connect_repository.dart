@@ -282,37 +282,40 @@ Future addToInventory(context) async {
         "\":\"${Connections.unitController.text}\",\"acquisition_date\":\""
         "${Connections.acquisitionController.text.substring(0, 10)}\",\""
         "expiration_date\":\"${Connections.expirationController.text.substring(0, 10)}\"}");
-    if ("${Connections.itemController.text}" == null ||
-        "${Connections.itemController.text}" == "") {
+    if ("${Connections.itemController.text}" == null) {
       throw new RangeError("Item name is null");
+    } else if ("${Connections.itemController.text}" == "") {
+      throw new RangeError("Item name cannot be empty!");
     }
-  } on RangeError {
+    print(item);
+    if (offline) {
+      _offlineAlert(context);
+    } else {
+      final response = await client.post(url + "/item",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          },
+          body: item);
+      if (response.statusCode == 200) {
+        _alertSuccess(context, 'Item sucessfully added to inventory');
+        Connections.itemController.clear();
+        Connections.unitController.clear();
+        Connections.expirationController.clear();
+        Connections.acquisitionController.clear();
+        return response;
+      } else {
+        throw Exception('Failed to load server Inventory');
+      }
+    }
+  } on Error catch (e) {
     _alertEmpty(
         context,
-        "Item Name and Dates must be filled., "
-        "Please check your input and try again");
-  }
-  print(item);
-  if (offline) {
-    _offlineAlert(context);
-  } else {
-    final response = await client.post(url + "/item",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        body: item);
-    if (response.statusCode == 200) {
-      _alertSuccess(context, 'Item sucessfully added to inventory');
-      Connections.itemController.clear();
-      Connections.unitController.clear();
-      Connections.expirationController.clear();
-      Connections.acquisitionController.clear();
-      return response;
-    } else {
-      _alertFail(context, 'Item not added to server');
-      throw Exception('Failed to load server Inventory');
-    }
+        "Item Name and Dates must be filled. "
+                "Please check your input and try again. " +
+            e.toString());
+  } on Exception catch (e) {
+    _alertFail(context, e.toString());
   }
 } //addToInventory
 
@@ -324,33 +327,39 @@ Future updateInventory(context, int itemId) async {
         "\":\"${Connections.unitController.text}\",\"acquisition_date\":\""
         "${Connections.acquisitionController.text.substring(0, 10)}\",\""
         "expiration_date\":\"${Connections.expirationController.text.substring(0, 10)}\"}");
-    if ("${Connections.itemController.text}" == null ||
-        "${Connections.itemController.text}" == "") {
+    if ("${Connections.itemController.text}" == null) {
       throw new RangeError("Item name is null");
+    } else if ("${Connections.itemController.text}" == "") {
+      throw new RangeError("Item name cannot be empty!");
     }
-  } on RangeError {
+    if (offline) {
+      _offlineAlert(context);
+    } else {
+      final response = await client.post(url + "/item",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          },
+          body: item);
+      if (response.statusCode == 200) {
+        Connections.itemController.clear();
+        Connections.unitController.clear();
+        Connections.expirationController.clear();
+        Connections.acquisitionController.clear();
+        _alertSuccess(context, 'Item sucessfully updated in inventory');
+        return response;
+      } else {
+        throw Exception('Failed to update Inventory');
+      }
+    }
+  } on RangeError catch (e) {
     _alertEmpty(
         context,
-        "Item Name and Dates must be filled., "
-        "Please check your input and try again");
-  }
-  print(item);
-  if (offline) {
-    _offlineAlert(context);
-  } else {
-    final response = await client.post(url + "/item",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        body: item);
-    if (response.statusCode == 200) {
-      _alertSuccess(context, 'Item sucessfully added to inventory');
-      return response;
-    } else {
-      _alertFail(context, 'Item not added to server');
-      throw Exception('Failed to load server Inventory');
-    }
+        "Item Name and Dates must be filled. "
+                "Please check your input and try again. " +
+            e.toString());
+  } on Exception catch (e) {
+    _alertFail(context, e.toString());
   }
 } //updateInventory
 
