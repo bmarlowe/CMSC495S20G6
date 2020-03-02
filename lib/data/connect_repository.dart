@@ -111,12 +111,16 @@ Future<String> login(loginData, BuildContext context) async {
   }
 } //login
 
-void logout(context) {
+void logout(context) async {
   Connections.searchController.dispose();
   Connections.itemController.dispose();
   Connections.acquisitionController.dispose();
   Connections.expirationController.dispose();
   Connections.unitController.dispose();
+  var response = await client.post(url + "/o/revoke_token/");
+  if (response.statusCode == 200) {
+    print("token revoked");
+  }
   client.close();
   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
 }
@@ -260,8 +264,9 @@ Future addToInventory(context) async {
         "\":\"${Connections.unitController.text}\",\"acquisition_date\":\""
         "${Connections.acquisitionController.text.substring(0, 10)}\",\""
         "expiration_date\":\"${Connections.expirationController.text.substring(0, 10)}\"}");
-    if ("${Connections.itemController.text}" == null) {
-      throw new RangeError("item name is null");
+    if ("${Connections.itemController.text}" == null ||
+        "${Connections.itemController.text}" == "") {
+      throw new RangeError("Item name is null");
     }
   } on RangeError {
     _alertEmpty(
@@ -297,8 +302,9 @@ Future updateInventory(context, int itemId) async {
         "\":\"${Connections.unitController.text}\",\"acquisition_date\":\""
         "${Connections.acquisitionController.text.substring(0, 10)}\",\""
         "expiration_date\":\"${Connections.expirationController.text.substring(0, 10)}\"}");
-    if ("${Connections.itemController.text}" == null) {
-      throw new RangeError("item name is null");
+    if ("${Connections.itemController.text}" == null ||
+        "${Connections.itemController.text}" == "") {
+      throw new RangeError("Item name is null");
     }
   } on RangeError {
     _alertEmpty(

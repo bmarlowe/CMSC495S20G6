@@ -12,9 +12,7 @@
   <component name="ChangeListManager">
     <list default="true" id="025e7661-bfed-4713-bf94-9ba50be62b0b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/UML.png" beforeDir="false" afterPath="$PROJECT_DIR$/UML.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/android/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/screens/login_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/screens/login_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/connect_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/connect_repository.dart" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -282,7 +280,14 @@
       <option name="project" value="LOCAL" />
       <updated>1583041890269</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="fixed login page">
+      <created>1583107590428</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1583107590428</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -316,7 +321,8 @@
     <MESSAGE value="fixed models to match back end int." />
     <MESSAGE value="offline search works with current UI" />
     <MESSAGE value="new fields available from backend to update and delete corrected Item class and added delete function to view_item.dart" />
-    <option name="LAST_COMMIT_MESSAGE" value="new fields available from backend to update and delete corrected Item class and added delete function to view_item.dart" />
+    <MESSAGE value="fixed login page" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed login page" />
   </component>
   <component name="WindowStateProjectService">
     <state x="539" y="242" key="#All_Tests" timestamp="1583042123956">
