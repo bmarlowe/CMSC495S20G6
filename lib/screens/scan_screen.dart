@@ -25,7 +25,7 @@ class Scan extends StatefulWidget {
   final bool isUpdate;
   final Item item;
 
-  Scan({Key key, this.isUpdate, this.item}) : super(key: key);
+  Scan({Key key, Widget child, this.isUpdate, this.item}) : super(key: key);
   
   @override
   ScanState createState() => new ScanState();
@@ -37,7 +37,7 @@ class ScanState extends State<Scan> {
   BaseResponse baseResponse = new BaseResponse();
   var formatter = new DateFormat('yyyy-MM-dd');
   BuildContext context;
-  String itemID;
+  String itemID = "";
   
 
   @override
@@ -65,17 +65,63 @@ class ScanState extends State<Scan> {
     print("${Connections.expirationController.text}");
   }
 
+  String ifUpdate(Item item) {
+      this.clear();
+      print("updating...");
+      print(item.id.toString() + " " + item.toString());
+      String itemID = item.id.toString();
+      Connections.itemController.text = item.name;
+      Connections.unitController.text = item.quantity_with_unit;
+      Connections.acquisitionController.text = item.acquisition_date;
+      Connections.expirationController.text = item.expiration_date;
+      return itemID;
+  }
+
+  void clear() {
+    Connections.itemController.text = "";
+    Connections.unitController.text = "";
+    Connections.expirationController.text = "";
+    Connections.acquisitionController.text = "";
+  }
+
+  void _alertUpdateClear(BuildContext context) {
+  new Alert(
+    context: context,
+    type: AlertType.error,
+    title: "Error",
+    desc: "Cannot clear during update",
+    buttons: [
+      DialogButton(
+        child: Text(
+          "OK",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        color: Colors.teal,
+        onPressed: () => Navigator.pop(context),
+      ),
+    ],
+  ).show();
+} 
+
   Widget build(context) {
-    clear();
+    print(widget.isUpdate);
     if (widget.isUpdate) {
       print(widget.item.id.toString() + widget.item.toString());
       itemID = ifUpdate(widget.item);
+      return new Scaffold(
+        body: Center(
+          child: pantryInput(context, true, widget.item),
+        ),
+      );
+    } else {
+      Item item = new Item();
+      return new Scaffold(
+        body: Center(
+          child: pantryInput(context, false, item),
+        ),
+      );
     }
-    return new Scaffold(
-      body: Center(
-          child: pantryInput(context, widget.isUpdate, widget.item),
-      ),
-    );
+    
   }
 
   Widget barcodeInput(context) {
@@ -177,22 +223,7 @@ class ScanState extends State<Scan> {
                 onPressed: () {
                   print(isUpdate);
                   if (isUpdate) {
-                    new Alert(
-                      context: context,
-                      type: AlertType.error,
-                      title: "Error",
-                      desc: "Cannot clear during update",
-                      buttons: [
-                        DialogButton(
-                          child: Text(
-                            "OK",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          color: Colors.teal,
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ],
-                    ).show();
+                    _alertUpdateClear(context);
                   } else {
                     clear();
                   }
@@ -212,6 +243,7 @@ class ScanState extends State<Scan> {
                   print(isUpdate);
                   print(itemID);
                   addToInventory(context, isUpdate, itemID);
+                  Navigator.pop(context);
                 },
                 color: Colors.teal,
                 child: Text('Add Item'),
@@ -255,22 +287,3 @@ class ScanState extends State<Scan> {
   }
 
 }
-
-  String ifUpdate(Item item) {
-      clear();
-      print("updating...");
-      //print(item.id.toString() + " " + item.toString());
-      String itemID = item.id.toString();
-      Connections.itemController.text = item.name;
-      Connections.unitController.text = item.quantity_with_unit;
-      Connections.acquisitionController.text = item.acquisition_date;
-      Connections.expirationController.text = item.expiration_date;
-      return itemID;
-  }
-
-  void clear(){
-    Connections.itemController.clear();
-    Connections.unitController.clear();
-    Connections.expirationController.clear();
-    Connections.acquisitionController.clear();
-  }

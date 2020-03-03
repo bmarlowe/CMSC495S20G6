@@ -26,6 +26,7 @@ class ViewItemState extends State<ViewItem> {
   Widget build(BuildContext context) {
     item = widget.item;
     color = widget.color;
+    print("view_item card:");
     print(item.name);
     return new Scaffold(
       appBar: AppBar(
@@ -93,7 +94,7 @@ class ViewItemState extends State<ViewItem> {
                 builder: (context) {
                 return RaisedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    //Navigator.pop(context);
                     Navigator.push(
                         context,
                         MaterialPageRoute(

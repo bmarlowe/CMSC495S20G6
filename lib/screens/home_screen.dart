@@ -18,9 +18,9 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
   final widgetOptions = [
-    new PantryList(isSearch: false),
-    new Search(),
-    new Scan(isUpdate: false),
+    PantryList(isSearch: false),
+    Search(),
+    Scan(isUpdate: false),
   ];
 
   @override
