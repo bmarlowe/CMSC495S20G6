@@ -20,7 +20,7 @@ class HomeScreenState extends State<HomeScreen> {
   final widgetOptions = [
     new PantryList(isSearch: false),
     new Search(),
-    new Scan(),
+    new Scan(isUpdate: false),
   ];
 
   @override
@@ -84,7 +84,9 @@ class HomeScreenState extends State<HomeScreen> {
 
 class PantryList extends StatefulWidget {
   final bool isSearch;
+
   PantryList({Key key, @required this.isSearch}) : super(key: key);
+  
   @override
   PantryListState createState() => PantryListState();
 }
@@ -159,7 +161,7 @@ class InventoryList extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ViewItem(item: invSorted[index], color: cardColor),
+                    builder: (context) => new ViewItem(item: invSorted[index], color: cardColor),
                   ),
                 );
               },

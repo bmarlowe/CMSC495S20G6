@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:pantry/models/item.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../data/connect_repository.dart';
 import '../models/upc_base_response.dart';
@@ -20,6 +22,11 @@ class Connections {
 }
 
 class Scan extends StatefulWidget {
+  final bool isUpdate;
+  final Item item;
+
+  Scan({Key key, this.isUpdate, this.item}) : super(key: key);
+  
   @override
   ScanState createState() => new ScanState();
 }
@@ -30,6 +37,8 @@ class ScanState extends State<Scan> {
   BaseResponse baseResponse = new BaseResponse();
   var formatter = new DateFormat('yyyy-MM-dd');
   BuildContext context;
+  String itemID;
+  
 
   @override
   void initState() {
@@ -56,11 +65,22 @@ class ScanState extends State<Scan> {
     print("${Connections.expirationController.text}");
   }
 
-  @override
   Widget build(context) {
+    clear();
+    if (widget.isUpdate) {
+      print(widget.item.id.toString() + widget.item.toString());
+      itemID = ifUpdate(widget.item);
+    }
     return new Scaffold(
-        body: Center(
-            child: SingleChildScrollView(
+      body: Center(
+          child: pantryInput(context, widget.isUpdate, widget.item),
+      ),
+    );
+  }
+
+  Widget barcodeInput(context) {
+    return Center(
+      child: SingleChildScrollView(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: <Widget>[
@@ -77,15 +97,23 @@ class ScanState extends State<Scan> {
             }
             return '';
           })()),
-          pantryInfoInputsWidget(context),
         ],
       ),
-    )));
+    ));
   }
 
-  Widget pantryInfoInputsWidget(context) {
-    return Column(
-      children: <Widget>[
+  Widget pantryInput(context, bool isUpdate, Item item) {
+    Widget child;
+    if (isUpdate) {
+      child = Container();
+    } else {
+      child = barcodeInput(context);
+    }
+    return Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(left: 3, bottom: 4.0),
           child: TextField(
@@ -146,9 +174,31 @@ class ScanState extends State<Scan> {
           child: Builder(
             builder: (context) {
               return RaisedButton(
-                onPressed: () => clear(),
+                onPressed: () {
+                  print(isUpdate);
+                  if (isUpdate) {
+                    new Alert(
+                      context: context,
+                      type: AlertType.error,
+                      title: "Error",
+                      desc: "Cannot clear during update",
+                      buttons: [
+                        DialogButton(
+                          child: Text(
+                            "OK",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                          color: Colors.teal,
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ).show();
+                  } else {
+                    clear();
+                  }
+                },
                 color: Colors.teal,
-                child: Text('Clear All Text'),
+                child: Text('Clear All'),
               );
             },
           ),
@@ -158,7 +208,11 @@ class ScanState extends State<Scan> {
           child: Builder(
             builder: (context) {
               return RaisedButton(
-                onPressed: () => addToInventory(context),
+                onPressed: () {
+                  print(isUpdate);
+                  print(itemID);
+                  addToInventory(context, isUpdate, itemID);
+                },
                 color: Colors.teal,
                 child: Text('Add Item'),
               );
@@ -166,16 +220,10 @@ class ScanState extends State<Scan> {
           ),
         ),
           ]
-        )
+        ),
+        child,
       ],
-    );
-  }
-
-  void clear(){
-    Connections.itemController.clear();
-    Connections.unitController.clear();
-    Connections.expirationController.clear();
-    Connections.acquisitionController.clear();
+    )));
   }
 
   Future scan() async {
@@ -205,4 +253,24 @@ class ScanState extends State<Scan> {
       print("Unknown error: $e");
     }
   }
+
 }
+
+  String ifUpdate(Item item) {
+      clear();
+      print("updating...");
+      //print(item.id.toString() + " " + item.toString());
+      String itemID = item.id.toString();
+      Connections.itemController.text = item.name;
+      Connections.unitController.text = item.quantity_with_unit;
+      Connections.acquisitionController.text = item.acquisition_date;
+      Connections.expirationController.text = item.expiration_date;
+      return itemID;
+  }
+
+  void clear(){
+    Connections.itemController.clear();
+    Connections.unitController.clear();
+    Connections.expirationController.clear();
+    Connections.acquisitionController.clear();
+  }

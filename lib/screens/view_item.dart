@@ -5,15 +5,29 @@ import 'package:pantry/data/connect_repository.dart';
 
 import 'package:pantry/models/item.dart';
 
-class ViewItem extends StatelessWidget {
+import 'scan_screen.dart';
+
+class ViewItem extends StatefulWidget {
   final Item item;
   final Color color;
 
   ViewItem({Key key, @required this.item, @required this.color}) : super(key: key);
 
   @override
+  ViewItemState createState() => new ViewItemState();
+
+}
+
+class ViewItemState extends State<ViewItem> {
+  Item item;
+  Color color;
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    item = widget.item;
+    color = widget.color;
+    print(item.name);
+    return new Scaffold(
       appBar: AppBar(
         title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -75,6 +89,26 @@ class ViewItem extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 34, fontWeight: FontWeight.bold)
                 ),
+              Builder(
+                builder: (context) {
+                return RaisedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) { print(item.id.toString() + " " + item.toString());
+                          return new Scan(isUpdate: true, item: item);
+                          }
+                        ),
+                      );
+                    //Scan(isUpdate: true, item: item);
+                  },
+                  color: Colors.teal,
+                  child: Text('Modify Item'),
+                );
+                },
+              )
             ]
           )
         )

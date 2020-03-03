@@ -65,9 +65,9 @@ Future<String> login(loginData, BuildContext context) async {
   //
   // Some servers don't require the client to authenticate itself, in which case
   // these should be omitted.
-  final identifier = "S1MOqTT711HmXKhYcMe82LQHFNBYxCuMLqihtBCe";
+  final identifier = "LjSleZ3SBQEjrdESIXgO9JLzkvslgLLRBHQCLOvT";
   final secret =
-      "NFN4brwzeVWVtfmXyyGs1zmEZN9jMuVJ6gvv9Ncv0Xe6UwU3NH8dZZwd53DL2WRcGFR9jIHuoFl0aV1qlqyP8rVu1NewM2OiXt9gpjY7azwXBXNzL9KBvTQ87wBuFEsc";
+      "3vFY6L9QXBmvXBqORR5t9SbAeUP3GIAyDCTwVRvLxnXCrmAilam9Bu1OEUUASgnriidxhMEIzye0GzlWhyQH4dODFdj2vk7QdYpAvgfOk2lF7TBlnO795sUETB2A91Nv";
   // Make a request to the authorization endpoint that will produce the fully
   // authenticated Client.
 
@@ -154,7 +154,7 @@ Future<List<Item>> fetchInventory(BuildContext context) async {
     } else {
       // If that call was not successful, throw an error.
       _alertFail(context,
-          'Did not connect to server ' + response.statusCode.toString());
+          'Could not connect to server ' + response.statusCode.toString());
       throw Exception('Failed to load pantry items');
     }
   }
@@ -229,11 +229,11 @@ Future<String> deleteItemForSure(context, itemId) async {
     }
     if (response.statusCode == 200) {
       _alertSuccess(context, "Your Item was Deleted");
-      return response.statusCode;
+      return response.statusCode.toString();
     } else {
       // If that call was not successful, throw an error.
       _alertFail(context,
-          'Did not connect to server ' + response.statusCode.toString());
+          'Could not connect to server ' + response.statusCode.toString());
       throw Exception('Failed to delete item');
     }
   }
@@ -253,7 +253,7 @@ void _alertAreYouSure(BuildContext context, int itemId) {
     context: context,
     type: AlertType.warning,
     title: "Are You Sure?",
-    desc: "If you choose to delete this cannot be undone!",
+    desc: "This action cannot be undone!",
     buttons: [
       DialogButton(
         child: Text(
@@ -274,11 +274,20 @@ void _alertAreYouSure(BuildContext context, int itemId) {
   ).show();
 } //_offlineAlert
 
-Future addToInventory(context) async {
-  var item;
+Future addToInventory(context, bool isUpdate, String itemID) async {
+  String item;
+  String message;
+  if (isUpdate) {
+    print(itemID);
+    item = "{\"id\":\"$itemID\",";
+    message = "Item successfully updated in Inventory";
+  } else {
+    item = "{";
+    message = "Item successfully added to Inventory";
+  }
   //try statement fo check for null items, show pop-up failure notices
   try {
-    item = ("{\"name\":\"${Connections.itemController.text}\",\"quantity_with_unit"
+    item += ("\"name\":\"${Connections.itemController.text}\",\"quantity_with_unit"
         "\":\"${Connections.unitController.text}\",\"acquisition_date\":\""
         "${Connections.acquisitionController.text.substring(0, 10)}\",\""
         "expiration_date\":\"${Connections.expirationController.text.substring(0, 10)}\"}");
@@ -298,7 +307,7 @@ Future addToInventory(context) async {
           },
           body: item);
       if (response.statusCode == 200) {
-        _alertSuccess(context, 'Item sucessfully added to inventory');
+        _alertSuccess(context, message);
         Connections.itemController.clear();
         Connections.unitController.clear();
         Connections.expirationController.clear();
@@ -319,7 +328,7 @@ Future addToInventory(context) async {
   }
 } //addToInventory
 
-Future updateInventory(context, int itemId) async {
+/*Future updateInventory(context, int itemId) async {
   var item;
   //try statement fo check for null items, show pop-up failure notices
   try {
@@ -361,7 +370,7 @@ Future updateInventory(context, int itemId) async {
   } on Exception catch (e) {
     _alertFail(context, e.toString());
   }
-} //updateInventory
+}*/ //updateInventory
 
 Future<dynamic> fetchBarcodeInfo(http.Client client, String barcode) async {
   final response = await http
@@ -379,12 +388,12 @@ void _alertSuccess(BuildContext context, String message) {
   new Alert(
     context: context,
     type: AlertType.info,
-    title: "CONGRATS",
+    title: "Success",
     desc: message,
     buttons: [
       DialogButton(
         child: Text(
-          "Transfer",
+          "Return",
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
         color: Colors.teal,
@@ -400,7 +409,7 @@ void _alertFail(BuildContext context, String message) {
   new Alert(
     context: context,
     type: AlertType.error,
-    title: "ERROR",
+    title: "Error",
     desc: message,
     buttons: [
       DialogButton(
@@ -419,7 +428,7 @@ void _alertFailLogin(context, String message) {
   new Alert(
     context: context,
     type: AlertType.error,
-    title: "ERROR",
+    title: "Error",
     desc: message,
     buttons: [
       DialogButton(
@@ -454,7 +463,7 @@ void _offlineAlert(context) {
     type: AlertType.warning,
     title: "Working Offline",
     desc: "While working offline you will not be able to modify, add or delete "
-        "items from your pantry inventory connected to the server.",
+        "items from your pantry inventory.",
     buttons: [
       DialogButton(
         child: Text(
@@ -472,7 +481,7 @@ void _alertEmpty(context, String message) {
   new Alert(
     context: context,
     type: AlertType.error,
-    title: "OOPS!",
+    title: "Error",
     desc: message,
     buttons: [
       DialogButton(
@@ -491,12 +500,12 @@ void _alertRegister(BuildContext context, String message) {
   new Alert(
     context: context,
     type: AlertType.info,
-    title: "CONGRATS",
+    title: "Success",
     desc: message,
     buttons: [
       DialogButton(
           child: Text(
-            "Transfer",
+            "Return",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
           color: Colors.teal,
