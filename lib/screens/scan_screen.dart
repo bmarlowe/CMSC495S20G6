@@ -11,6 +11,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../data/connect_repository.dart';
 import '../models/upc_base_response.dart';
+import 'package:pantry/data/globals.dart' as globals;
 
 class Connections {
   /// Inputs
@@ -22,10 +23,8 @@ class Connections {
 }
 
 class Scan extends StatefulWidget {
-  final bool isUpdate;
-  final Item item;
 
-  Scan({Key key, Widget child, this.isUpdate, this.item}) : super(key: key);
+  Scan({Key key}) : super(key: key);
   
   @override
   ScanState createState() => new ScanState();
@@ -66,22 +65,25 @@ class ScanState extends State<Scan> {
   }
 
   String ifUpdate(Item item) {
-      this.clear();
       print("updating...");
       print(item.id.toString() + " " + item.toString());
       String itemID = item.id.toString();
-      Connections.itemController.text = item.name;
-      Connections.unitController.text = item.quantity_with_unit;
-      Connections.acquisitionController.text = item.acquisition_date;
-      Connections.expirationController.text = item.expiration_date;
+      setState(() {
+        Connections.itemController.text = item.name;
+        Connections.unitController.text = item.quantity_with_unit;
+        Connections.acquisitionController.text = item.acquisition_date;
+        Connections.expirationController.text = item.expiration_date;
+      });
       return itemID;
   }
 
   void clear() {
-    Connections.itemController.text = "";
-    Connections.unitController.text = "";
-    Connections.expirationController.text = "";
-    Connections.acquisitionController.text = "";
+    setState(() {
+      Connections.itemController.clear();
+      Connections.unitController.clear();
+      Connections.expirationController.clear();
+      Connections.acquisitionController.clear();
+    });
   }
 
   void _alertUpdateClear(BuildContext context) {
@@ -104,23 +106,64 @@ class ScanState extends State<Scan> {
 } 
 
   Widget build(context) {
-    print(widget.isUpdate);
-    if (widget.isUpdate) {
-      print(widget.item.id.toString() + widget.item.toString());
-      itemID = ifUpdate(widget.item);
-      return new Scaffold(
-        body: Center(
-          child: pantryInput(context, true, widget.item),
-        ),
+    print(globals.isUpdate);
+
+    if (globals.isUpdate) {
+      print(globals.currentItem.id.toString() + globals.currentItem.toString());
+      itemID = ifUpdate(globals.currentItem);
+      return new WillPopScope(
+        onWillPop: () async => false,
+        child: new Scaffold(
+          appBar: AppBar(
+            leading: Container(),
+            title: Center(
+              child: Column(
+              //mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Pantry Application',
+                ),
+                Visibility(
+                  visible: true,
+                  child: Text(
+                    new DateFormat.yMMMMd('en_US').format(new DateTime.now()),
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ),
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                pantryInput(context, true, globals.currentItem),
+                new RaisedButton(
+                  onPressed: () {
+                    globals.isUpdate = false;
+                    clear();
+                    Navigator.pop(context);
+                  },
+                  color: Colors.teal,
+                  child: new Text("Back")
+                ),
+              ],
+            )
+          ),
+        )
       );
     } else {
       Item item = new Item();
-      return new Scaffold(
-        body: Center(
-          child: pantryInput(context, false, item),
-        ),
-      );
-    }
+        return new Scaffold(
+          body: Center(
+            child: pantryInput(context, false, item),
+          ),
+        );
+      }
     
   }
 
@@ -190,9 +233,12 @@ class ScanState extends State<Scan> {
                   lastDate: DateTime(DateTime.now().year + 40));
             },
             onChanged: (dt) =>
-                setState(() => Connections.acquisitionController.text),
+                setState(() {
+                  Connections.acquisitionController.text;
+                }),
           ),
         ),
+        //datePicker(),
         Padding(
           padding: const EdgeInsets.only(left: 3),
           child: DateTimeField(
@@ -209,7 +255,9 @@ class ScanState extends State<Scan> {
                   lastDate: DateTime(DateTime.now().year + 40));
             },
             onChanged: (dt) =>
-                setState(() => Connections.expirationController.text),
+                setState(() {
+                  Connections.expirationController.text;
+                }),
           ),
         ),
         Row(
@@ -243,7 +291,9 @@ class ScanState extends State<Scan> {
                   print(isUpdate);
                   print(itemID);
                   addToInventory(context, isUpdate, itemID);
-                  Navigator.pop(context);
+                  globals.isUpdate = false;
+                  print(globals.isUpdate);
+                  //Navigator.pop(context);
                 },
                 color: Colors.teal,
                 child: Text('Add Item'),
@@ -284,6 +334,28 @@ class ScanState extends State<Scan> {
       setState(() => this.barcode = '');
       print("Unknown error: $e");
     }
+  }
+
+  Widget datePicker() {
+    return Padding(
+          padding: const EdgeInsets.only(left: 3),
+          child: DateTimeField(
+            format: formatter,
+            controller: Connections.acquisitionController,
+            decoration: InputDecoration(labelText: 'Acquisition Date'),
+            onShowPicker: (context, currentValue) {
+              return showDatePicker(
+                  context: context,
+                  firstDate: DateTime(DateTime.now().year - 40),
+                  initialDate: currentValue ?? DateTime.now(),
+                  lastDate: DateTime(DateTime.now().year + 40));
+            },
+            onChanged: (dt) =>
+                setState(() {
+                  Connections.acquisitionController.text;
+                }),
+          ),
+        );
   }
 
 }

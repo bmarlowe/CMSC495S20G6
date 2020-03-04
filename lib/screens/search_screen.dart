@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pantry/models/item.dart';
 import 'home_screen.dart';
 import 'scan_screen.dart';
+import 'package:pantry/data/globals.dart' as globals;
 
 
 class Search extends StatefulWidget {
@@ -13,7 +14,7 @@ class Search extends StatefulWidget {
 }
 
 class SearchState extends State<Search> {
-  final List<Item> foundItems = new List<Item>();
+
   BuildContext context;
 
   @override
@@ -38,6 +39,7 @@ class SearchState extends State<Search> {
               new Container(
                 child: new RaisedButton(
                     onPressed: () {print("searching...");
+                      globals.isSearch = true;
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -91,11 +93,13 @@ class SearchDisplayState extends State<SearchDisplay> {
             icon: Icon(Icons.arrow_back),
             tooltip: 'Return to Search',
             enableFeedback: true,
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+            }
         ),
       ),
         body: Center(
-          child: PantryList(isSearch: true),
+          child: PantryList(),
         )
     );
   
