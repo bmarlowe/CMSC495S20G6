@@ -210,6 +210,15 @@ List<Item> parseItemsOfflineSearch(String responseBody, String searchString) {
   return items;
 } //parse offline Search items
 
+void delete(BuildContext context, int itemId) {
+  if (offline) {
+    _offlineAlert(context);
+    return null;
+  } else {
+    _alertAreYouSure(context, itemId);
+  }
+} //delete called by view_item
+
 Future<String> deleteItemForSure(context, itemId) async {
   var response;
   if (offline) {
@@ -238,15 +247,6 @@ Future<String> deleteItemForSure(context, itemId) async {
     }
   }
 } //delete item for sure!
-
-void delete(BuildContext context, int itemId) {
-  if (offline) {
-    _offlineAlert(context);
-    return null;
-  } else {
-    _alertAreYouSure(context, itemId);
-  }
-} //delete called by view_item
 
 void _alertAreYouSure(BuildContext context, int itemId) {
   new Alert(
@@ -326,51 +326,7 @@ Future addToInventory(context, bool isUpdate, String itemID) async {
   } on Exception catch (e) {
     _alertFail(context, e.toString());
   }
-} //addToInventory
-
-/*Future updateInventory(context, int itemId) async {
-  var item;
-  //try statement fo check for null items, show pop-up failure notices
-  try {
-    item = ("{\"id\":\"$itemId\",\"name\":\"${Connections.itemController.text}\",\"quantity_with_unit"
-        "\":\"${Connections.unitController.text}\",\"acquisition_date\":\""
-        "${Connections.acquisitionController.text.substring(0, 10)}\",\""
-        "expiration_date\":\"${Connections.expirationController.text.substring(0, 10)}\"}");
-    if ("${Connections.itemController.text}" == null) {
-      throw new RangeError("Item name is null");
-    } else if ("${Connections.itemController.text}" == "") {
-      throw new RangeError("Item name cannot be empty!");
-    }
-    if (offline) {
-      _offlineAlert(context);
-    } else {
-      final response = await client.post(url + "/item",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-          },
-          body: item);
-      if (response.statusCode == 200) {
-        Connections.itemController.clear();
-        Connections.unitController.clear();
-        Connections.expirationController.clear();
-        Connections.acquisitionController.clear();
-        _alertSuccess(context, 'Item sucessfully updated in inventory');
-        return response;
-      } else {
-        throw Exception('Failed to update Inventory');
-      }
-    }
-  } on RangeError catch (e) {
-    _alertEmpty(
-        context,
-        "Item Name and Dates must be filled. "
-                "Please check your input and try again. " +
-            e.toString());
-  } on Exception catch (e) {
-    _alertFail(context, e.toString());
-  }
-}*/ //updateInventory
+} //addToInventory - updates as well
 
 Future<dynamic> fetchBarcodeInfo(http.Client client, String barcode) async {
   final response = await http
@@ -405,7 +361,7 @@ class Checks {
   bool getSearch() {
     return this.isSearch;
   }
-} 
+}
 
 void _alertSuccess(BuildContext context, String message) {
   new Alert(
