@@ -11,10 +11,11 @@ class ViewItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("view_item card:");
-    print(globals.currentItem.name);
-    return new Scaffold(
+    return new WillPopScope(
+      onWillPop: () async => false,
+      child: new Scaffold(
       appBar: AppBar(
+        leading: Container(),
         title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,31 +76,48 @@ class ViewItem extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 34, fontWeight: FontWeight.bold)
                 ),
-              Builder(
-                builder: (context) {
-                return RaisedButton(
-                  onPressed: () {
-                    //Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) { print(globals.currentItem.id.toString() + " " + globals.currentItem.toString());
-                          globals.isUpdate = true;
-                          return new Scan();
-                          }
-                        ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Builder(
+                    builder: (context) {
+                      return RaisedButton(
+                        
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        color: Colors.teal,
+                        child: Text('Back'),
                       );
-                  },
-                  color: Colors.teal,
-                  child: Text('Modify Item'),
-                );
-                },
-              )
+                    },
+                  ),
+                  Builder(
+                    builder: (context) {
+                      return RaisedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                globals.isUpdate = true;
+                                return new Scan();
+                              }
+                            ),
+                          );
+                        },
+                        color: Colors.teal,
+                        child: Text('Modify'),
+                      );
+                    },
+                  ),
+                ],),
+              
             ]
           )
         )
       )
-    );
+    )
+  );
 
   }
 }

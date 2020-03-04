@@ -98,8 +98,10 @@ class PantryListState extends State<PantryList> {
   @override
   Widget build(BuildContext context) {
     if (globals.isSearch) {
-    return new Scaffold(
-        body: isLoading
+      return new WillPopScope(
+        onWillPop: () async => false,
+        child: new Scaffold(
+          body: isLoading
             ? Center(
                 child: CircularProgressIndicator(),
               )
@@ -113,7 +115,8 @@ class PantryListState extends State<PantryList> {
                       ? InventoryList(inventory: snapshot.data, isSearch: true)
                       : Center(child: CircularProgressIndicator());
                 }),
-    );
+        )
+      );
     }
     else {
       return new Scaffold(

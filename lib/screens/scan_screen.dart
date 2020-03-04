@@ -68,22 +68,22 @@ class ScanState extends State<Scan> {
       print("updating...");
       print(item.id.toString() + " " + item.toString());
       String itemID = item.id.toString();
-      setState(() {
+      //setState(() {
         Connections.itemController.text = item.name;
         Connections.unitController.text = item.quantity_with_unit;
         Connections.acquisitionController.text = item.acquisition_date;
         Connections.expirationController.text = item.expiration_date;
-      });
+      //});
       return itemID;
   }
 
   void clear() {
-    setState(() {
+    //setState(() {
       Connections.itemController.clear();
       Connections.unitController.clear();
       Connections.expirationController.clear();
       Connections.acquisitionController.clear();
-    });
+    //});
   }
 
   void _alertUpdateClear(BuildContext context) {
@@ -231,14 +231,9 @@ class ScanState extends State<Scan> {
                   firstDate: DateTime(DateTime.now().year - 40),
                   initialDate: currentValue ?? DateTime.now(),
                   lastDate: DateTime(DateTime.now().year + 40));
-            },
-            onChanged: (dt) =>
-                setState(() {
-                  Connections.acquisitionController.text;
-                }),
+            },              
           ),
         ),
-        //datePicker(),
         Padding(
           padding: const EdgeInsets.only(left: 3),
           child: DateTimeField(
@@ -254,10 +249,6 @@ class ScanState extends State<Scan> {
                   initialDate: currentValue ?? DateTime.now(),
                   lastDate: DateTime(DateTime.now().year + 40));
             },
-            onChanged: (dt) =>
-                setState(() {
-                  Connections.expirationController.text;
-                }),
           ),
         ),
         Row(
