@@ -149,11 +149,23 @@ search_screen - placeholder for search logic widgets
 Utils(File)
 fade_route.dart 
 
-This restructure caused a need for three global variables to be used throughout the application.  I placed those variables within the home_screen.dart. Removed thes variables from the home screen and placed them into the connect_repository file.
+This restructure caused a need for three global variables to be used throughout the application.  I placed those variables within the home_screen.dart.
+Removed these variables from the home screen and placed them into the connect_repository file, there was no need for global variables at this time
 
 ### search_screen.dart: 
-Flutter packages added: 
+Flutter packages added: none
 
 Files produced as a result:  search_screen.dart, 
-Files edited as a result:  
+Files edited as a result:  none
 
+### view_item.dart
+Flutter packages added: none
+
+Files produced as a result:  view_item.dart,
+Files edited as a result:  home_screen.dart
+
+### Update item functionality was built into the scan screen logic.  This created a need for global variables
+Flutter packages added: none
+
+Files produced as a result:  globals.dart
+Files edited as a result:  scan_screen.dart
