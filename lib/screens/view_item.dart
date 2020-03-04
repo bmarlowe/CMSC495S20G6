@@ -2,33 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 import 'package:pantry/data/connect_repository.dart';
-
-import 'package:pantry/models/item.dart';
-
 import 'scan_screen.dart';
+import 'package:pantry/data/globals.dart' as globals;
 
-class ViewItem extends StatefulWidget {
-  final Item item;
-  final Color color;
+class ViewItem extends StatelessWidget {
 
-  ViewItem({Key key, @required this.item, @required this.color}) : super(key: key);
-
-  @override
-  ViewItemState createState() => new ViewItemState();
-
-}
-
-class ViewItemState extends State<ViewItem> {
-  Item item;
-  Color color;
+  ViewItem({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    item = widget.item;
-    color = widget.color;
-    print(item.name);
-    return new Scaffold(
+    return new WillPopScope(
+      onWillPop: () async => false,
+      child: new Scaffold(
       appBar: AppBar(
+        leading: Container(),
         title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,64 +43,81 @@ class ViewItemState extends State<ViewItem> {
                 icon: Icon(Icons.highlight_off),
                 iconSize: 20,
                 enableFeedback: true,
-                onPressed: () => delete(context, item.id),
+                onPressed: () => delete(context, globals.currentItem.id),
               ),
             ]
           ),
         ],
       ),
       body: Container(
-        color: color,
+        color: globals.color,
         child: Align(
           alignment: Alignment.center,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text(item.name.toString(),
+              Text(globals.currentItem.name.toString(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 40, fontWeight: FontWeight.bold, decoration: TextDecoration.underline)
                 ),
               Text('Quantity: ' +
-                item.quantity_with_unit.toString(),
+                globals.currentItem.quantity_with_unit.toString(),
                 style: TextStyle(
                   fontSize: 34, fontWeight: FontWeight.bold)
                 ),
               Text('Acquired: ' +
-                item.acquisition_date.toString(),
+                globals.currentItem.acquisition_date.toString(),
                 style: TextStyle(
                   fontSize: 34, fontWeight: FontWeight.bold)
                 ),
               Text('Expiration: ' +
-                item.expiration_date.toString(),
+                globals.currentItem.expiration_date.toString(),
                 style: TextStyle(
                   fontSize: 34, fontWeight: FontWeight.bold)
                 ),
-              Builder(
-                builder: (context) {
-                return RaisedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) { print(item.id.toString() + " " + item.toString());
-                          return new Scan(isUpdate: true, item: item);
-                          }
-                        ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Builder(
+                    builder: (context) {
+                      return RaisedButton(
+                        
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        color: Colors.teal,
+                        child: Text('Back'),
                       );
-                    //Scan(isUpdate: true, item: item);
-                  },
-                  color: Colors.teal,
-                  child: Text('Modify Item'),
-                );
-                },
-              )
+                    },
+                  ),
+                  Builder(
+                    builder: (context) {
+                      return RaisedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                globals.isUpdate = true;
+                                return new Scan();
+                              }
+                            ),
+                          );
+                        },
+                        color: Colors.teal,
+                        child: Text('Modify'),
+                      );
+                    },
+                  ),
+                ],),
+              
             ]
           )
         )
       )
-    );
+    )
+  );
 
   }
 }

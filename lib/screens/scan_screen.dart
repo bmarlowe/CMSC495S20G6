@@ -11,6 +11,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../data/connect_repository.dart';
 import '../models/upc_base_response.dart';
+import 'package:pantry/data/globals.dart' as globals;
 
 class Connections {
   /// Inputs
@@ -22,10 +23,8 @@ class Connections {
 }
 
 class Scan extends StatefulWidget {
-  final bool isUpdate;
-  final Item item;
 
-  Scan({Key key, this.isUpdate, this.item}) : super(key: key);
+  Scan({Key key}) : super(key: key);
   
   @override
   ScanState createState() => new ScanState();
@@ -37,7 +36,7 @@ class ScanState extends State<Scan> {
   BaseResponse baseResponse = new BaseResponse();
   var formatter = new DateFormat('yyyy-MM-dd');
   BuildContext context;
-  String itemID;
+  String itemID = "";
   
 
   @override
@@ -65,17 +64,107 @@ class ScanState extends State<Scan> {
     print("${Connections.expirationController.text}");
   }
 
-  Widget build(context) {
-    clear();
-    if (widget.isUpdate) {
-      print(widget.item.id.toString() + widget.item.toString());
-      itemID = ifUpdate(widget.item);
-    }
-    return new Scaffold(
-      body: Center(
-          child: pantryInput(context, widget.isUpdate, widget.item),
+  String ifUpdate(Item item) {
+      print("updating...");
+      print(item.id.toString() + " " + item.toString());
+      String itemID = item.id.toString();
+      //setState(() {
+        Connections.itemController.text = item.name;
+        Connections.unitController.text = item.quantity_with_unit;
+        Connections.acquisitionController.text = item.acquisition_date;
+        Connections.expirationController.text = item.expiration_date;
+      //});
+      return itemID;
+  }
+
+  void clear() {
+    //setState(() {
+      Connections.itemController.clear();
+      Connections.unitController.clear();
+      Connections.expirationController.clear();
+      Connections.acquisitionController.clear();
+    //});
+  }
+
+  void _alertUpdateClear(BuildContext context) {
+  new Alert(
+    context: context,
+    type: AlertType.error,
+    title: "Error",
+    desc: "Cannot clear during update",
+    buttons: [
+      DialogButton(
+        child: Text(
+          "OK",
+          style: TextStyle(color: Colors.white, fontSize: 20),
+        ),
+        color: Colors.teal,
+        onPressed: () => Navigator.pop(context),
       ),
-    );
+    ],
+  ).show();
+} 
+
+  Widget build(context) {
+    print(globals.isUpdate);
+
+    if (globals.isUpdate) {
+      print(globals.currentItem.id.toString() + globals.currentItem.toString());
+      itemID = ifUpdate(globals.currentItem);
+      return new WillPopScope(
+        onWillPop: () async => false,
+        child: new Scaffold(
+          appBar: AppBar(
+            leading: Container(),
+            title: Center(
+              child: Column(
+              //mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  'Pantry Application',
+                ),
+                Visibility(
+                  visible: true,
+                  child: Text(
+                    new DateFormat.yMMMMd('en_US').format(new DateTime.now()),
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ),
+          ),
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                pantryInput(context, true, globals.currentItem),
+                new RaisedButton(
+                  onPressed: () {
+                    globals.isUpdate = false;
+                    clear();
+                    Navigator.pop(context);
+                  },
+                  color: Colors.teal,
+                  child: new Text("Back")
+                ),
+              ],
+            )
+          ),
+        )
+      );
+    } else {
+      Item item = new Item();
+        return new Scaffold(
+          body: Center(
+            child: pantryInput(context, false, item),
+          ),
+        );
+      }
+    
   }
 
   Widget barcodeInput(context) {
@@ -142,9 +231,7 @@ class ScanState extends State<Scan> {
                   firstDate: DateTime(DateTime.now().year - 40),
                   initialDate: currentValue ?? DateTime.now(),
                   lastDate: DateTime(DateTime.now().year + 40));
-            },
-            onChanged: (dt) =>
-                setState(() => Connections.acquisitionController.text),
+            },              
           ),
         ),
         Padding(
@@ -162,8 +249,6 @@ class ScanState extends State<Scan> {
                   initialDate: currentValue ?? DateTime.now(),
                   lastDate: DateTime(DateTime.now().year + 40));
             },
-            onChanged: (dt) =>
-                setState(() => Connections.expirationController.text),
           ),
         ),
         Row(
@@ -177,22 +262,7 @@ class ScanState extends State<Scan> {
                 onPressed: () {
                   print(isUpdate);
                   if (isUpdate) {
-                    new Alert(
-                      context: context,
-                      type: AlertType.error,
-                      title: "Error",
-                      desc: "Cannot clear during update",
-                      buttons: [
-                        DialogButton(
-                          child: Text(
-                            "OK",
-                          style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                          color: Colors.teal,
-                          onPressed: () => Navigator.pop(context),
-                        ),
-                      ],
-                    ).show();
+                    _alertUpdateClear(context);
                   } else {
                     clear();
                   }
@@ -212,6 +282,9 @@ class ScanState extends State<Scan> {
                   print(isUpdate);
                   print(itemID);
                   addToInventory(context, isUpdate, itemID);
+                  globals.isUpdate = false;
+                  print(globals.isUpdate);
+                  //Navigator.pop(context);
                 },
                 color: Colors.teal,
                 child: Text('Add Item'),
@@ -254,23 +327,26 @@ class ScanState extends State<Scan> {
     }
   }
 
+  Widget datePicker() {
+    return Padding(
+          padding: const EdgeInsets.only(left: 3),
+          child: DateTimeField(
+            format: formatter,
+            controller: Connections.acquisitionController,
+            decoration: InputDecoration(labelText: 'Acquisition Date'),
+            onShowPicker: (context, currentValue) {
+              return showDatePicker(
+                  context: context,
+                  firstDate: DateTime(DateTime.now().year - 40),
+                  initialDate: currentValue ?? DateTime.now(),
+                  lastDate: DateTime(DateTime.now().year + 40));
+            },
+            onChanged: (dt) =>
+                setState(() {
+                  Connections.acquisitionController.text;
+                }),
+          ),
+        );
+  }
+
 }
-
-  String ifUpdate(Item item) {
-      clear();
-      print("updating...");
-      //print(item.id.toString() + " " + item.toString());
-      String itemID = item.id.toString();
-      Connections.itemController.text = item.name;
-      Connections.unitController.text = item.quantity_with_unit;
-      Connections.acquisitionController.text = item.acquisition_date;
-      Connections.expirationController.text = item.expiration_date;
-      return itemID;
-  }
-
-  void clear(){
-    Connections.itemController.clear();
-    Connections.unitController.clear();
-    Connections.expirationController.clear();
-    Connections.acquisitionController.clear();
-  }

@@ -7,6 +7,7 @@ import 'scan_screen.dart';
 import 'view_item.dart';
 import 'package:pantry/data/connect_repository.dart';
 import 'package:pantry/models/item.dart';
+import 'package:pantry/data/globals.dart' as globals;
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -18,9 +19,9 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   int selectedIndex = 0;
   final widgetOptions = [
-    new PantryList(isSearch: false),
-    new Search(),
-    new Scan(isUpdate: false),
+    PantryList(),
+    Search(),
+    Scan(),
   ];
 
   @override
@@ -83,9 +84,8 @@ class HomeScreenState extends State<HomeScreen> {
 }
 
 class PantryList extends StatefulWidget {
-  final bool isSearch;
 
-  PantryList({Key key, @required this.isSearch}) : super(key: key);
+  PantryList({Key key}) : super(key: key);
   
   @override
   PantryListState createState() => PantryListState();
@@ -97,9 +97,11 @@ class PantryListState extends State<PantryList> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.isSearch) {
-    return new Scaffold(
-        body: isLoading
+    if (globals.isSearch) {
+      return new WillPopScope(
+        onWillPop: () async => false,
+        child: new Scaffold(
+          body: isLoading
             ? Center(
                 child: CircularProgressIndicator(),
               )
@@ -113,7 +115,8 @@ class PantryListState extends State<PantryList> {
                       ? InventoryList(inventory: snapshot.data, isSearch: true)
                       : Center(child: CircularProgressIndicator());
                 }),
-    );
+        )
+      );
     }
     else {
       return new Scaffold(
@@ -143,11 +146,13 @@ class InventoryList extends StatelessWidget {
 
   Widget build(BuildContext context) {
     if (inventory.length == 0 && isSearch){
+      globals.isSearch = false;
       return Align(
         alignment: Alignment.center,
         child: Text("No results found"),
       );
     } else {
+      globals.isSearch = false;
     List<Item> invSorted = sortInventory(context, inventory);
     return GridView.builder(
       padding: const EdgeInsets.all(10),
@@ -158,10 +163,13 @@ class InventoryList extends StatelessWidget {
         Color cardColor = colorCode(invSorted[index].expiration_date);
         return GestureDetector(
               onLongPress: () {
+                globals.currentItem = invSorted[index];
+                globals.color = cardColor;
+                print(globals.currentItem.toString());
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => new ViewItem(item: invSorted[index], color: cardColor),
+                    builder: (context) => new ViewItem(),
                   ),
                 );
               },

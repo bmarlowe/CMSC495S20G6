@@ -384,6 +384,29 @@ Future<dynamic> fetchBarcodeInfo(http.Client client, String barcode) async {
   }
 } //fetchBarcodeInfo
 
+class Checks {
+  bool isUpdate;
+  bool isSearch;
+
+  Checks({this.isUpdate, this.isSearch});
+
+  void setUpdate(bool isUpdate) {
+    this.isUpdate = isUpdate;
+  }
+
+  void setSearch(bool isSearch) {
+    this.isSearch = isSearch;
+  }
+
+  bool getUpdate() {
+    return this.isUpdate;
+  }
+
+  bool getSearch() {
+    return this.isSearch;
+  }
+} 
+
 void _alertSuccess(BuildContext context, String message) {
   new Alert(
     context: context,
