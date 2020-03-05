@@ -2,7 +2,7 @@
 
 A new Flutter application for CMSC 495 Spring 2020 Group 6.
 
-![demo1](https://imgur.com/j5r90fR.gif)
+![demo1](https://imgur.com/4EesYq3.gif)
 
 ## Getting Started
 
