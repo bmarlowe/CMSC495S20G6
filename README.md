@@ -2,6 +2,8 @@
 
 A new Flutter application for CMSC 495 Spring 2020 Group 6.
 
+! (https://github.com/bmarlowe/PantryImages/blob/master/screencast-Genymotion-2020-03-05_14.30.46.222.webm)
+
 ## Getting Started
 
 This project is a starting point for a Flutter Pantry Mobile Application.
