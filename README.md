@@ -11,7 +11,7 @@ This branch has all of the created flutter files for the UI portion of the proje
 ## Downloaded Items: 
 	Flutter
 	Android Studio
-	Xcode
+	Xcode / VS Code
 
 Research how to use Flutter and program application:
 
