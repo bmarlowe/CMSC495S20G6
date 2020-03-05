@@ -2,7 +2,7 @@
 
 A new Flutter application for CMSC 495 Spring 2020 Group 6.
 
-!(https://github.com/bmarlowe/PantryImages/blob/master/screencast-Genymotion-2020-03-05_14.30.46.222.webm)
+![demo1](https://drive.google.com/open?id=17XBX1ig0vIcXjr-VR_soK3acrvHHF2dm)
 
 ## Getting Started
 
