@@ -8,6 +8,7 @@ import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:oauth2/oauth2.dart';
 
 import '../models/item.dart';
 import '../models/upc_base_response.dart';
@@ -20,18 +21,22 @@ import 'package:pantry/data/auth.dart' as auth;
 bool offline = false;
 var client = new http.Client();
 
-//String url = 'http://172.16.10.60:8000'; //Testing real device
-//String url = 'http://localhost:8000'; //iOS Simulator TESTING
-String url = 'http://10.0.3.2:8000'; //ANDROID Emulator TESTING
-//String url ='https://17dfcfcc-63d3-456a-a5d8-c5f394434f7c.mock.pstmn.io';
-
 Future<String> register(loginData, BuildContext context) async {
+  final grantEndpoint = Uri.parse(auth.url + "/o/token/");
   final registrationEndpoint = Uri.parse(auth.url + "/register/");
   var response;
   await Future<void>.delayed(Duration(seconds: 1));
-  response = await http.post(registrationEndpoint, body: {
-    "username": '${(loginData.name)}',
-    "password": '${(loginData.password)}'
+  final username = '${(loginData.name)}';
+  final password = '${(loginData.password)}';
+  client = await oauth2.clientCredentialsGrant(
+      grantEndpoint, clientId, clientSecret);
+  response = await client.post(registrationEndpoint, headers: {
+    "Content-Type": "application/x-www-form-urlencoded"
+  }, body: {
+    "client_id": "$clientId",
+    "client_secret": "$clientSecret",
+    "username": '$username',
+    "password": '$password'
   });
   if (response.statusCode == 201) {
     _alertRegister(context, "You have completed registration, please login.");
@@ -50,6 +55,7 @@ Future<String> register(loginData, BuildContext context) async {
   return null;
 } //register
 
+var token;
 Future<String> login(loginData, BuildContext context) async {
   // This URL is an endpoint that's provided by the authorization server. It's
   // usually included in the server's documentation of its OAuth2 API.
@@ -58,27 +64,17 @@ Future<String> login(loginData, BuildContext context) async {
   // The user should supply their own username and password.
   final username = '${(loginData.name)}';
   final password = '${(loginData.password)}';
-
-  // The authorization server may issue each client a separate client
-  // identifier and secret, which allows the server to tell which client
-  // is accessing it. Some servers may also have an anonymous
-  // identifier/secret pair that any client may use.
-  //
-  // Some servers don't require the client to authenticate itself, in which case
-  // these should be omitted.
-  final identifier = "XZ5pgDzXud3R3Kb51PP7ERsKt5UZYrSzLEkCJrbF";
-  final secret =
-      "yYyYieWLhlUC71vQtWHDCHxT8AscjQ1OIfkAnOwXrUznlZVZwoz6YWPqCx0ENfA9wFF07Mz3aQyGKnmVvL9nHUAeJ6jcEmxGoXwOcapH5qMoPicwRhwBAntXRZJCwjAq";
-  // Make a request to the authorization endpoint that will produce the fully
-  // authenticated Client.
-
-  // Once you have the client, you can use it just like any other HTTP client.
   var response;
   try {
     client = await oauth2.resourceOwnerPasswordGrant(
         authorizationEndpoint, username, password,
         identifier: auth.identifier, secret: auth.secret);
-  } on oauth2.AuthorizationException catch (e) {
+    token = await oauth2.resourceOwnerPasswordGrant(
+        authorizationEndpoint, username, password,
+        identifier: auth.identifier, secret: auth.secret);
+    token = token.credentials.toString();
+  } on AuthorizationException catch (e) {
+
     _alertFailLogin(
         context,
         'Failed to login to server. '
@@ -96,7 +92,7 @@ Future<String> login(loginData, BuildContext context) async {
   response =
       await client.get(auth.url + "/item").timeout(Duration(milliseconds: 1000));
   if (response.statusCode == 200) {
-    print(response.toString());
+    print(response.body);
     Navigator.of(context)
         .pushReplacement(FadePageRoute(builder: (context) => HomeScreen()));
     return null;
@@ -113,12 +109,13 @@ Future<String> login(loginData, BuildContext context) async {
 } //login
 
 void logout(context) async {
-  /*Connections.searchController.dispose();
-  Connections.itemController.dispose();
-  Connections.acquisitionController.dispose();
-  Connections.expirationController.dispose();
-  Connections.unitController.dispose();*/
-  var response = await client.post(auth.url + "/o/revoke_token/");
+  var response = await client.post(auth.url + "/o/revoke_token/", headers: {
+    "Content-Type": "application/x-www-form-urlencoded"
+  }, body: {
+    "token": token,
+    "client_id": identifier,
+    "client_secret": secret,
+  });
   if (response.statusCode == 200) {
     print("token revoked");
   } else {
@@ -126,6 +123,7 @@ void logout(context) async {
   }
   client.close();
   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+  _alertRegister(context, "You are logged off.  Please log in.");
 }
 
 Future<List<Item>> fetchInventory(BuildContext context) async {
