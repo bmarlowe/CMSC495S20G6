@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
@@ -30,8 +29,8 @@ class LoginScreenState extends State<LoginScreen> {
         confirmPasswordError: 'Passwords do not match!',
       ),
       emailValidator: (value) {
-        if (!value.contains('@') || !value.endsWith('.com')) {
-          return "Email must contain '@' and end with '.com'";
+        if (value.isEmpty) {
+          return "userID must not be empty.";
         }
         return null;
       },

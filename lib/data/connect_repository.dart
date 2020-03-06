@@ -4,8 +4,9 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:oauth2/oauth2.dart' as oauth2;
+import 'package:oauth2/oauth2.dart';
 import 'package:flutter/material.dart';
+import 'package:oauth2/oauth2.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,19 +19,34 @@ import '../utils/fade_route.dart';
 
 bool offline = false;
 var client = new http.Client();
-
-//String url = 'http://172.16.10.60:8000'; //Testing real device
+final identifier = "HyJ86HsVaO2Lsh9mDzPN8M3S0cuVyfdpf3JbhcoG";
+final secret =
+    "thzut55oYWlDt1rjesqMS9mbKpueY1beG364ZYDxW64Ij8DGxldrX4ULjdKxZYGgT3Cm7KI5G0KcDU73hTizbyAu5czzSjyFvVF5GVfLm6rOHNkBAqTAhr7QIH76rity";
+final clientId = "LjSleZ3SBQEjrdESIXgO9JLzkvslgLLRBHQCLOvT";
+final clientSecret =
+    "3vFY6L9QXBmvXBqORR5t9SbAeUP3GIAyDCTwVRvLxnXCrmAilam9Bu1OEUUASgnriidxhMEIzye0GzlWhyQH4dODFdj2vk7QdYpAvgfOk2lF7TBlnO795sUETB2A91Nv";
+final token = null;
+String url = 'http://172.16.10.60:8000'; //Testing real device
 //String url = 'http://localhost:8000'; //iOS Simulator TESTING
-String url = 'http://10.0.3.2:8000'; //ANDROID Emulator TESTING
+//String url = 'http://10.0.2.2:8000'; //ANDROID Emulator TESTING with Android Studio
+//String url = 'http://10.0.3.2:8000'; //ANDROID Emulator TESTING with Other
 //String url ='https://17dfcfcc-63d3-456a-a5d8-c5f394434f7c.mock.pstmn.io';
 
 Future<String> register(loginData, BuildContext context) async {
+  final grantEndpoint = Uri.parse(url + "/o/token/");
   final registrationEndpoint = Uri.parse(url + "/register/");
   var response;
   await Future<void>.delayed(Duration(seconds: 1));
-  response = await http.post(registrationEndpoint, body: {
-    "username": '${(loginData.name)}',
-    "password": '${(loginData.password)}'
+  final username = '${(loginData.name)}';
+  final password = '${(loginData.password)}';
+  client = await clientCredentialsGrant(grantEndpoint, clientId, clientSecret);
+  response = await client.post(registrationEndpoint, headers: {
+    "Content-Type": "application/x-www-form-urlencoded"
+  }, body: {
+    "client_id": "$clientId",
+    "client_secret": "$clientSecret",
+    "username": '$username',
+    "password": '$password'
   });
   if (response.statusCode == 201) {
     _alertRegister(context, "You have completed registration, please login.");
@@ -58,26 +74,12 @@ Future<String> login(loginData, BuildContext context) async {
   final username = '${(loginData.name)}';
   final password = '${(loginData.password)}';
 
-  // The authorization server may issue each client a separate client
-  // identifier and secret, which allows the server to tell which client
-  // is accessing it. Some servers may also have an anonymous
-  // identifier/secret pair that any client may use.
-  //
-  // Some servers don't require the client to authenticate itself, in which case
-  // these should be omitted.
-  final identifier = "LjSleZ3SBQEjrdESIXgO9JLzkvslgLLRBHQCLOvT";
-  final secret =
-      "3vFY6L9QXBmvXBqORR5t9SbAeUP3GIAyDCTwVRvLxnXCrmAilam9Bu1OEUUASgnriidxhMEIzye0GzlWhyQH4dODFdj2vk7QdYpAvgfOk2lF7TBlnO795sUETB2A91Nv";
-  // Make a request to the authorization endpoint that will produce the fully
-  // authenticated Client.
-
-  // Once you have the client, you can use it just like any other HTTP client.
   var response;
   try {
-    client = await oauth2.resourceOwnerPasswordGrant(
+    client = await resourceOwnerPasswordGrant(
         authorizationEndpoint, username, password,
         identifier: identifier, secret: secret);
-  } on oauth2.AuthorizationException catch (e) {
+  } on AuthorizationException catch (e) {
     _alertFailLogin(
         context,
         'Failed to login to server. '
@@ -95,7 +97,8 @@ Future<String> login(loginData, BuildContext context) async {
   response =
       await client.get(url + "/item").timeout(Duration(milliseconds: 1000));
   if (response.statusCode == 200) {
-    print(response.toString());
+    print(response.body.toString());
+    print(response.body);
     Navigator.of(context)
         .pushReplacement(FadePageRoute(builder: (context) => HomeScreen()));
     return null;
@@ -112,12 +115,10 @@ Future<String> login(loginData, BuildContext context) async {
 } //login
 
 void logout(context) async {
-  Connections.searchController.dispose();
-  Connections.itemController.dispose();
-  Connections.acquisitionController.dispose();
-  Connections.expirationController.dispose();
-  Connections.unitController.dispose();
-  var response = await client.post(url + "/o/revoke_token/");
+  print(client.toString());
+  var response = await client.post(url + "/o/revoke-token/",
+      headers: {"Content-Type": "application/x-www-form-urlencoded"},
+      body: {"token": "", "client_id": identifier, "client_secret": secret});
   if (response.statusCode == 200) {
     print("token revoked");
   } else {
@@ -125,6 +126,7 @@ void logout(context) async {
   }
   client.close();
   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+  _alertRegister(context, "You are logged off.  Please log in.");
 }
 
 Future<List<Item>> fetchInventory(BuildContext context) async {
