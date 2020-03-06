@@ -4,11 +4,12 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:oauth2/oauth2.dart';
+import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:flutter/material.dart';
-import 'package:oauth2/oauth2.dart';
+import 'package:pantry/data/Authenticator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:oauth2/oauth2.dart';
 
 import '../models/item.dart';
 import '../models/upc_base_response.dart';
@@ -17,6 +18,7 @@ import '../screens/scan_screen.dart';
 import '../screens/login_screen.dart';
 import '../utils/fade_route.dart';
 
+var credentials = new Authenticator();
 bool offline = false;
 var client = new http.Client();
 final identifier = "HyJ86HsVaO2Lsh9mDzPN8M3S0cuVyfdpf3JbhcoG";
@@ -25,8 +27,7 @@ final secret =
 final clientId = "LjSleZ3SBQEjrdESIXgO9JLzkvslgLLRBHQCLOvT";
 final clientSecret =
     "3vFY6L9QXBmvXBqORR5t9SbAeUP3GIAyDCTwVRvLxnXCrmAilam9Bu1OEUUASgnriidxhMEIzye0GzlWhyQH4dODFdj2vk7QdYpAvgfOk2lF7TBlnO795sUETB2A91Nv";
-final token = null;
-String url = 'http://172.16.10.60:8000'; //Testing real device
+String url = 'http://<<YOUR IP>>:8000'; //Testing real device
 //String url = 'http://localhost:8000'; //iOS Simulator TESTING
 //String url = 'http://10.0.2.2:8000'; //ANDROID Emulator TESTING with Android Studio
 //String url = 'http://10.0.3.2:8000'; //ANDROID Emulator TESTING with Other
@@ -65,15 +66,13 @@ Future<String> register(loginData, BuildContext context) async {
   return null;
 } //register
 
+var token;
 Future<String> login(loginData, BuildContext context) async {
-  // This URL is an endpoint that's provided by the authorization server. It's
-  // usually included in the server's documentation of its OAuth2 API.
   final authorizationEndpoint = Uri.parse(url + "/o/token/");
 
   // The user should supply their own username and password.
   final username = '${(loginData.name)}';
   final password = '${(loginData.password)}';
-
   var response;
   try {
     client = await resourceOwnerPasswordGrant(
@@ -97,7 +96,7 @@ Future<String> login(loginData, BuildContext context) async {
   response =
       await client.get(url + "/item").timeout(Duration(milliseconds: 1000));
   if (response.statusCode == 200) {
-    print(response.body.toString());
+    print(Credentials);
     print(response.body);
     Navigator.of(context)
         .pushReplacement(FadePageRoute(builder: (context) => HomeScreen()));
@@ -115,10 +114,14 @@ Future<String> login(loginData, BuildContext context) async {
 } //login
 
 void logout(context) async {
-  print(client.toString());
-  var response = await client.post(url + "/o/revoke-token/",
-      headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      body: {"token": "", "client_id": identifier, "client_secret": secret});
+  print("${credentials.toString()}");
+  var response = await client.post(url + "/o/revoke-token/", headers: {
+    "Content-Type": "application/x-www-form-urlencoded"
+  }, body: {
+    "token": "${credentials.getToken()}",
+    "client_id": identifier,
+    "client_secret": secret,
+  });
   if (response.statusCode == 200) {
     print("token revoked");
   } else {
