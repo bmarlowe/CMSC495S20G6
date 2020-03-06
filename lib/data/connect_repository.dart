@@ -33,8 +33,8 @@ Future<String> register(loginData, BuildContext context) async {
   response = await client.post(registrationEndpoint, headers: {
     "Content-Type": "application/x-www-form-urlencoded"
   }, body: {
-    "client_id": "$auth.clientId",
-    "client_secret": "$auth.clientSecret",
+    "client_id": "${auth.clientId}",
+    "client_secret": "${auth.clientSecret}",
     "username": '$username',
     "password": '$password'
   });
@@ -113,8 +113,8 @@ void logout(context) async {
     "Content-Type": "application/x-www-form-urlencoded"
   }, body: {
     "token": token,
-    "client_id": identifier,
-    "client_secret": secret,
+    "client_id": auth.identifier,
+    "client_secret": auth.secret,
   });
   if (response.statusCode == 200) {
     print("token revoked");
