@@ -2,6 +2,13 @@
 
 A new Flutter application for CMSC 495 Spring 2020 Group 6.
 
+Demo1:
+https://imgur.com/4EesYq3.gif
+Demo2:
+https://imgur.com/MalO5sA.gif
+Demo3:
+https://imgur.com/4s3Xdox.gif
+
 ## Getting Started
 
 This project is a starting point for a Flutter Pantry Mobile Application.
@@ -11,7 +18,7 @@ This branch has all of the created flutter files for the UI portion of the proje
 ## Downloaded Items: 
 	Flutter
 	Android Studio
-	Xcode
+	Xcode / VS Code
 
 Research how to use Flutter and program application:
 
