@@ -52,3 +52,4 @@ android/local.properties
 lib/data/connect_repository.dart
 .packages
 .packages
+lib/data/auth.dart

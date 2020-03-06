@@ -15,6 +15,7 @@ import '../screens/home_screen.dart';
 import '../screens/scan_screen.dart';
 import '../screens/login_screen.dart';
 import '../utils/fade_route.dart';
+import 'package:pantry/data/auth.dart' as auth;
 
 bool offline = false;
 var client = new http.Client();
@@ -25,7 +26,7 @@ String url = 'http://10.0.3.2:8000'; //ANDROID Emulator TESTING
 //String url ='https://17dfcfcc-63d3-456a-a5d8-c5f394434f7c.mock.pstmn.io';
 
 Future<String> register(loginData, BuildContext context) async {
-  final registrationEndpoint = Uri.parse(url + "/register/");
+  final registrationEndpoint = Uri.parse(auth.url + "/register/");
   var response;
   await Future<void>.delayed(Duration(seconds: 1));
   response = await http.post(registrationEndpoint, body: {
@@ -52,7 +53,7 @@ Future<String> register(loginData, BuildContext context) async {
 Future<String> login(loginData, BuildContext context) async {
   // This URL is an endpoint that's provided by the authorization server. It's
   // usually included in the server's documentation of its OAuth2 API.
-  final authorizationEndpoint = Uri.parse(url + "/o/token/");
+  final authorizationEndpoint = Uri.parse(auth.url + "/o/token/");
 
   // The user should supply their own username and password.
   final username = '${(loginData.name)}';
@@ -65,9 +66,9 @@ Future<String> login(loginData, BuildContext context) async {
   //
   // Some servers don't require the client to authenticate itself, in which case
   // these should be omitted.
-  final identifier = "LjSleZ3SBQEjrdESIXgO9JLzkvslgLLRBHQCLOvT";
+  final identifier = "XZ5pgDzXud3R3Kb51PP7ERsKt5UZYrSzLEkCJrbF";
   final secret =
-      "3vFY6L9QXBmvXBqORR5t9SbAeUP3GIAyDCTwVRvLxnXCrmAilam9Bu1OEUUASgnriidxhMEIzye0GzlWhyQH4dODFdj2vk7QdYpAvgfOk2lF7TBlnO795sUETB2A91Nv";
+      "yYyYieWLhlUC71vQtWHDCHxT8AscjQ1OIfkAnOwXrUznlZVZwoz6YWPqCx0ENfA9wFF07Mz3aQyGKnmVvL9nHUAeJ6jcEmxGoXwOcapH5qMoPicwRhwBAntXRZJCwjAq";
   // Make a request to the authorization endpoint that will produce the fully
   // authenticated Client.
 
@@ -76,7 +77,7 @@ Future<String> login(loginData, BuildContext context) async {
   try {
     client = await oauth2.resourceOwnerPasswordGrant(
         authorizationEndpoint, username, password,
-        identifier: identifier, secret: secret);
+        identifier: auth.identifier, secret: auth.secret);
   } on oauth2.AuthorizationException catch (e) {
     _alertFailLogin(
         context,
@@ -93,7 +94,7 @@ Future<String> login(loginData, BuildContext context) async {
     _alertFailLogin(context, 'Failed to login to server. ' + e.toString());
   }
   response =
-      await client.get(url + "/item").timeout(Duration(milliseconds: 1000));
+      await client.get(auth.url + "/item").timeout(Duration(milliseconds: 1000));
   if (response.statusCode == 200) {
     print(response.toString());
     Navigator.of(context)
@@ -112,12 +113,12 @@ Future<String> login(loginData, BuildContext context) async {
 } //login
 
 void logout(context) async {
-  Connections.searchController.dispose();
+  /*Connections.searchController.dispose();
   Connections.itemController.dispose();
   Connections.acquisitionController.dispose();
   Connections.expirationController.dispose();
-  Connections.unitController.dispose();
-  var response = await client.post(url + "/o/revoke_token/");
+  Connections.unitController.dispose();*/
+  var response = await client.post(auth.url + "/o/revoke_token/");
   if (response.statusCode == 200) {
     print("token revoked");
   } else {
@@ -137,7 +138,7 @@ Future<List<Item>> fetchInventory(BuildContext context) async {
   } else {
     try {
       await Future<void>.delayed(Duration(seconds: 1));
-      response = await client.get(url + "/item", headers: {
+      response = await client.get(auth.url + "/item", headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
       }).timeout(const Duration(seconds: 10));
@@ -171,7 +172,7 @@ Future<List<Item>> fetchSearch(
   } else {
     try {
       await Future<void>.delayed(Duration(seconds: 1));
-      response = await client.get(url + "/item?name=" + searchString, headers: {
+      response = await client.get(auth.url + "/item?name=" + searchString, headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
       }).timeout(const Duration(seconds: 10));
@@ -227,7 +228,7 @@ Future<String> deleteItemForSure(context, itemId) async {
   } else {
     try {
       await Future<void>.delayed(Duration(seconds: 1));
-      response = await client.delete(url + "/item/$itemId/", headers: {
+      response = await client.delete(auth.url + "/item/$itemId/", headers: {
         "Content-Type": "application/json"
       }).timeout(Duration(seconds: 10));
       await Future<void>.delayed(Duration(seconds: 1));
@@ -300,7 +301,7 @@ Future addToInventory(context, bool isUpdate, String itemID) async {
     if (offline) {
       _offlineAlert(context);
     } else {
-      final response = await client.post(url + "/item",
+      final response = await client.post(auth.url + "/item",
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",

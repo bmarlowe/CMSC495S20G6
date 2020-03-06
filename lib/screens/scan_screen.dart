@@ -106,10 +106,7 @@ class ScanState extends State<Scan> {
 } 
 
   Widget build(context) {
-    print(globals.isUpdate);
-
     if (globals.isUpdate) {
-      print(globals.currentItem.id.toString() + globals.currentItem.toString());
       itemID = ifUpdate(globals.currentItem);
       return new WillPopScope(
         onWillPop: () async => false,

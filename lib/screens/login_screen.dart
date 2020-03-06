@@ -30,8 +30,8 @@ class LoginScreenState extends State<LoginScreen> {
         confirmPasswordError: 'Passwords do not match!',
       ),
       emailValidator: (value) {
-        if (!value.contains('@') || !value.endsWith('.com')) {
-          return "Email must contain '@' and end with '.com'";
+        if (value.length < 1) {
+          return "Username must not be blank";
         }
         return null;
       },
@@ -39,10 +39,10 @@ class LoginScreenState extends State<LoginScreen> {
         if (value.isEmpty) {
           return 'Please enter a password';
         }
-        if (value.length < 8) {
+        /*if (value.length < 8) {
           return 'Your password must contain at least 8 characters.';
           // ignore: missing_return
-        }
+        }*/
         return null;
       },
       onRecoverPassword: (_) => Future(null),
