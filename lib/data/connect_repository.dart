@@ -29,12 +29,12 @@ Future<String> register(loginData, BuildContext context) async {
   final username = '${(loginData.name)}';
   final password = '${(loginData.password)}';
   client = await oauth2.clientCredentialsGrant(
-      grantEndpoint, clientId, clientSecret);
+      grantEndpoint, auth.clientId, auth.clientSecret);
   response = await client.post(registrationEndpoint, headers: {
     "Content-Type": "application/x-www-form-urlencoded"
   }, body: {
-    "client_id": "$clientId",
-    "client_secret": "$clientSecret",
+    "client_id": "$auth.clientId",
+    "client_secret": "$auth.clientSecret",
     "username": '$username',
     "password": '$password'
   });
