@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -19,7 +20,10 @@ import '../utils/fade_route.dart';
 import 'package:pantry/data/auth.dart' as auth;
 
 bool offline = false;
-var client = new http.Client();
+var _client = new HttpClient()
+  ..badCertificateCallback =
+      (X509Certificate cert, String host, int port) => true;
+var client = new IOClient(_client) as http.Client;
 
 Future<String> register(loginData, BuildContext context) async {
   final grantEndpoint = Uri.parse(auth.url + "/o/token/");
@@ -74,7 +78,6 @@ Future<String> login(loginData, BuildContext context) async {
         identifier: auth.identifier, secret: auth.secret);
     token = token.credentials.toString();
   } on AuthorizationException catch (e) {
-
     _alertFailLogin(
         context,
         'Failed to login to server. '
@@ -89,8 +92,9 @@ Future<String> login(loginData, BuildContext context) async {
   } on Exception catch (e) {
     _alertFailLogin(context, 'Failed to login to server. ' + e.toString());
   }
-  response =
-      await client.get(auth.url + "/item").timeout(Duration(milliseconds: 1000));
+  response = await client
+      .get(auth.url + "/item")
+      .timeout(Duration(milliseconds: 1000));
   if (response.statusCode == 200) {
     print(response.body);
     Navigator.of(context)
@@ -170,7 +174,8 @@ Future<List<Item>> fetchSearch(
   } else {
     try {
       await Future<void>.delayed(Duration(seconds: 1));
-      response = await client.get(auth.url + "/item?name=" + searchString, headers: {
+      response =
+          await client.get(auth.url + "/item?name=" + searchString, headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
       }).timeout(const Duration(seconds: 10));
@@ -475,6 +480,24 @@ void _alertEmpty(context, String message) {
 } //_alertEmpty
 
 void _alertRegister(BuildContext context, String message) {
+  new Alert(
+    context: context,
+    type: AlertType.info,
+    title: "Success",
+    desc: message,
+    buttons: [
+      DialogButton(
+          child: Text(
+            "Return",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          color: Colors.teal,
+          onPressed: () => Navigator.pushReplacementNamed(context, "/")),
+    ],
+  ).show();
+} //_alertSuccess
+
+void alertRegisterDontUse(BuildContext context, String message) {
   new Alert(
     context: context,
     type: AlertType.info,

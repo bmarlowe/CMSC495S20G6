@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
+import 'package:pantry/data/connect_repository.dart';
 
 import '../data/connect_repository.dart';
 
@@ -20,14 +21,15 @@ class LoginScreenState extends State<LoginScreen> {
     return FlutterLogin(
       title: 'Pantry Login',
       messages: LoginMessages(
-        usernameHint: 'Username',
-        passwordHint: 'Password',
-        confirmPasswordHint: 'Confirm',
-        loginButton: 'LOG IN',
-        signupButton: 'REGISTER',
-        goBackButton: 'GO BACK',
-        confirmPasswordError: 'Passwords do not match!',
-      ),
+          usernameHint: 'Username',
+          passwordHint: 'Password',
+          confirmPasswordHint: 'Confirm',
+          loginButton: 'LOG IN',
+          signupButton: 'REGISTER',
+          goBackButton: 'GO BACK',
+          confirmPasswordError: 'Passwords do not match!',
+          forgotPasswordButton:
+              "The connection to the backend API is not secure.  Do not enter sensitive information."),
       emailValidator: (value) {
         if (value.length < 1) {
           return "Username must not be blank";
