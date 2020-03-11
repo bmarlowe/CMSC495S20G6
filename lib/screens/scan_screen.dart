@@ -23,9 +23,8 @@ class Connections {
 }
 
 class Scan extends StatefulWidget {
-
   Scan({Key key}) : super(key: key);
-  
+
   @override
   ScanState createState() => new ScanState();
 }
@@ -37,7 +36,6 @@ class ScanState extends State<Scan> {
   var formatter = new DateFormat('yyyy-MM-dd');
   BuildContext context;
   String itemID = "";
-  
 
   @override
   void initState() {
@@ -65,108 +63,103 @@ class ScanState extends State<Scan> {
   }
 
   String ifUpdate(Item item) {
-      print("updating...");
-      print(item.id.toString() + " " + item.toString());
-      String itemID = item.id.toString();
-      //setState(() {
-        Connections.itemController.text = item.name;
-        Connections.unitController.text = item.quantity_with_unit;
-        Connections.acquisitionController.text = item.acquisition_date;
-        Connections.expirationController.text = item.expiration_date;
-      //});
-      return itemID;
+    print("updating...");
+    print(item.id.toString() + " " + item.toString());
+    String itemID = item.id.toString();
+    Connections.itemController.text = item.name;
+    Connections.unitController.text = item.quantity_with_unit;
+    Connections.acquisitionController.text = item.acquisition_date;
+    Connections.expirationController.text = item.expiration_date;
+    return itemID;
   }
 
   void clear() {
     //setState(() {
-      Connections.itemController.clear();
-      Connections.unitController.clear();
-      Connections.expirationController.clear();
-      Connections.acquisitionController.clear();
+    Connections.itemController.clear();
+    Connections.unitController.clear();
+    Connections.expirationController.clear();
+    Connections.acquisitionController.clear();
     //});
   }
 
   void _alertUpdateClear(BuildContext context) {
-  new Alert(
-    context: context,
-    type: AlertType.error,
-    title: "Error",
-    desc: "Cannot clear during update",
-    buttons: [
-      DialogButton(
-        child: Text(
-          "OK",
-          style: TextStyle(color: Colors.white, fontSize: 20),
+    new Alert(
+      context: context,
+      type: AlertType.error,
+      title: "Error",
+      desc: "Cannot clear during update",
+      buttons: [
+        DialogButton(
+          child: Text(
+            "OK",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          color: Colors.teal,
+          onPressed: () => Navigator.pop(context),
         ),
-        color: Colors.teal,
-        onPressed: () => Navigator.pop(context),
-      ),
-    ],
-  ).show();
-} 
+      ],
+    ).show();
+  }
 
   Widget build(context) {
     if (globals.isUpdate) {
       itemID = ifUpdate(globals.currentItem);
       return new WillPopScope(
-        onWillPop: () async => false,
-        child: new Scaffold(
-          appBar: AppBar(
-            leading: Container(),
-            title: Center(
-              child: Column(
-              //mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Pantry Application',
-                ),
-                Visibility(
-                  visible: true,
-                  child: Text(
-                    new DateFormat.yMMMMd('en_US').format(new DateTime.now()),
-                    style: TextStyle(
-                      fontSize: 18.0,
+          onWillPop: () async => false,
+          child: new Scaffold(
+            appBar: AppBar(
+              leading: Container(),
+              title: Center(
+                child: Column(
+                  //mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'Pantry Application',
                     ),
-                  ),
+                    Visibility(
+                      visible: true,
+                      child: Text(
+                        new DateFormat.yMMMMd('en_US')
+                            .format(new DateTime.now()),
+                        style: TextStyle(
+                          fontSize: 18.0,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-            ),
-          ),
-          body: Center(
-            child: Column(
+            body: Center(
+                child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 pantryInput(context, true, globals.currentItem),
                 new RaisedButton(
-                  onPressed: () {
-                    globals.isUpdate = false;
-                    clear();
-                    Navigator.pop(context);
-                  },
-                  color: Colors.teal,
-                  child: new Text("Back")
-                ),
+                    onPressed: () {
+                      globals.isUpdate = false;
+                      clear();
+                      Navigator.pop(context);
+                    },
+                    color: Colors.teal,
+                    child: new Text("Back")),
               ],
-            )
-          ),
-        )
-      );
+            )),
+          ));
     } else {
       Item item = new Item();
-        return new Scaffold(
-          body: Center(
-            child: pantryInput(context, false, item),
-          ),
-        );
-      }
-    
+      return new Scaffold(
+        body: Center(
+          child: pantryInput(context, false, item),
+        ),
+      );
+    }
   }
 
   Widget barcodeInput(context) {
     return Center(
-      child: SingleChildScrollView(
+        child: SingleChildScrollView(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: <Widget>[
@@ -197,103 +190,121 @@ class ScanState extends State<Scan> {
     }
     return Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 3, bottom: 4.0),
-          child: TextField(
-              controller: Connections.itemController,
-              decoration: InputDecoration(
-                labelText: 'Item: What is it?',
-              )),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 3, bottom: 4.0),
-          child: TextField(
-              controller: Connections.unitController,
-              decoration: InputDecoration(
-                labelText: "Unit: How much?",
-              )),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 3),
-          child: DateTimeField(
-            format: formatter,
-            controller: Connections.acquisitionController,
-            decoration: InputDecoration(labelText: 'Acquisition Date'),
-            onShowPicker: (context, currentValue) {
-              return showDatePicker(
-                  context: context,
-                  firstDate: DateTime(DateTime.now().year - 40),
-                  initialDate: currentValue ?? DateTime.now(),
-                  lastDate: DateTime(DateTime.now().year + 40));
-            },              
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 3),
-          child: DateTimeField(
-            format: formatter,
-            controller: Connections.expirationController,
-            decoration: InputDecoration(
-              labelText: 'Expiration Date',
-            ),
-            onShowPicker: (context, currentValue) {
-              return showDatePicker(
-                  context: context,
-                  firstDate: DateTime(DateTime.now().year - 40),
-                  initialDate: currentValue ?? DateTime.now(),
-                  lastDate: DateTime(DateTime.now().year + 40));
-            },
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Builder(
-            builder: (context) {
-              return RaisedButton(
-                onPressed: () {
-                  print(isUpdate);
-                  if (isUpdate) {
-                    _alertUpdateClear(context);
-                  } else {
-                    clear();
-                  }
-                },
-                color: Colors.teal,
-                child: Text('Clear All'),
-              );
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Builder(
-            builder: (context) {
-              return RaisedButton(
-                onPressed: () {
-                  print(isUpdate);
-                  print(itemID);
-                  addToInventory(context, isUpdate, itemID);
-                  globals.isUpdate = false;
-                  print(globals.isUpdate);
-                  //Navigator.pop(context);
-                },
-                color: Colors.teal,
-                child: Text('Add Item'),
-              );
-            },
-          ),
-        ),
-          ]
-        ),
-        child,
-      ],
-    )));
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 3, bottom: 4.0),
+                  child: TextField(
+                      controller: Connections.itemController,
+                      decoration: InputDecoration(
+                        labelText: 'Item: What is it?',
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 3, bottom: 4.0),
+                  child: TextField(
+                      controller: Connections.unitController,
+                      decoration: InputDecoration(
+                        labelText: "Unit: How much?",
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 3),
+                  child: DateTimeField(
+                    format: formatter,
+                    controller: Connections.acquisitionController,
+                    decoration: InputDecoration(labelText: 'Acquisition Date'),
+                    onShowPicker: (context, currentValue) {
+                      return showDatePicker(
+                          context: context,
+                          firstDate: DateTime(DateTime.now().year - 40),
+                          initialDate: currentValue ?? DateTime.now(),
+                          lastDate: DateTime(DateTime.now().year + 40));
+                    },
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 3),
+                  child: DateTimeField(
+                    format: formatter,
+                    controller: Connections.expirationController,
+                    decoration: InputDecoration(
+                      labelText: 'Expiration Date',
+                    ),
+                    onShowPicker: (context, currentValue) {
+                      return showDatePicker(
+                          context: context,
+                          firstDate: DateTime(DateTime.now().year - 40),
+                          initialDate: currentValue ?? DateTime.now(),
+                          lastDate: DateTime(DateTime.now().year + 40));
+                    },
+                  ),
+                ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Builder(
+                          builder: (context) {
+                            return RaisedButton(
+                              onPressed: () {
+                                print(isUpdate);
+                                if (isUpdate) {
+                                  _alertUpdateClear(context);
+                                } else {
+                                  clear();
+                                }
+                              },
+                              color: Colors.teal,
+                              child: Text('Clear All'),
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Builder(
+                          builder: (context) {
+                            return RaisedButton(
+                              onPressed: () {
+                                print(isUpdate);
+                                if (isUpdate) {
+                                  ifUpdate(globals.currentItem);
+                                } else {
+                                  clear();
+                                }
+                              },
+                              color: Colors.teal,
+                              child: Text('Reset'),
+                            );
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Builder(
+                          builder: (context) {
+                            return RaisedButton(
+                              onPressed: () {
+                                print(isUpdate);
+                                print(itemID);
+                                addToInventory(context, isUpdate, itemID);
+                                globals.isUpdate = false;
+                                print(globals.isUpdate);
+                                //Navigator.pop(context);
+                              },
+                              color: Colors.teal,
+                              child: Text('Add Item'),
+                            );
+                          },
+                        ),
+                      ),
+                    ]),
+                child,
+              ],
+            )));
   }
 
   Future scan() async {
@@ -326,24 +337,22 @@ class ScanState extends State<Scan> {
 
   Widget datePicker() {
     return Padding(
-          padding: const EdgeInsets.only(left: 3),
-          child: DateTimeField(
-            format: formatter,
-            controller: Connections.acquisitionController,
-            decoration: InputDecoration(labelText: 'Acquisition Date'),
-            onShowPicker: (context, currentValue) {
-              return showDatePicker(
-                  context: context,
-                  firstDate: DateTime(DateTime.now().year - 40),
-                  initialDate: currentValue ?? DateTime.now(),
-                  lastDate: DateTime(DateTime.now().year + 40));
-            },
-            onChanged: (dt) =>
-                setState(() {
-                  Connections.acquisitionController.text;
-                }),
-          ),
-        );
+      padding: const EdgeInsets.only(left: 3),
+      child: DateTimeField(
+        format: formatter,
+        controller: Connections.acquisitionController,
+        decoration: InputDecoration(labelText: 'Acquisition Date'),
+        onShowPicker: (context, currentValue) {
+          return showDatePicker(
+              context: context,
+              firstDate: DateTime(DateTime.now().year - 40),
+              initialDate: currentValue ?? DateTime.now(),
+              lastDate: DateTime(DateTime.now().year + 40));
+        },
+        onChanged: (dt) => setState(() {
+          Connections.acquisitionController.text;
+        }),
+      ),
+    );
   }
-
 }
