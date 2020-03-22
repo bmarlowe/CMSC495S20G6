@@ -15,6 +15,7 @@ public final class GeneratedPluginRegistrant {
   public static void registerWith(@NonNull FlutterEngine flutterEngine) {
     ShimPluginRegistry shimPluginRegistry = new ShimPluginRegistry(flutterEngine);
       com.apptreesoftware.barcodescan.BarcodeScanPlugin.registerWith(shimPluginRegistry.registrarFor("com.apptreesoftware.barcodescan.BarcodeScanPlugin"));
+    flutterEngine.getPlugins().add(new dev.flutter.plugins.e2e.E2EPlugin());
     flutterEngine.getPlugins().add(new com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin());
     flutterEngine.getPlugins().add(new io.flutter.plugins.sharedpreferences.SharedPreferencesPlugin());
   }

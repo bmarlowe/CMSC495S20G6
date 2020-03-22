@@ -6,4 +6,5 @@ import 'package:pantry/models/item.dart';
 bool isSearch = false;
 bool isUpdate = false;
 Item currentItem = Item();
+Item nearestExpiration = Item();
 Color color = Colors.teal;

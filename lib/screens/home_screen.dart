@@ -84,9 +84,8 @@ class HomeScreenState extends State<HomeScreen> {
 }
 
 class PantryList extends StatefulWidget {
-
   PantryList({Key key}) : super(key: key);
-  
+
   @override
   PantryListState createState() => PantryListState();
 }
@@ -99,41 +98,42 @@ class PantryListState extends State<PantryList> {
   Widget build(BuildContext context) {
     if (globals.isSearch) {
       return new WillPopScope(
-        onWillPop: () async => false,
-        child: new Scaffold(
-          body: isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : FutureBuilder<List<Item>>(
-               future: fetchSearch(context, "${Connections.searchController.text}"),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
-                  }
-                  return snapshot.hasData
-                      ? InventoryList(inventory: snapshot.data, isSearch: true)
-                      : Center(child: CircularProgressIndicator());
-                }),
-        )
-      );
-    }
-    else {
+          onWillPop: () async => false,
+          child: new Scaffold(
+            body: isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : FutureBuilder<List<Item>>(
+                    future: fetchSearch(
+                        context, "${Connections.searchController.text}"),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text("${snapshot.error}");
+                      }
+                      return snapshot.hasData
+                          ? InventoryList(
+                              inventory: snapshot.data, isSearch: true)
+                          : Center(child: CircularProgressIndicator());
+                    }),
+          ));
+    } else {
       return new Scaffold(
-        body: isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : FutureBuilder<List<Item>>(
-                future: fetchInventory(context),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text("${snapshot.error}");
-                  }
-                  return snapshot.hasData
-                      ? InventoryList(inventory: snapshot.data, isSearch: false)
-                      : Center(child: CircularProgressIndicator());
-                }));
+          body: isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : FutureBuilder<List<Item>>(
+                  future: fetchInventory(context),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text("${snapshot.error}");
+                    }
+                    return snapshot.hasData
+                        ? InventoryList(
+                            inventory: snapshot.data, isSearch: false)
+                        : Center(child: CircularProgressIndicator());
+                  }));
     }
   }
 }
@@ -142,10 +142,11 @@ class InventoryList extends StatelessWidget {
   final List<Item> inventory;
   final bool isSearch;
 
-  InventoryList({Key key, Widget child, this.inventory, this.isSearch}) : super(key: key);
+  InventoryList({Key key, Widget child, this.inventory, this.isSearch})
+      : super(key: key);
 
   Widget build(BuildContext context) {
-    if (inventory.length == 0 && isSearch){
+    if (inventory.length == 0 && isSearch) {
       globals.isSearch = false;
       return Align(
         alignment: Alignment.center,
@@ -153,15 +154,15 @@ class InventoryList extends StatelessWidget {
       );
     } else {
       globals.isSearch = false;
-    List<Item> invSorted = sortInventory(context, inventory);
-    return GridView.builder(
-      padding: const EdgeInsets.all(10),
-      itemCount: invSorted.length,
-      gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-      itemBuilder: (context, index) {
-        Color cardColor = colorCode(invSorted[index].expiration_date);
-        return GestureDetector(
+      List<Item> invSorted = sortInventory(context, inventory);
+      return GridView.builder(
+        padding: const EdgeInsets.all(10),
+        itemCount: invSorted.length,
+        gridDelegate:
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        itemBuilder: (context, index) {
+          Color cardColor = colorCode(invSorted[index].expiration_date);
+          return GestureDetector(
               onLongPress: () {
                 globals.currentItem = invSorted[index];
                 globals.color = cardColor;
@@ -173,36 +174,37 @@ class InventoryList extends StatelessWidget {
                   ),
                 );
               },
-                child: Card(
+              child: Card(
                   margin: EdgeInsets.only(left: 5, right: 5, bottom: 20),
                   color: cardColor,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(invSorted[index].name.toString(),
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold, decoration: TextDecoration.underline)
-                              ),
-                          Text('Quantity: ' +
-                              invSorted[index].quantity_with_unit.toString(),
-                              style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold)
-                              ),
-                          Text('Acquired: ' +
-                              invSorted[index].acquisition_date.toString(),
-                              style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold)
-                              ),
-                          Text('Expiration: ' +
-                              invSorted[index].expiration_date.toString(),
-                              style: TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.bold)
-                              ),
-                        ])));
-      },
-    );
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(invSorted[index].name.toString(),
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline)),
+                        Text(
+                            'Quantity: ' +
+                                invSorted[index].quantity_with_unit.toString(),
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold)),
+                        Text(
+                            'Acquired: ' +
+                                invSorted[index].acquisition_date.toString(),
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold)),
+                        Text(
+                            'Expiration: ' +
+                                invSorted[index].expiration_date.toString(),
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold)),
+                      ])));
+        },
+      );
     }
   }
 
@@ -235,7 +237,6 @@ class InventoryList extends StatelessWidget {
     List<Item> sortedInventory = new List<Item>();
     List<Item> inv = inventory;
 
-
     for (var i = 0; i < inv.length; i++) {
       Color colorCheck = colorCode(inv[i].expiration_date);
       if (colorCheck == Color(0xBBFF2222)) {
@@ -256,6 +257,7 @@ class InventoryList extends StatelessWidget {
         sortedInventory.add(inv[i]);
       }
     }
+    globals.nearestExpiration = sortedInventory[0];
     return sortedInventory;
   }
 }
