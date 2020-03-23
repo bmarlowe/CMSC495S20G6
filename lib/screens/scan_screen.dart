@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:barcode_scan_fix/barcode_scan.dart';
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -2,30 +2,23 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:pantry/data/connect_repository.dart';
 import 'package:pantry/screens/home_screen.dart';
 import 'package:pantry/models/item.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final notifications = new FlutterLocalNotificationsPlugin();
 
-void initNotifications() {
+void initNotifications(List<Item> list) {
   final settingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
   final settingsIos = IOSInitializationSettings();
   var initSettings = InitializationSettings(settingsAndroid, settingsIos);
   notifications.initialize(initSettings);
-  notification();
+  notification(list);
 }
 
-Future notification() async {
+Future notification(List<Item> list) async {
   BuildContext context;
   var time = Time(10, 0, 0);
-  SharedPreferences sp = await SharedPreferences.getInstance();
-  var response;
-  final String inventoryList = 'inventoryList';
-  response = sp.getString(inventoryList);
-  List<Item> unsorted = parseItems(response);
-  Item sortItem = sortInventory(context, unsorted)[0];
+  Item sortItem = sortInventory(context, list)[0];
 
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'repeatDailyAtTime channel id',

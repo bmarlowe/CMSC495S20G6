@@ -7,7 +7,6 @@ import 'utils/push_notifications.dart';
 
 void main() {
   runApp(new MyApp());
-  initNotifications();
 }
 
 class MyApp extends StatelessWidget {
