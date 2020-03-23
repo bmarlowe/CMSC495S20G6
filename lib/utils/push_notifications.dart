@@ -35,13 +35,13 @@ Future notification() async {
   var platformChannelSpecifics = NotificationDetails(
       androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
   Color color = colorCode(sortItem.expiration_date);
-  if(color == 0xBBFF2222 || color == 0xFFFFFF33) {
+  if (color == 0xBBFF2222 || color == 0xFFFFFF33) {
     await notifications.showDailyAtTime(
-      0,
-      'You have items expiring within the next 7 days: ',
-      '${sortItem.toString()}',
-      time,
-      platformChannelSpecifics);
+        0,
+        'You have items expiring within the next 7 days: ',
+        '${sortItem.toString()}',
+        time,
+        platformChannelSpecifics);
   }
   print('notification payload: ${sortItem.toString()}');
 } //notification()
