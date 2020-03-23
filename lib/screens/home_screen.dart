@@ -207,57 +207,56 @@ class InventoryList extends StatelessWidget {
       );
     }
   }
+}
 
-  Color colorCode(String expiration) {
-    var todayRaw = new DateTime.now();
-    DateTime today = new DateTime(todayRaw.year, todayRaw.month, todayRaw.day);
+Color colorCode(String expiration) {
+  var todayRaw = new DateTime.now();
+  DateTime today = new DateTime(todayRaw.year, todayRaw.month, todayRaw.day);
 
-    String yearStr = expiration.substring(0, 4);
-    String monthStr = expiration.substring(5, 7);
-    String dayStr = expiration.substring(8, 10);
-    int yearInt = int.parse(yearStr);
-    int monthInt = int.parse(monthStr);
-    int dayInt = int.parse(dayStr);
-    DateTime itemExpire = new DateTime(yearInt, monthInt, dayInt);
+  String yearStr = expiration.substring(0, 4);
+  String monthStr = expiration.substring(5, 7);
+  String dayStr = expiration.substring(8, 10);
+  int yearInt = int.parse(yearStr);
+  int monthInt = int.parse(monthStr);
+  int dayInt = int.parse(dayStr);
+  DateTime itemExpire = new DateTime(yearInt, monthInt, dayInt);
 
-    int check = itemExpire.compareTo(today);
+  int check = itemExpire.compareTo(today);
 
-    if (check <= 0) {
-      return new Color(0xBBFF2222);
+  if (check <= 0) {
+    return new Color(0xBBFF2222);
+  }
+  var difference = itemExpire.difference(today);
+
+  if (difference.inDays <= 7) {
+    return new Color(0xFFFFFF33);
+  }
+  return new Color(0xFF11BB33);
+}
+
+List<Item> sortInventory(BuildContext context, List<Item> inventory) {
+  List<Item> sortedInventory = new List<Item>();
+  List<Item> inv = inventory;
+
+  for (var i = 0; i < inv.length; i++) {
+    Color colorCheck = colorCode(inv[i].expiration_date);
+    if (colorCheck == Color(0xBBFF2222)) {
+      sortedInventory.add(inv[i]);
     }
-    var difference = itemExpire.difference(today);
-
-    if (difference.inDays <= 7) {
-      return new Color(0xFFFFFF33);
-    }
-    return new Color(0xFF11BB33);
   }
 
-  List<Item> sortInventory(BuildContext context, List<Item> inventory) {
-    List<Item> sortedInventory = new List<Item>();
-    List<Item> inv = inventory;
-
-    for (var i = 0; i < inv.length; i++) {
-      Color colorCheck = colorCode(inv[i].expiration_date);
-      if (colorCheck == Color(0xBBFF2222)) {
-        sortedInventory.add(inv[i]);
-      }
+  for (var i = 0; i < inv.length; i++) {
+    Color colorCheck = colorCode(inv[i].expiration_date);
+    if (colorCheck == Color(0xFFFFFF33)) {
+      sortedInventory.add(inv[i]);
     }
-
-    for (var i = 0; i < inv.length; i++) {
-      Color colorCheck = colorCode(inv[i].expiration_date);
-      if (colorCheck == Color(0xFFFFFF33)) {
-        sortedInventory.add(inv[i]);
-      }
-    }
-
-    for (var i = 0; i < inv.length; i++) {
-      Color colorCheck = colorCode(inv[i].expiration_date);
-      if (colorCheck == Color(0xFF11BB33)) {
-        sortedInventory.add(inv[i]);
-      }
-    }
-    globals.nearestExpiration = sortedInventory[0];
-    return sortedInventory;
   }
+
+  for (var i = 0; i < inv.length; i++) {
+    Color colorCheck = colorCode(inv[i].expiration_date);
+    if (colorCheck == Color(0xFF11BB33)) {
+      sortedInventory.add(inv[i]);
+    }
+  }
+  return sortedInventory;
 }

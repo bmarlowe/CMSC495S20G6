@@ -24,9 +24,9 @@ class Item {
   // each item when using the print statement.
   @override
   String toString() {
-    return 'Item{name: $name, '
+    return 'name: $name, '
         'quantity_with_unit: $quantity_with_unit, '
         'acquisition_date: $acquisition_date, '
-        'expiration_date: $expiration_date)}';
+        'expiration_date: $expiration_date)';
   }
 } //Inventory
