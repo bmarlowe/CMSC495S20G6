@@ -19,7 +19,7 @@ void initNotifications() {
 
 Future notification() async {
   BuildContext context;
-  var time = Time(20, 15, 0);
+  var time = Time(20, 20, 0);
   SharedPreferences sp = await SharedPreferences.getInstance();
   var response;
   final String inventoryList = 'inventoryList';
@@ -34,11 +34,14 @@ Future notification() async {
   var iOSPlatformChannelSpecifics = IOSNotificationDetails();
   var platformChannelSpecifics = NotificationDetails(
       androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-  await notifications.showDailyAtTime(
+  Color color = colorCode(sortItem.expiration_date);
+  if(color == 0xBBFF2222 || color == 0xFFFFFF33) {
+    await notifications.showDailyAtTime(
       0,
       'You have items expiring within the next 7 days: ',
       '${sortItem.toString()}',
       time,
       platformChannelSpecifics);
+  }
   print('notification payload: ${sortItem.toString()}');
 } //notification()
