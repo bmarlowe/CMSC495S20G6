@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:pantry/data/globals.dart' as globals;
 
-final notifications = FlutterLocalNotificationsPlugin();
+final notifications = new FlutterLocalNotificationsPlugin();
 
 void initNotifications() {
-  final settingsAndroid = AndroidInitializationSettings('fresh.jpg');
+  final settingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
   final settingsIos = IOSInitializationSettings();
   var initSettings = InitializationSettings(settingsAndroid, settingsIos);
   notifications.initialize(initSettings);
@@ -14,7 +14,7 @@ void initNotifications() {
 }
 
 Future notification() async {
-  var time = Time(17, 0, 0);
+  var time = Time(18, 45, 0);
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'repeatDailyAtTime channel id',
       'repeatDailyAtTime channel name',
@@ -28,4 +28,5 @@ Future notification() async {
       '${globals.nearestExpiration.toString}',
       time,
       platformChannelSpecifics);
+  print('notification payload: ${globals.nearestExpiration}');
 } //notification()

@@ -6,6 +6,7 @@ import 'screens/search_screen.dart';
 import 'utils/push_notifications.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   initNotifications();
   runApp(new MyApp());
 }
