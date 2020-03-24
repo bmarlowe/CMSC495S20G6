@@ -19,7 +19,6 @@ Future notification(List<Item> list) async {
   BuildContext context;
   var time = Time(10, 0, 0);
   Item sortItem = sortInventory(context, list)[0];
-
   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'repeatDailyAtTime channel id',
       'repeatDailyAtTime channel name',
@@ -35,6 +34,6 @@ Future notification(List<Item> list) async {
         '${sortItem.toString()}',
         time,
         platformChannelSpecifics);
+    print('notification payload: ${sortItem.toString()}');
   }
-  print('notification payload: ${sortItem.toString()}');
 } //notification()

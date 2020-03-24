@@ -30,7 +30,9 @@ dependencies:
   rflutter_alert: ^1.0.3
 
   # barcode scanner
-  barcode_scan: any
+  barcode_scan: ^2.0.1
+  # barcode_scan_fix: ^1.0.2
+  # flutter_barcode_scanner: ^0.1.7
 
   # used for login screens
   flutter_login: 1.0.14
@@ -75,7 +77,7 @@ dev_dependencies:
   json_serializable: ^3.0.0
 
   # local notification test requirements
-  e2e: ^0.2.4+2
+  # e2e: ^0.2.4+2
   pedantic: ^1.8.0
 
 # For information on the generic Dart part of this file, see the
