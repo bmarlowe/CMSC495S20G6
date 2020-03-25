@@ -3,7 +3,6 @@ import 'screens/scan_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/search_screen.dart';
-import 'utils/push_notifications.dart';
 
 void main() {
   runApp(new MyApp());
