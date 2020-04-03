@@ -20,7 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # allows camera and JSON usage
+  # allows camera, client and JSON usage
   http: 0.12.0+1
 
   #oauth2
@@ -30,7 +30,9 @@ dependencies:
   rflutter_alert: ^1.0.3
 
   # barcode scanner
-  barcode_scan_fix: ^1.0.2
+  barcode_scan: ^2.0.1
+  # barcode_scan_fix: ^1.0.2
+  # flutter_barcode_scanner: ^0.1.7
 
   # used for login screens
   flutter_login: 1.0.14
@@ -39,7 +41,7 @@ dependencies:
   json_annotation: ^3.0.0
 
   # format the dateTime
-  intl: 0.16.1
+  intl: 0.16.0
 
   # allow calendar selection for dates
   datetime_picker_formfield: ^1.0.0
@@ -49,6 +51,10 @@ dependencies:
 
   # uml help
   dcdg: ^2.0.1
+
+  # push notifications
+  flutter_local_notifications: ^1.2.2
+
 
   # change flutter icon to default image
   flutter_launcher_icons: ^0.7.3
@@ -64,9 +70,15 @@ flutter_icons:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_driver:
+    sdk: flutter
 
   build_runner: ^1.0.0
   json_serializable: ^3.0.0
+
+  # local notification test requirements
+  # e2e: ^0.2.4+2
+  pedantic: ^1.8.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -82,6 +94,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/bg_img.jpg
+    - assets/images/fresh.jpg
   #  - assets/local_inventory.json
   #  - assets/server_inventory.json
   # An image asset can refer to one or more resolution-specific "variants", see

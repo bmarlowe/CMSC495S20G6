@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:barcode_scan_fix/barcode_scan.dart';
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -74,12 +74,10 @@ class ScanState extends State<Scan> {
   }
 
   void clear() {
-    //setState(() {
     Connections.itemController.clear();
     Connections.unitController.clear();
     Connections.expirationController.clear();
     Connections.acquisitionController.clear();
-    //});
   }
 
   void _alertUpdateClear(BuildContext context) {
@@ -245,7 +243,7 @@ class ScanState extends State<Scan> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Builder(
                           builder: (context) {
                             return RaisedButton(
@@ -264,7 +262,7 @@ class ScanState extends State<Scan> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Builder(
                           builder: (context) {
                             return RaisedButton(
@@ -283,7 +281,7 @@ class ScanState extends State<Scan> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(10.0),
                         child: Builder(
                           builder: (context) {
                             return RaisedButton(
@@ -333,6 +331,7 @@ class ScanState extends State<Scan> {
       setState(() => this.barcode = '');
       print("Unknown error: $e");
     }
+    if (!mounted) return;
   }
 
   Widget datePicker() {

@@ -1,4 +1,4 @@
-package com.cellerytechsupport.pantry
+package com.pantry
 
 import androidx.annotation.NonNull
 import io.flutter.embedding.android.FlutterActivity

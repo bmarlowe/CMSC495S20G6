@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
 import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:flutter/material.dart';
+import 'package:pantry/utils/push_notifications.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:oauth2/oauth2.dart';
@@ -136,7 +137,9 @@ Future<List<Item>> fetchInventory(BuildContext context) async {
   var response;
   if (offline) {
     response = sp.getString(inventoryList);
-    return parseItems(response);
+    var list = parseItems(response);
+    initNotifications(list);
+    return list;
   } else {
     try {
       await Future<void>.delayed(Duration(seconds: 1));
@@ -153,7 +156,9 @@ Future<List<Item>> fetchInventory(BuildContext context) async {
     if (response.statusCode == 200) {
       SharedPreferences sp = await SharedPreferences.getInstance();
       sp.setString(inventoryList, response.body);
-      return parseItems(response.body);
+      var list = parseItems(response.body);
+      initNotifications(list);
+      return list;
     } else {
       // If that call was not successful, throw an error.
       _alertFail(context,
